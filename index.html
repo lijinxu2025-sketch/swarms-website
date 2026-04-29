@@ -1,0 +1,2443 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Swarms Marketplace — Agent Market</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+  rel="stylesheet"
+/>
+<style>
+:root {
+  /* ===== Brand (from Swarms design system) ===== */
+  --brand-50:  #FFF1F1;
+  --brand-100: #FFDFDF;
+  --brand-200: #FFC5C5;
+  --brand-300: #FF9D9D;
+  --brand-400: #FF6464;
+  --brand-500: #FF3434;
+  --brand-600: #ED1717;
+  --brand-700: #C80D0D;
+  --brand-800: #A50F0F;
+  --brand-900: #881414;
+  --brand-950: #4A0505;
+
+  /* ===== Neutral ===== */
+  --neutral-0:   #FFFFFF;
+  --neutral-100: #F2F2F2;
+  --neutral-200: #DDDDDD;
+  --neutral-300: #BBBBBB;
+  --neutral-400: #999999;
+  --neutral-500: #777777;
+  --neutral-600: #555555;
+  --neutral-700: #333333;
+  --neutral-800: #1F1F1F;
+  --neutral-900: #111111;
+  --neutral-950: #0A0A0A;
+
+  /* ===== Status ===== */
+  --success-400: #4ADE80;
+  --success-500: #22C55E;
+  --success-700: #15803D;
+  --warning-400: #FBBF24;
+  --warning-500: #F59E0B;
+  --warning-700: #B45309;
+
+  /* ===== Semantic — Dark mode ===== */
+  --bg-default:        var(--neutral-950);
+  --bg-subtle:         var(--neutral-900);
+  --bg-overlay:        var(--neutral-800);
+  --bg-card:           #131313;
+  --bg-card-hover:     #181818;
+
+  --text-primary:      var(--neutral-0);
+  --text-secondary:    var(--neutral-400);
+  --text-tertiary:     var(--neutral-500);
+  --text-disabled:     var(--neutral-600);
+  --text-brand:        var(--brand-500);
+
+  --border-default:    var(--neutral-800);
+  --border-strong:     var(--neutral-700);
+  --border-brand:      var(--brand-600);
+
+  /* ===== Type ===== */
+  --font-display: "Montserrat", system-ui, -apple-system, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* ===== Radius ===== */
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-xl: 12px;
+  --r-2xl: 16px;
+  --r-full: 9999px;
+}
+
+/* ===== Reset ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-display);
+  background: var(--bg-default);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+button { font-family: inherit; cursor: pointer; border: 0; background: transparent; color: inherit; padding: 0; }
+input, textarea, select { font-family: inherit; }
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+::selection { background: var(--brand-600); color: white; }
+
+/* ===== Subtle grid texture overlay on body ===== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 56px 56px;
+  z-index: 0;
+}
+
+/* ====================================================================== */
+/*  LAYOUT                                                                */
+/* ====================================================================== */
+.app {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  border-right: 1px solid var(--border-default);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 0 20px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: var(--bg-default);
+}
+.sb__logo {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: grid; place-items: center;
+  margin-bottom: 28px;
+  background: var(--brand-600);
+  position: relative;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 24px -8px rgba(237,23,23,0.6);
+}
+.sb__logo svg { width: 26px; height: 26px; }
+.sb__nav {
+  display: flex; flex-direction: column;
+  gap: 2px; width: 100%; align-items: center;
+}
+.sb__item {
+  width: 60px; padding: 10px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  color: var(--text-secondary);
+  border-radius: var(--r-md);
+  transition: color 120ms ease, background-color 120ms ease;
+  position: relative;
+}
+.sb__item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.sb__item.is-active { color: var(--text-primary); background: var(--bg-overlay); }
+.sb__item.is-active::before {
+  content: ""; position: absolute; left: -22px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 22px; border-radius: 0 2px 2px 0;
+  background: var(--brand-600);
+}
+.sb__item svg { width: 19px; height: 19px; stroke-width: 1.6; }
+.sb__item span { font-size: 9.5px; font-weight: 600; letter-spacing: 0.3px; }
+.sb__bottom { margin-top: auto; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.credits-coin {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #ffe690, #d99815 60%, #7a5400);
+  display: grid; place-items: center;
+  font-size: 8.5px; font-weight: 800; color: #4a3000;
+  text-align: center; line-height: 1;
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,0.25), 0 4px 14px -4px rgba(217,152,21,0.4);
+  position: relative;
+}
+.credits-coin span { display: block; }
+.credits-coin small { font-size: 7px; font-weight: 700; opacity: 0.8; letter-spacing: 0.4px; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #ed1717 0%, #8b5cf6 100%);
+  border: 1.5px solid var(--neutral-800);
+}
+
+/* ===== Main canvas ===== */
+.main { padding: 28px 56px 96px; }
+.container { max-width: 1180px; margin: 0 auto; }
+
+/* ====================================================================== */
+/*  TOP HEADER                                                            */
+/* ====================================================================== */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+}
+.top__left .eyebrow {
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: 2.4px; text-transform: uppercase;
+  color: var(--text-tertiary);
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+}
+.top__left .eyebrow::before {
+  content: ""; width: 28px; height: 1px; background: var(--brand-600);
+}
+.top__title {
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -2.2px;
+  line-height: 0.95;
+  margin: 0;
+}
+.top__title em {
+  font-style: italic; font-weight: 800;
+  color: var(--brand-500);
+}
+.top__right {
+  display: flex; align-items: center; gap: 24px;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-tertiary);
+}
+.top__metric { display: flex; flex-direction: column; gap: 4px; }
+.top__metric strong {
+  color: var(--text-primary); font-weight: 600;
+  font-size: 13px; letter-spacing: -0.2px;
+}
+.top__live {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px; border: 1px solid var(--border-default);
+  border-radius: var(--r-full); font-size: 10.5px;
+  letter-spacing: 1px; text-transform: uppercase;
+  font-weight: 600; color: var(--text-secondary);
+  background: rgba(255,255,255,0.02);
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--success-500); position: relative;
+}
+.live-dot::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  background: var(--success-500); opacity: 0.35;
+  animation: pulse 1.8s cubic-bezier(.4,0,.2,1) infinite;
+}
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 0.4; }
+  80%  { transform: scale(2.2); opacity: 0;   }
+  100% { transform: scale(2.2); opacity: 0;   }
+}
+
+/* ====================================================================== */
+/*  HERO CAROUSEL                                                         */
+/* ====================================================================== */
+.hero {
+  position: relative;
+  height: 460px;
+  border-radius: var(--r-2xl);
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+  margin-bottom: 28px;
+  isolation: isolate;
+}
+.hero__track {
+  display: flex;
+  height: 100%;
+  transition: transform 700ms cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+}
+.hero__slide {
+  flex: 0 0 100%;
+  height: 100%;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  align-items: center;
+  padding: 56px 60px;
+  overflow: hidden;
+}
+
+/* Slide 1: Nysa — Operations / Red */
+.hero__slide--1 {
+  background:
+    radial-gradient(ellipse at 12% 100%, rgba(237,23,23,0.5),  transparent 55%),
+    radial-gradient(ellipse at 95% -10%, rgba(255,100,100,0.18), transparent 50%),
+    linear-gradient(135deg, #1d0707 0%, #0a0a0a 65%);
+}
+/* Slide 2: Vortex — Trading / Indigo */
+.hero__slide--2 {
+  background:
+    radial-gradient(ellipse at 90% 60%, rgba(99, 102, 241, 0.32), transparent 50%),
+    radial-gradient(ellipse at 8% 20%,  rgba(237, 23, 23, 0.22), transparent 55%),
+    linear-gradient(135deg, #0d0e1f 0%, #0a0a0a 75%);
+}
+/* Slide 3: Aletheia — Research / Green-red */
+.hero__slide--3 {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(34, 197, 94, 0.18), transparent 55%),
+    radial-gradient(ellipse at 100% 0%,  rgba(237, 23, 23, 0.32), transparent 55%),
+    linear-gradient(135deg, #0c1810 0%, #0a0a0a 78%);
+}
+
+/* Decorative SVG layer */
+.hero__deco {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.45;
+  mix-blend-mode: screen;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 3;
+  max-width: 540px;
+}
+.hero__index {
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 1.5px;
+  color: var(--brand-400);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero__index::after {
+  content: ""; flex: 0 0 56px; height: 1px;
+  background: linear-gradient(90deg, var(--brand-500), transparent);
+}
+
+.hero__badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid rgba(237,23,23,0.4);
+  background: rgba(237,23,23,0.08);
+  border-radius: var(--r-full);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--brand-300);
+  margin-bottom: 22px;
+}
+.hero__badge .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--brand-500);
+  box-shadow: 0 0 10px var(--brand-500);
+}
+
+.hero__title {
+  font-size: 60px;
+  font-weight: 800;
+  letter-spacing: -2.4px;
+  line-height: 0.98;
+  margin: 0 0 22px;
+}
+.hero__title .accent { color: var(--brand-500); }
+.hero__title em { font-style: italic; font-weight: 800; }
+
+.hero__desc {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  max-width: 460px;
+  margin: 0 0 28px;
+}
+
+.hero__cta {
+  display: inline-flex; align-items: center; gap: 14px;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 20px;
+  font-size: 13px; font-weight: 600;
+  border-radius: var(--r-md);
+  letter-spacing: 0.2px;
+  transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease;
+}
+.btn--primary {
+  background: var(--brand-600); color: white;
+  box-shadow: 0 1px 0 0 rgba(255,255,255,0.1) inset;
+}
+.btn--primary:hover { background: var(--brand-500); transform: translateY(-1px); }
+.btn--ghost {
+  border: 1px solid rgba(255,255,255,0.18);
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(8px);
+}
+.btn--ghost:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); }
+
+.hero__stats {
+  display: flex; gap: 36px;
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.hero__stat-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 5px;
+}
+.hero__stat-value {
+  font-family: var(--font-mono);
+  font-size: 22px; font-weight: 600;
+  letter-spacing: -0.6px;
+  color: var(--text-primary);
+}
+.hero__stat-value .unit {
+  font-size: 12px; color: var(--text-tertiary);
+  font-weight: 500; margin-left: 3px;
+}
+
+.hero__visual {
+  position: relative;
+  height: 100%;
+  display: grid; place-items: center;
+  z-index: 2;
+}
+
+/* Slide 3 photo variant — fills entire slide, left dark mask for legibility */
+/* === Slide 3 — pixel-exact spec from Figma node 1586:7962 (1180×460) === */
+.hero__slide--3 {
+  display: block;
+  padding: 0;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+}
+.hero__slide--3 .s3-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero__slide--3 .s3-robot-wrap {
+  position: absolute;
+  left: 691.15px;
+  bottom: -3.25px;
+  width: 459.07px;
+  height: 426.15px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.hero__slide--3 .s3-robot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 123.75%;
+  height: 100%;
+  max-width: none;
+  display: block;
+  object-fit: cover;
+}
+.hero__slide--3 .s3-index {
+  position: absolute;
+  left: 63.88px;
+  top: 60px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16.5px;
+  letter-spacing: 1.5px;
+  color: #ff6464;
+  z-index: 2;
+}
+.hero__slide--3 .s3-badge {
+  position: absolute;
+  left: 63.88px;
+  top: 100.5px;
+  width: 153.359px;
+  height: 29px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  background: rgba(237,23,23,0.08);
+  border: 1px solid rgba(237,23,23,0.4);
+  border-radius: 9999px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #ff9d9d;
+  white-space: nowrap;
+  box-sizing: border-box;
+  z-index: 2;
+}
+.hero__slide--3 .s3-badge-dot {
+  width: 6px;
+  height: 6px;
+  background: #ff3434;
+  border-radius: 3px;
+  box-shadow: 0 0 10px #ff3434;
+  margin-right: 8px;
+  flex: 0 0 auto;
+}
+.hero__slide--3 .s3-title {
+  position: absolute;
+  left: 63.88px;
+  top: 152.5px;
+  width: 605.203px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 60px;
+  line-height: 58.8px;
+  letter-spacing: -2.4px;
+  color: #fff;
+  z-index: 2;
+}
+.hero__slide--3 .s3-desc {
+  position: absolute;
+  left: 63.88px;
+  top: 245px;
+  width: 597.75px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 24.75px;
+  color: #999;
+  z-index: 2;
+}
+.hero__slide--3 .s3-btn {
+  position: absolute;
+  left: 63.88px;
+  top: 354.89px;
+  width: 162.672px;
+  height: 43.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  color: #000;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 19.5px;
+  letter-spacing: 0.2px;
+  border-radius: 6px;
+  text-decoration: none;
+  box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.1);
+  box-sizing: border-box;
+  z-index: 2;
+}
+.hero__slide--3 .s3-btn:hover { background: #f5f5f5; }
+.hero__content--narrow {
+  max-width: 520px;
+  padding: 56px 60px;
+}
+.hero__orb {
+  width: 320px; height: 320px;
+  position: relative;
+}
+.hero__orb-ring {
+  position: absolute; inset: 0;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50%;
+}
+.hero__orb-ring--2 { inset: 30px; border-color: rgba(255,255,255,0.08); }
+.hero__orb-ring--3 { inset: 60px; border-color: rgba(255,255,255,0.05); }
+.hero__orb-core {
+  position: absolute; inset: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--brand-400), var(--brand-700) 50%, var(--brand-950));
+  box-shadow:
+    0 0 60px 0 rgba(237,23,23,0.35),
+    inset 0 0 40px rgba(0,0,0,0.4);
+  animation: orbFloat 6s ease-in-out infinite;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+.hero__orb-dot {
+  position: absolute; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--brand-300);
+  box-shadow: 0 0 10px var(--brand-400);
+}
+.hero__orb-dot--a { top: 10%; left: 50%; transform: translateX(-50%); }
+.hero__orb-dot--b { top: 50%; right: 0; transform: translateY(-50%); }
+.hero__orb-dot--c { bottom: 8%; left: 20%; }
+
+/* Carousel controls */
+.hero__dots {
+  position: absolute; bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 6px; z-index: 5;
+}
+.hero__dot {
+  width: 22px; height: 3px; border-radius: 2px;
+  background: rgba(255,255,255,0.18);
+  transition: background-color 240ms, width 240ms;
+}
+.hero__dot.is-active { background: var(--brand-500); width: 44px; }
+
+.hero__arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: grid; place-items: center;
+  z-index: 5;
+  transition: background-color 150ms, border-color 150ms;
+  color: white;
+}
+.hero__arrow:hover { background: var(--brand-600); border-color: var(--brand-600); }
+.hero__arrow--prev { left: 20px; }
+.hero__arrow--next { right: 20px; }
+
+/* ====================================================================== */
+/*  SEARCH + TAGS                                                         */
+/* ====================================================================== */
+.search-row {
+  display: flex; gap: 10px;
+  margin-bottom: 14px;
+}
+.search-box {
+  flex: 1;
+  position: relative;
+}
+.search-box input {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+  color: var(--text-primary);
+  font-size: 13.5px;
+  transition: border-color 120ms, background-color 120ms;
+}
+.search-box input::placeholder { color: var(--text-tertiary); }
+.search-box input:focus {
+  outline: none;
+  border-color: var(--brand-600);
+  background: var(--bg-subtle);
+}
+.search-box svg {
+  position: absolute; left: 16px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  width: 16px; height: 16px;
+}
+.search-box .kbd {
+  position: absolute; right: 14px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px; color: var(--text-tertiary);
+  padding: 3px 6px; border: 1px solid var(--border-default);
+  border-radius: var(--r-xs);
+  background: var(--bg-subtle);
+}
+
+.btn-dashboard {
+  padding: 0 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+  font-size: 13px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+  transition: color 120ms, border-color 120ms;
+  color: var(--text-secondary);
+}
+.btn-dashboard:hover { color: var(--brand-500); border-color: var(--brand-700); }
+.btn-dashboard svg { width: 14px; height: 14px; }
+
+.tags-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 80px;
+}
+.tag {
+  padding: 8px 16px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-card);
+  border-radius: var(--r-md);
+  font-size: 12px; font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 120ms ease;
+}
+.tag:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.tag.is-active {
+  background: var(--brand-600); border-color: var(--brand-600); color: white;
+}
+
+/* ====================================================================== */
+/*  SECTION                                                               */
+/* ====================================================================== */
+.section { margin-bottom: 76px; }
+.section__head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border-default);
+  position: relative;
+}
+.section__head::after {
+  content: ""; position: absolute; bottom: -1px; left: 0;
+  width: 64px; height: 1px;
+  background: var(--brand-600);
+}
+.section__title-block { max-width: 640px; }
+.section__index {
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 1.6px;
+  color: var(--brand-500);
+  margin-bottom: 10px;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.section__index .num { color: var(--brand-500); }
+.section__index .slash { color: var(--text-disabled); }
+.section__index .label {
+  color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1.6px;
+}
+.section__title {
+  font-size: 34px; font-weight: 700;
+  letter-spacing: -0.9px; line-height: 1.1;
+  margin: 0 0 8px;
+}
+.section__desc {
+  color: var(--text-secondary);
+  font-size: 14px; line-height: 1.55;
+  max-width: 560px;
+}
+.section__more {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600;
+  color: var(--text-secondary);
+  padding: 9px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+  transition: all 150ms ease;
+  white-space: nowrap;
+}
+.section__more svg { width: 12px; height: 12px; transition: transform 200ms; }
+.section__more:hover {
+  color: var(--text-primary);
+  border-color: var(--brand-700);
+  background: rgba(237,23,23,0.06);
+}
+.section__more:hover svg { transform: translateX(2px); }
+
+/* ===== Section actions group (chevrons + view-all) ===== */
+.section__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.section__chev {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-card);
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: color 150ms ease, border-color 150ms ease,
+              background-color 150ms ease, opacity 150ms ease;
+}
+.section__chev svg { width: 14px; height: 14px; stroke-width: 2.2; }
+.section__chev:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--neutral-0);
+  background: rgba(255,255,255,0.04);
+}
+.section__chev:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.section__pager {
+  display: flex;
+  gap: 4px;
+  padding-right: 6px;
+  margin-right: 4px;
+  border-right: 1px solid var(--border-default);
+}
+
+/* ====================================================================== */
+/*  CARD GRID                                                             */
+/* ====================================================================== */
+.card-grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 0 10px; /* breathing room for card hover transform */
+}
+.card-grid::-webkit-scrollbar { display: none; }
+.card-grid > .card {
+  flex: 0 0 calc((100% - 40px) / 3);
+  scroll-snap-align: start;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  transition: border-color 200ms, transform 200ms, background-color 200ms;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+.card:hover {
+  border-color: var(--neutral-0);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+.card:hover .card__image-fade { opacity: 1; }
+.card:hover .card__title { color: var(--neutral-0); }
+
+/* Card image */
+.card__image {
+  height: 168px;
+  position: relative;
+  overflow: hidden;
+}
+.card__image-bg {
+  position: absolute; inset: 0;
+}
+.card__image-fade {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.85));
+  opacity: 0.85;
+  transition: opacity 240ms;
+  z-index: 2;
+}
+/* Variant gradients */
+.img-1  { background: radial-gradient(circle at 30% 30%, #6b46c1, #1e1b4b 70%); }
+.img-2  { background: radial-gradient(circle at 70% 50%, #ed1717, #2a0303 70%); }
+.img-3  { background: radial-gradient(circle at 50% 35%, #0ea5e9, #0c2540 70%); }
+.img-4  { background: radial-gradient(circle at 60% 40%, #f59e0b, #3b2200 70%); }
+.img-5  { background: radial-gradient(circle at 40% 60%, #22c55e, #052e16 70%); }
+.img-6  { background: radial-gradient(circle at 50% 50%, #ec4899, #3a081d 70%); }
+.img-7  { background: radial-gradient(circle at 30% 70%, #8b5cf6, #2e1065 70%); }
+.img-8  { background: radial-gradient(circle at 70% 30%, #14b8a6, #042f2e 70%); }
+.img-9  { background: radial-gradient(circle at 50% 50%, #f97316, #431407 70%); }
+.img-10 { background: radial-gradient(circle at 35% 35%, #06b6d4, #083344 70%); }
+.img-11 { background: radial-gradient(circle at 65% 50%, #d946ef, #4a044e 70%); }
+.img-12 { background: radial-gradient(circle at 50% 65%, #ef4444, #450a0a 70%); }
+
+/* Subtle pattern over image */
+.card__image-pattern {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.12) 1px, transparent 0);
+  background-size: 14px 14px;
+  opacity: 0.3;
+  z-index: 1;
+}
+
+/* Real photo fill — replaces gradient placeholder */
+.card__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Tags pinned top-left */
+.card__tags {
+  position: absolute; top: 12px; left: 12px;
+  display: flex; gap: 5px;
+  z-index: 3;
+}
+.ctag {
+  font-size: 9.5px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: var(--r-sm);
+  backdrop-filter: blur(10px);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.ctag--frenzy {
+  background: rgba(237,23,23,0.92); color: white;
+}
+.ctag--prompt {
+  background: rgba(245,158,11,0.92); color: #2a1700;
+}
+.ctag--agent {
+  background: rgba(0,0,0,0.55); color: white;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.ctag--token {
+  background: rgba(34,197,94,0.92); color: #052e16;
+}
+.ctag--profit {
+  background: rgba(237,23,23,0.92); color: white;
+}
+.ctag--rated {
+  background: rgba(0,0,0,0.55); color: var(--warning-400);
+  border: 1px solid rgba(251,191,36,0.4);
+}
+.ctag svg { width: 9px; height: 9px; }
+
+/* Price pinned top-right */
+.card__price {
+  position: absolute; top: 12px; right: 12px;
+  z-index: 3;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(10px);
+  padding: 6px 10px;
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: 11.5px; font-weight: 600;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.card__price .currency { color: var(--brand-400); font-weight: 600; }
+.card__price .unit     { color: var(--text-tertiary); font-weight: 500; font-size: 9.5px; }
+
+/* Card body */
+.card__body {
+  padding: 16px 18px 18px;
+  display: flex; flex-direction: column;
+  flex: 1;
+}
+
+.card__creator {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px;
+}
+.card__creator-avatar {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  font-size: 9.5px; font-weight: 800;
+  display: grid; place-items: center;
+  color: white;
+  flex-shrink: 0;
+  letter-spacing: -0.3px;
+}
+.av--1 { background: linear-gradient(135deg, #ed1717, #8b5cf6); }
+.av--2 { background: linear-gradient(135deg, #0ea5e9, #6366f1); }
+.av--3 { background: linear-gradient(135deg, #22c55e, #0ea5e9); }
+.av--4 { background: linear-gradient(135deg, #f59e0b, #ed1717); }
+.av--5 { background: linear-gradient(135deg, #ec4899, #8b5cf6); }
+.av--6 { background: linear-gradient(135deg, #14b8a6, #22c55e); }
+.av--7 { background: linear-gradient(135deg, #f97316, #ec4899); }
+.av--8 { background: linear-gradient(135deg, #6366f1, #ed1717); }
+
+.card__creator-name {
+  font-size: 11.5px; color: var(--text-tertiary);
+  font-weight: 500;
+}
+.card__creator-name strong {
+  color: var(--text-secondary); font-weight: 600;
+  margin-right: 4px;
+}
+.card__verified {
+  width: 12px; height: 12px;
+  background: var(--brand-600); border-radius: 50%;
+  display: inline-grid; place-items: center;
+  margin-left: 2px;
+}
+.card__verified::before {
+  content: "✓"; font-size: 8px; color: white; font-weight: 800;
+  line-height: 1;
+}
+
+.card__title {
+  font-size: 17px; font-weight: 700;
+  letter-spacing: -0.3px;
+  margin: 0 0 6px;
+  line-height: 1.2;
+  transition: color 200ms;
+}
+.card__desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0 0 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Mid-card: tags / token strip / profit metric */
+.card__strip {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.minitag {
+  font-size: 10px; font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.card__token {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px;
+  background: rgba(34,197,94,0.06);
+  border: 1px solid rgba(34,197,94,0.18);
+  border-radius: var(--r-md);
+  margin-bottom: 14px;
+}
+.card__token-symbol {
+  font-family: var(--font-mono); font-size: 11px;
+  font-weight: 600; color: var(--success-400);
+  letter-spacing: 0.3px;
+}
+.card__token-price {
+  font-family: var(--font-mono); font-size: 11.5px;
+  font-weight: 600; color: var(--text-primary);
+}
+.card__token-change {
+  font-family: var(--font-mono); font-size: 10px;
+  font-weight: 600; color: var(--success-400);
+  margin-left: 6px;
+}
+
+.card__profit {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 12px;
+  background: rgba(237,23,23,0.06);
+  border: 1px solid rgba(237,23,23,0.18);
+  border-radius: var(--r-md);
+  margin-bottom: 14px;
+}
+.card__profit-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--brand-400);
+}
+.card__profit-value {
+  font-family: var(--font-mono); font-size: 13px;
+  font-weight: 600; color: var(--text-primary);
+}
+.card__profit-value .delta { color: var(--success-400); font-size: 10.5px; margin-left: 6px; }
+
+/* Card meta footer */
+.card__meta {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-default);
+  margin-top: auto;
+}
+.card__rating {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 600;
+}
+.card__rating-stars { color: var(--warning-500); font-size: 11px; letter-spacing: -1px; }
+.card__rating-value { font-family: var(--font-mono); color: var(--text-primary); }
+.card__rating-count { color: var(--text-tertiary); font-size: 11px; font-weight: 500; }
+
+.card__usage {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; color: var(--text-tertiary);
+  font-family: var(--font-mono); font-weight: 500;
+}
+.card__usage svg { width: 12px; height: 12px; }
+.card__usage strong { color: var(--text-secondary); font-weight: 600; }
+
+/* ====================================================================== */
+/*  FOOTER                                                                */
+/* ====================================================================== */
+.footer {
+  margin-top: 72px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border-default);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  letter-spacing: 0.4px;
+}
+.footer__brand { display: flex; align-items: center; gap: 10px; }
+.footer__mark {
+  width: 18px; height: 18px;
+  background: var(--brand-600);
+  border-radius: 4px;
+}
+.footer__links { display: flex; gap: 28px; }
+.footer__links a:hover { color: var(--text-primary); }
+
+/* ====================================================================== */
+/*  RESPONSIVE                                                            */
+/* ====================================================================== */
+@media (max-width: 1100px) {
+  .card-grid > .card { flex: 0 0 calc((100% - 20px) / 2); }
+  .hero__visual { display: none; }
+  .hero__slide { grid-template-columns: 1fr; }
+  .top__title { font-size: 48px; }
+}
+@media (max-width: 720px) {
+  .app { grid-template-columns: 64px 1fr; }
+  .main { padding: 24px 20px 64px; }
+  .top__right { display: none; }
+  .card-grid > .card { flex: 0 0 calc(100% - 24px); }
+  .top__title { font-size: 38px; }
+  .hero { height: 420px; }
+  .hero__title { font-size: 36px; }
+  .hero__slide { padding: 32px 24px; }
+  .section__title { font-size: 26px; }
+  .section__head { flex-direction: column; align-items: flex-start; gap: 14px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============================================================ -->
+  <!--  SIDEBAR                                                     -->
+  <!-- ============================================================ -->
+  <aside class="sidebar">
+    <a class="sb__logo" href="#" aria-label="Swarms">
+      <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M25 4l8 4.6v9.3L25 22.5l-8-4.6V8.6L25 4z" fill="white"/>
+        <path d="M14 18l8 4.6v9.3L14 36.5l-8-4.6V22.6L14 18z" fill="white" opacity="0.85"/>
+        <path d="M36 18l8 4.6v9.3L36 36.5l-8-4.6V22.6L36 18z" fill="white" opacity="0.85"/>
+        <path d="M25 32l8 4.6v9.3L25 50.5l-8-4.6V36.6L25 32z" fill="white" opacity="0.7"/>
+      </svg>
+    </a>
+    <nav class="sb__nav">
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+        <span>Airdrop</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        <span>RouterLink</span>
+      </a>
+      <a class="sb__item is-active" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+          <line x1="12" y1="22" x2="12" y2="15.5"/>
+          <polyline points="22 8.5 12 15.5 2 8.5"/>
+        </svg>
+        <span>AI Portal</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        <span>Quest</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>Apps</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <line x1="2" y1="10" x2="22" y2="10"/>
+        </svg>
+        <span>Billing</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="9" y1="13" x2="15" y2="13"/>
+          <line x1="9" y1="17" x2="15" y2="17"/>
+        </svg>
+        <span>Docs</span>
+      </a>
+    </nav>
+    <div class="sb__bottom">
+      <div class="credits-coin" title="WAI Credits">
+        <span>2,840</span>
+        <small>WAI</small>
+      </div>
+      <div class="user-avatar"></div>
+    </div>
+  </aside>
+
+  <!-- ============================================================ -->
+  <!--  MAIN                                                        -->
+  <!-- ============================================================ -->
+  <main class="main">
+    <div class="container">
+
+      <!-- ===== TOP HEADER ===== -->
+      <header class="top">
+        <div class="top__left">
+          <div class="eyebrow">SWARMS · MARKETPLACE</div>
+          <h1 class="top__title">Agent <em>Market.</em></h1>
+        </div>
+        <div class="top__right">
+          <div class="top__metric">
+            <span>ACTIVE AGENTS</span>
+            <strong>12,847</strong>
+          </div>
+          <div class="top__metric">
+            <span>TOTAL VOLUME</span>
+            <strong>$4.2M</strong>
+          </div>
+          <div class="top__live">
+            <span class="live-dot"></span>
+            Network · Live
+          </div>
+        </div>
+      </header>
+
+      <!-- ===== HERO CAROUSEL ===== -->
+      <section class="hero" aria-label="Featured agents">
+        <div class="hero__track" id="heroTrack">
+
+          <!-- Slide 1 — Quant Trader Agent (same as slide 3) -->
+          <article class="hero__slide hero__slide--3">
+            <img class="s3-bg" src="image/figma/hero-quant-bg.png" alt="" aria-hidden="true" />
+            <div class="s3-robot-wrap">
+              <img class="s3-robot" src="image/figma/hero-quant-robot.png" alt="Quant Trader Agent" />
+            </div>
+            <div class="s3-index">FEATURED · 01 / 03</div>
+            <span class="s3-badge"><span class="s3-badge-dot"></span>Research Agent</span>
+            <h2 class="s3-title">Quant Trader Agent</h2>
+            <p class="s3-desc">Quant Trader Agent is an elite quantitative analyst specializing in comprehensive financial analysis across all asset classes and market conditions. It synthesizes technical indicators,…</p>
+            <a href="#" class="s3-btn">
+              <span>Get Started</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </article>
+
+          <!-- Slide 2 — Quant Trader Agent (same as slide 3) -->
+          <article class="hero__slide hero__slide--3">
+            <img class="s3-bg" src="image/figma/hero-quant-bg.png" alt="" aria-hidden="true" />
+            <div class="s3-robot-wrap">
+              <img class="s3-robot" src="image/figma/hero-quant-robot.png" alt="Quant Trader Agent" />
+            </div>
+            <div class="s3-index">FEATURED · 02 / 03</div>
+            <span class="s3-badge"><span class="s3-badge-dot"></span>Research Agent</span>
+            <h2 class="s3-title">Quant Trader Agent</h2>
+            <p class="s3-desc">Quant Trader Agent is an elite quantitative analyst specializing in comprehensive financial analysis across all asset classes and market conditions. It synthesizes technical indicators,…</p>
+            <a href="#" class="s3-btn">
+              <span>Get Started</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </article>
+
+          <!-- Slide 3 — pixel-exact match to Figma node 1586:7962 -->
+          <article class="hero__slide hero__slide--3">
+            <img class="s3-bg" src="image/figma/hero-quant-bg.png" alt="" aria-hidden="true" />
+            <div class="s3-robot-wrap">
+              <img class="s3-robot" src="image/figma/hero-quant-robot.png" alt="Quant Trader Agent" />
+            </div>
+            <div class="s3-index">FEATURED · 03 / 03</div>
+            <span class="s3-badge"><span class="s3-badge-dot"></span>Research Agent</span>
+            <h2 class="s3-title">Quant Trader Agent</h2>
+            <p class="s3-desc">Quant Trader Agent is an elite quantitative analyst specializing in comprehensive financial analysis across all asset classes and market conditions. It synthesizes technical indicators,…</p>
+            <a href="#" class="s3-btn">
+              <span>Get Started</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </article>
+
+        </div>
+
+        <!-- arrows -->
+        <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Next">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <!-- dots -->
+        <div class="hero__dots" id="heroDots">
+          <button class="hero__dot is-active" data-idx="0" aria-label="Slide 1"></button>
+          <button class="hero__dot" data-idx="1" aria-label="Slide 2"></button>
+          <button class="hero__dot" data-idx="2" aria-label="Slide 3"></button>
+        </div>
+      </section>
+
+      <!-- ===== SEARCH ===== -->
+      <div class="search-row">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Search agents, prompts, creators…" />
+          <span class="kbd">⌘K</span>
+        </div>
+        <a href="#" class="btn-dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          My Agent Dashboard
+        </a>
+      </div>
+
+      <div class="tags-row">
+        <button class="tag is-active">Featured</button>
+        <button class="tag">Trending</button>
+        <button class="tag">Research</button>
+        <button class="tag">Marketing</button>
+        <button class="tag">Sales</button>
+        <button class="tag">Operations</button>
+        <button class="tag">Trading</button>
+        <button class="tag">Web3</button>
+        <button class="tag">Productivity</button>
+      </div>
+
+      <!-- ============================================================ -->
+      <!--  SECTION 1 — MOST PROFITABLE AGENTS                          -->
+      <!-- ============================================================ -->
+      <section class="section">
+        <div class="section__head">
+          <div class="section__title-block">
+            <div class="section__index">
+              <span class="num">01</span>
+              <span class="slash">/</span>
+              <span class="label">Capital Performance</span>
+            </div>
+            <h2 class="section__title">Most Profitable Agents</h2>
+            <p class="section__desc">
+              Agents ranked by 30-day creator earnings. Updated hourly.
+            </p>
+          </div>
+          <div class="section__actions">
+            <div class="section__pager">
+              <button class="section__chev section__chev--prev" aria-label="Previous">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="section__chev section__chev--next" aria-label="Next">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+            <a href="#" class="section__more">
+              View leaderboard
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card-grid">
+
+          <!-- Card 1 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/yuki.png" alt="Yuki" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--profit">⚡ #3 Earner</span>
+                <span class="ctag ctag--prompt">PROMPT</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.07<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--3">YK</div>
+                <span class="card__creator-name">by <strong>Yuki</strong></span>
+              </div>
+              <h3 class="card__title">Yuki</h3>
+              <p class="card__desc">A romantic anime-style prompt collection for narrative stylists. Curated palettes, character framing presets, and scene scaffolding ready to ship.</p>
+              <div class="card__profit">
+                <span class="card__profit-label">30D Earnings</span>
+                <span class="card__profit-value">$12,860 <span class="delta">↑ 14%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.7</span>
+                  <span class="card__rating-count">(287)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>34.8K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/clawpay-s1.png" alt="ClawPay" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--profit">⚡ #4 Earner</span>
+                <span class="ctag ctag--prompt">PROMPT</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.06<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--4">FZ</div>
+                <span class="card__creator-name">by <strong>frenzzzzy</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">ClawPay</h3>
+              <p class="card__desc">Crustacean-themed payments prompt pack. Generates checkout copy, refund flows, and dispute templates with a playful brand voice.</p>
+              <div class="card__profit">
+                <span class="card__profit-label">30D Earnings</span>
+                <span class="card__profit-value">$9,840 <span class="delta">↑ 18%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.6</span>
+                  <span class="card__rating-count">(198)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>22.7K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/cr-ca-agent.png" alt="CR-CA Agent" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--profit">⚡ #5 Earner</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.03<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--6">IL</div>
+                <span class="card__creator-name">by <strong>ilumdev</strong></span>
+              </div>
+              <h3 class="card__title">CR-CA Agent</h3>
+              <p class="card__desc">Customer-relations & churn-analytics agent. Reads support tickets, scores risk, drafts personalized retention outreach automatically.</p>
+              <div class="card__profit">
+                <span class="card__profit-label">30D Earnings</span>
+                <span class="card__profit-value">$7,520 <span class="delta">↑ 9%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.5</span>
+                  <span class="card__rating-count">(367)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>41.3K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="card">
+            <div class="card__image">
+              <div class="card__image-bg img-1"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--profit">⚡ #4 Earner</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.06<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--7">DP</div>
+                <span class="card__creator-name">by <strong>data.priest</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">DataPriest Insights</h3>
+              <p class="card__desc">Real-time business intelligence agent. Connects to 30+ data sources and ships dashboards on demand.</p>
+              <div class="card__profit">
+                <span class="card__profit-label">30D Earnings</span>
+                <span class="card__profit-value">$9,840 <span class="delta">↑ 18%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.6</span>
+                  <span class="card__rating-count">(198)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>22.7K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="card">
+            <div class="card__image">
+              <div class="card__image-bg img-3"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--profit">⚡ #5 Earner</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.03<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--2">CL</div>
+                <span class="card__creator-name">by <strong>clarity.io</strong></span>
+              </div>
+              <h3 class="card__title">Clarity Support Hub</h3>
+              <p class="card__desc">24/7 customer support agent. Multilingual, context-aware, handles 92% of tickets unassisted.</p>
+              <div class="card__profit">
+                <span class="card__profit-label">30D Earnings</span>
+                <span class="card__profit-value">$7,520 <span class="delta">↑ 9%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.5</span>
+                  <span class="card__rating-count">(367)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>41.3K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="card">
+            <div class="card__image">
+              <div class="card__image-bg img-8"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--profit">⚡ #6 Earner</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.15<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--6">PX</div>
+                <span class="card__creator-name">by <strong>praxis.legal</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">Praxis Contract Review</h3>
+              <p class="card__desc">AI-assisted contract review. Flags risk clauses, suggests revisions, references jurisdictional law.</p>
+              <div class="card__profit">
+                <span class="card__profit-label">30D Earnings</span>
+                <span class="card__profit-value">$6,180 <span class="delta">↑ 31%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.7</span>
+                  <span class="card__rating-count">(124)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>8.9K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!--  SECTION 2 — TOP FRENZY AGENTS & PROMPTS                     -->
+      <!-- ============================================================ -->
+      <section class="section">
+        <div class="section__head">
+          <div class="section__title-block">
+            <div class="section__index">
+              <span class="num">02</span>
+              <span class="slash">/</span>
+              <span class="label">Speed Mode</span>
+            </div>
+            <h2 class="section__title">Top Frenzy Agents &amp; Prompts</h2>
+            <p class="section__desc">
+              Frenzy mode unlocks parallel execution at 8× the throughput. These are the community's most-used.
+            </p>
+          </div>
+          <div class="section__actions">
+            <div class="section__pager">
+              <button class="section__chev section__chev--prev" aria-label="Previous">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="section__chev section__chev--next" aria-label="Next">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+            <a href="#" class="section__more">
+              See all frenzy
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card-grid">
+
+          <!-- Card 1 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/clawpay-s2.png" alt="ClawPay" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--frenzy">⚡ Frenzy</span>
+                <span class="ctag ctag--prompt">Prompt</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.03<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--4">RW</div>
+                <span class="card__creator-name">by <strong>rapid.writer</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">ClawPay</h3>
+              <p class="card__desc">Parallel content engine themed around the ClawPay universe. Generates 8 long-form posts simultaneously with shared brand tone.</p>
+              <div class="card__strip">
+                <span class="minitag">Long-form</span>
+                <span class="minitag">Style transfer</span>
+                <span class="minitag">12 langs</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.6</span>
+                  <span class="card__rating-count">(847)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>72.1K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/self-aware-meme.png" alt="Self Aware Meme" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--frenzy">⚡ Frenzy</span>
+                <span class="ctag ctag--prompt">Prompt</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.02<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--7">OZ</div>
+                <span class="card__creator-name">by <strong>Ozai</strong></span>
+              </div>
+              <h3 class="card__title">Self Aware Meme</h3>
+              <p class="card__desc">Self-referential meme generator that audits its own output for staleness. 80 battle-tested templates plus parallel variant scoring.</p>
+              <div class="card__strip">
+                <span class="minitag">80 prompts</span>
+                <span class="minitag">PostgreSQL</span>
+                <span class="minitag">ETL</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.7</span>
+                  <span class="card__rating-count">(623)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>51.6K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/sam-the-scam.png" alt="SAM the SCAM" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--frenzy">⚡ Frenzy</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.03<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--5">LF</div>
+                <span class="card__creator-name">by <strong>lingua.flow</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">SAM the SCAM</h3>
+              <p class="card__desc">Multilingual scam-detection agent. Parses transcripts across 32 languages in parallel, preserves tone, surfaces red flags fast.</p>
+              <div class="card__strip">
+                <span class="minitag">32 langs</span>
+                <span class="minitag">Tone match</span>
+                <span class="minitag">8× speed</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.8</span>
+                  <span class="card__rating-count">(1.4K)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>103K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="card">
+            <div class="card__image">
+              <div class="card__image-bg img-10"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--prompt">Prompt</span>
+                <span class="ctag ctag--frenzy">⚡ Frenzy</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.02<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--3">QS</div>
+                <span class="card__creator-name">by <strong>query.smith</strong></span>
+              </div>
+              <h3 class="card__title">QuerySmith SQL Pack</h3>
+              <p class="card__desc">80 battle-tested SQL prompts covering analytics, ETL, and database optimization workflows.</p>
+              <div class="card__strip">
+                <span class="minitag">80 prompts</span>
+                <span class="minitag">PostgreSQL</span>
+                <span class="minitag">ETL</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.7</span>
+                  <span class="card__rating-count">(623)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>51.6K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="card">
+            <div class="card__image">
+              <div class="card__image-bg img-11"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--frenzy">⚡ Frenzy</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.03<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--4">LF</div>
+                <span class="card__creator-name">by <strong>lingua.flow</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">LinguaFlow Translator</h3>
+              <p class="card__desc">Parallel translation across 32 languages. Preserves tone, formatting, and domain context end-to-end.</p>
+              <div class="card__strip">
+                <span class="minitag">32 langs</span>
+                <span class="minitag">Tone match</span>
+                <span class="minitag">8× speed</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.8</span>
+                  <span class="card__rating-count">(1.4K)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>103K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="card">
+            <div class="card__image">
+              <div class="card__image-bg img-9"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--frenzy">⚡ Frenzy</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.05<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--7">PS</div>
+                <span class="card__creator-name">by <strong>pixel.swarm</strong></span>
+              </div>
+              <h3 class="card__title">PixelSwarm Bulk</h3>
+              <p class="card__desc">Generates 16 image variations in parallel. Style locking, prompt scaffolding, batch export ready.</p>
+              <div class="card__strip">
+                <span class="minitag">16× parallel</span>
+                <span class="minitag">Style lock</span>
+                <span class="minitag">Batch</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.6</span>
+                  <span class="card__rating-count">(892)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>67.8K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!--  SECTION 3 — HIGHEST RATED PRODUCTS                          -->
+      <!-- ============================================================ -->
+      <section class="section">
+        <div class="section__head">
+          <div class="section__title-block">
+            <div class="section__index">
+              <span class="num">03</span>
+              <span class="slash">/</span>
+              <span class="label">Community Favorites</span>
+            </div>
+            <h2 class="section__title">Highest Rated Products</h2>
+            <p class="section__desc">
+              Top-tier user satisfaction. Minimum 200 ratings, sorted by weighted score.
+            </p>
+          </div>
+          <div class="section__actions">
+            <div class="section__pager">
+              <button class="section__chev section__chev--prev" aria-label="Previous">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="section__chev section__chev--next" aria-label="Next">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+            <a href="#" class="section__more">
+              Browse all
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card-grid">
+
+          <!-- Card 1 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/nexus-ai.png" alt="NEXUS AI" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.06<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--2">IT</div>
+                <span class="card__creator-name">by <strong>Intellitrade</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">NEXUS AI</h3>
+              <p class="card__desc">General-purpose research agent. Synthesizes 40+ sources into structured briefs and ranks claims by source quality.</p>
+              <div class="card__strip">
+                <span class="minitag">Research</span>
+                <span class="minitag">Citations</span>
+                <span class="minitag">Verified</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">5.0</span>
+                  <span class="card__rating-count">(1.8K)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>94.7K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/quant-trader-agent.png" alt="Quant Trader Agent" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.05<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--8">QA</div>
+                <span class="card__creator-name">by <strong>QuantAgentDev</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">Quant Trader Agent</h3>
+              <p class="card__desc">Quant trading agent with on-chain anomaly detection. Personalizes outreach, syncs CRM, executes within risk limits.</p>
+              <div class="card__strip">
+                <span class="minitag">Sales</span>
+                <span class="minitag">CRM-sync</span>
+                <span class="minitag">Outreach</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.9</span>
+                  <span class="card__rating-count">(2.3K)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>118K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/apple-agent.png" alt="Apple Agent" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.04<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--6">PL</div>
+                <span class="card__creator-name">by <strong>Playeds</strong></span>
+              </div>
+              <h3 class="card__title">Apple Agent</h3>
+              <p class="card__desc">Friendly knowledge-base agent built on a 12-source RAG stack. Connects to Notion, Slack, GDrive, Confluence and more.</p>
+              <div class="card__strip">
+                <span class="minitag">Knowledge</span>
+                <span class="minitag">RAG</span>
+                <span class="minitag">12 sources</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.9</span>
+                  <span class="card__rating-count">(956)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>56.3K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="card">
+            <div class="card__image">
+              <div class="card__image-bg img-7"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--rated">★ 4.9</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.07<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--5">KR</div>
+                <span class="card__creator-name">by <strong>kerning.studio</strong></span>
+              </div>
+              <h3 class="card__title">Kerning Design Critic</h3>
+              <p class="card__desc">Senior-level design feedback. Reviews layouts, typography, and accessibility against best practices.</p>
+              <div class="card__strip">
+                <span class="minitag">Design</span>
+                <span class="minitag">a11y</span>
+                <span class="minitag">Critique</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.9</span>
+                  <span class="card__rating-count">(483)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>27.4K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="card">
+            <div class="card__image">
+              <div class="card__image-bg img-4"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--rated">★ 4.8</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.05<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--4">RF</div>
+                <span class="card__creator-name">by <strong>rankforge</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">RankForge SEO Audit</h3>
+              <p class="card__desc">Technical SEO audit agent. Crawls, scores, and prioritizes fixes with measurable lift estimates.</p>
+              <div class="card__strip">
+                <span class="minitag">SEO</span>
+                <span class="minitag">Technical</span>
+                <span class="minitag">Lift est.</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.8</span>
+                  <span class="card__rating-count">(376)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>22.1K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="card">
+            <div class="card__image">
+              <div class="card__image-bg img-12"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--rated">★ 4.8</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.02<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--1">SN</div>
+                <span class="card__creator-name">by <strong>synth.notes</strong></span>
+              </div>
+              <h3 class="card__title">SynthNotes Meetings</h3>
+              <p class="card__desc">Meeting transcription and summarization. Extracts action items, decisions, and follow-ups automatically.</p>
+              <div class="card__strip">
+                <span class="minitag">Transcribe</span>
+                <span class="minitag">Action items</span>
+                <span class="minitag">CRM-sync</span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.8</span>
+                  <span class="card__rating-count">(1.1K)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>84.2K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!--  SECTION 4 — TOKENIZED PRODUCTS                              -->
+      <!-- ============================================================ -->
+      <section class="section">
+        <div class="section__head">
+          <div class="section__title-block">
+            <div class="section__index">
+              <span class="num">04</span>
+              <span class="slash">/</span>
+              <span class="label">On-Chain</span>
+            </div>
+            <h2 class="section__title">Tokenized Products</h2>
+            <p class="section__desc">
+              Agents and prompt collections issued as on-chain tokens. Hold, trade, and earn revenue share.
+            </p>
+          </div>
+          <div class="section__actions">
+            <div class="section__pager">
+              <button class="section__chev section__chev--prev" aria-label="Previous">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="section__chev section__chev--next" aria-label="Next">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+            <a href="#" class="section__more">
+              Explore tokens
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card-grid">
+
+          <!-- Card 1 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/rok.png" alt="ROK" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--token">$ Token</span>
+                <span class="ctag ctag--prompt">PROMPT</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.10<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--6">DK</div>
+                <span class="card__creator-name">by <strong>Duke21</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">ROK</h3>
+              <p class="card__desc">Decentralized swarm coordination prompt suite. Token holders earn 30% of all execution fees, plus quarterly buyback distributions.</p>
+              <div class="card__token">
+                <span class="card__token-symbol">$ROK</span>
+                <span><span class="card__token-price">$0.842</span><span class="card__token-change">+12.4%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.8</span>
+                  <span class="card__rating-count">(642)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>41.5K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/muffins.png" alt="Muffins" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--token">$ Token</span>
+                <span class="ctag ctag--prompt">Prompt</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.05<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--5">IF</div>
+                <span class="card__creator-name">by <strong>IfecoHQ</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">Muffins</h3>
+              <p class="card__desc">Community-curated prompt library. Token-gated access, weekly drops of fresh prompts, on-chain attribution for contributors.</p>
+              <div class="card__token">
+                <span class="card__token-symbol">$AGNT</span>
+                <span><span class="card__token-price">$1.247</span><span class="card__token-change">+8.7%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.7</span>
+                  <span class="card__rating-count">(389)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>28.9K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="card">
+            <div class="card__image">
+              <img class="card__photo" src="image/figma/frenzy.png" alt="Frenzy" />
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--token">$ Token</span>
+                <span class="ctag ctag--prompt">Prompt</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.08<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--1">SX</div>
+                <span class="card__creator-name">by <strong>Sagix</strong></span>
+              </div>
+              <h3 class="card__title">Frenzy</h3>
+              <p class="card__desc">Distributed compute prompt vault for inference workloads. Stake $NRL to access priority queues and revenue sharing.</p>
+              <div class="card__token">
+                <span class="card__token-symbol">$NRL</span>
+                <span><span class="card__token-price">$0.318</span><span class="card__token-change">+24.1%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.6</span>
+                  <span class="card__rating-count">(412)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>33.2K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="card card--token">
+            <div class="card__image">
+              <div class="card__image-bg img-2"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--token">$ Token</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.12<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--8">AL</div>
+                <span class="card__creator-name">by <strong>alpha.signals</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">AlphaSignals Trading</h3>
+              <p class="card__desc">Algorithmic trading signals on-chain. Hold $ALPH for tier access and weekly buyback distributions.</p>
+              <div class="card__token">
+                <span class="card__token-symbol">$ALPH</span>
+                <span><span class="card__token-price">$2.143</span><span class="card__token-change">+5.2%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.7</span>
+                  <span class="card__rating-count">(728)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>56.4K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="card card--token">
+            <div class="card__image">
+              <div class="card__image-bg img-6"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--token">$ Token</span>
+                <span class="ctag ctag--agent">Agent</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.07<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--5">MN</div>
+                <span class="card__creator-name">by <strong>muse.network</strong></span>
+              </div>
+              <h3 class="card__title">Muse Creator Coin</h3>
+              <p class="card__desc">Tokenized creator economy agent. Mints fan tokens, manages royalties, distributes earnings on-chain.</p>
+              <div class="card__token">
+                <span class="card__token-symbol">$MUSE</span>
+                <span><span class="card__token-price">$0.564</span><span class="card__token-change">+3.8%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★☆</span>
+                  <span class="card__rating-value">4.6</span>
+                  <span class="card__rating-count">(412)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>31.7K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="card card--token">
+            <div class="card__image">
+              <div class="card__image-bg img-5"></div>
+              <div class="card__image-pattern"></div>
+              <div class="card__image-fade"></div>
+              <div class="card__tags">
+                <span class="ctag ctag--token">$ Token</span>
+                <span class="ctag ctag--prompt">Prompt</span>
+              </div>
+              <div class="card__price"><span class="currency">$</span>0.04<span class="unit">/run</span></div>
+            </div>
+            <div class="card__body">
+              <div class="card__creator">
+                <div class="card__creator-avatar av--3">ED</div>
+                <span class="card__creator-name">by <strong>edu.dao</strong><span class="card__verified"></span></span>
+              </div>
+              <h3 class="card__title">EduDAO Curriculum</h3>
+              <p class="card__desc">Tokenized educational prompt library. 500+ teaching prompts, holders earn from course usage fees.</p>
+              <div class="card__token">
+                <span class="card__token-symbol">$EDU</span>
+                <span><span class="card__token-price">$0.092</span><span class="card__token-change">+18.6%</span></span>
+              </div>
+              <div class="card__meta">
+                <div class="card__rating">
+                  <span class="card__rating-stars">★★★★★</span>
+                  <span class="card__rating-value">4.7</span>
+                  <span class="card__rating-count">(296)</span>
+                </div>
+                <div class="card__usage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <strong>19.8K</strong> runs
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===== FOOTER ===== -->
+      <footer class="footer">
+        <div class="footer__brand">
+          <div class="footer__mark"></div>
+          <span>SWARMS · MARKETPLACE · v3.0</span>
+        </div>
+        <div class="footer__links">
+          <a href="#">Docs</a>
+          <a href="#">Status</a>
+          <a href="#">Discord</a>
+          <a href="#">Twitter</a>
+          <a href="#">© 2026</a>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  /* ===== Hero carousel ===== */
+  (function() {
+    const track = document.getElementById('heroTrack');
+    const dots  = document.querySelectorAll('#heroDots .hero__dot');
+    const prev  = document.getElementById('heroPrev');
+    const next  = document.getElementById('heroNext');
+    const total = 3;
+    let idx = 0;
+    let timer;
+
+    function go(n) {
+      idx = (n + total) % total;
+      track.style.transform = `translateX(-${idx * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+    }
+    function startAuto() {
+      stopAuto();
+      timer = setInterval(() => go(idx + 1), 6000);
+    }
+    function stopAuto() { if (timer) clearInterval(timer); }
+
+    dots.forEach(d => d.addEventListener('click', () => {
+      go(parseInt(d.dataset.idx, 10));
+      startAuto();
+    }));
+    prev.addEventListener('click', () => { go(idx - 1); startAuto(); });
+    next.addEventListener('click', () => { go(idx + 1); startAuto(); });
+
+    const hero = document.querySelector('.hero');
+    hero.addEventListener('mouseenter', stopAuto);
+    hero.addEventListener('mouseleave', startAuto);
+
+    startAuto();
+  })();
+
+  /* ===== Tag toggle ===== */
+  document.querySelectorAll('.tag').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tag').forEach(x => x.classList.remove('is-active'));
+      t.classList.add('is-active');
+    });
+  });
+
+  /* ===== Section chevrons (scroll-snap pager) ===== */
+  document.querySelectorAll('.section').forEach(section => {
+    const grid = section.querySelector('.card-grid');
+    const prev = section.querySelector('.section__chev--prev');
+    const next = section.querySelector('.section__chev--next');
+    if (!grid || !prev || !next) return;
+
+    const getStep = () => {
+      const card = grid.querySelector('.card');
+      if (!card) return grid.clientWidth;
+      // step = one card width + 20px gap
+      return card.offsetWidth + 20;
+    };
+
+    prev.addEventListener('click', () => {
+      grid.scrollBy({ left: -getStep(), behavior: 'smooth' });
+    });
+    next.addEventListener('click', () => {
+      grid.scrollBy({ left: getStep(), behavior: 'smooth' });
+    });
+
+    const update = () => {
+      const max = grid.scrollWidth - grid.clientWidth;
+      // small tolerance for sub-pixel scroll positions
+      prev.disabled = grid.scrollLeft <= 2;
+      next.disabled = grid.scrollLeft >= max - 2;
+    };
+    grid.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    // initial state after layout settles
+    requestAnimationFrame(update);
+  });
+</script>
+</body>
+</html>

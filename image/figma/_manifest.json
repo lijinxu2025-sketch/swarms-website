@@ -1,0 +1,80 @@
+[
+  {
+    "uuid": "d7bae546-52e4-4686-bc8c-dfb378604232",
+    "name": "hero-quant-trader",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "9d7e69b3-2411-4bd2-84d1-364f30b532b5",
+    "name": "yuki",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "85189ef0-a8df-43b4-a5fc-6744e124a055",
+    "name": "clawpay-s1",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "088584ea-0dd8-45b5-8179-4febbecc2233",
+    "name": "cr-ca-agent",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "782c81e7-4204-4edc-992d-cca12c2ed739",
+    "name": "clawpay-s2",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "1f2c1dac-5341-49a3-9142-b60400c7c030",
+    "name": "self-aware-meme",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "f96a22ef-3554-4182-a9b2-32667a00dd2e",
+    "name": "sam-the-scam",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "5467522c-8bad-4dad-986b-733476cabba3",
+    "name": "nexus-ai",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "b06269cb-2a80-4f19-b908-2ccb3db2ffdf",
+    "name": "quant-trader-agent",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "480956a9-6e51-4224-94c6-56c859c5a375",
+    "name": "apple-agent",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "02fd47c3-061b-4615-9819-abc29c24483b",
+    "name": "rok",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "eeefaeb3-9f3c-423d-83ad-ac95021e8d25",
+    "name": "muffins",
+    "ext": ".png",
+    "ok": true
+  },
+  {
+    "uuid": "09798067-3cdc-4b9f-a0a3-0e642f008062",
+    "name": "frenzy",
+    "ext": ".png",
+    "ok": true
+  }
+]

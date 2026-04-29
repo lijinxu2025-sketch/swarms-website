@@ -1,0 +1,11 @@
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Build artifacts (none here, just safety)
+node_modules/
+dist/
+*.log
