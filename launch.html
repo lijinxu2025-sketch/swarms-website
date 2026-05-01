@@ -1,0 +1,2915 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Launch · Swarms Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+  rel="stylesheet"
+/>
+<style>
+:root {
+  /* === Brand (Swarms DS) === */
+  --brand-50:#FFF1F1;--brand-100:#FFDFDF;--brand-200:#FFC5C5;--brand-300:#FF9D9D;
+  --brand-400:#FF6464;--brand-500:#FF3434;--brand-600:#ED1717;--brand-700:#C80D0D;
+  --brand-800:#A50F0F;--brand-900:#881414;--brand-950:#4A0505;
+
+  /* === Neutral === */
+  --neutral-0:#FFFFFF;--neutral-100:#F2F2F2;--neutral-200:#DDDDDD;--neutral-300:#BBBBBB;
+  --neutral-400:#999999;--neutral-500:#777777;--neutral-600:#555555;--neutral-700:#333333;
+  --neutral-800:#1F1F1F;--neutral-900:#111111;--neutral-950:#0A0A0A;
+
+  /* === Status === */
+  --success-400:#4ADE80;--success-500:#22C55E;--success-700:#15803D;--success-950:#052E16;
+  --warning-400:#FBBF24;--warning-500:#F59E0B;--warning-700:#B45309;--warning-950:#451A03;
+  --danger-400:#F87171;--danger-500:#EF4444;--danger-700:#B91C1C;--danger-950:#450A0A;
+
+  /* === Semantic Dark === */
+  --bg-default:var(--neutral-950);--bg-subtle:var(--neutral-900);--bg-overlay:var(--neutral-800);
+  --bg-card:#131313;--bg-card-hover:#181818;--bg-input:#0F0F0F;
+  --text-primary:var(--neutral-0);--text-secondary:var(--neutral-400);
+  --text-tertiary:var(--neutral-500);--text-disabled:var(--neutral-600);
+  --border-default:var(--neutral-800);--border-strong:var(--neutral-700);
+  --border-input:var(--neutral-700);
+
+  --font-display:"Montserrat",system-ui,-apple-system,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",monospace;
+
+  --r-xs:2px;--r-sm:4px;--r-md:6px;--r-lg:8px;--r-xl:12px;--r-2xl:16px;--r-full:9999px;
+}
+
+/* === Reset === */
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-display);background:var(--bg-default);color:var(--text-primary);
+  font-size:14px;line-height:1.5;font-weight:400;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:0;background:transparent;color:inherit;padding:0;}
+input,textarea,select{font-family:inherit;color:inherit;}
+a{color:inherit;text-decoration:none;}
+img,svg{display:block;max-width:100%;}
+::selection{background:var(--brand-600);color:white;}
+
+/* Subtle grid texture */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+
+/* ====================================================================== */
+/*  TOP BAR                                                               */
+/* ====================================================================== */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,10,10,0.85);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border-default);
+}
+.topbar__inner{
+  max-width:1340px;margin:0 auto;
+  padding:14px 32px;
+  display:flex;align-items:center;gap:24px;
+}
+.topbar__brand{display:flex;align-items:center;gap:10px;}
+.topbar__logo{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--brand-600);
+  display:grid;place-items:center;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 6px 20px -6px rgba(237,23,23,0.5);
+}
+.topbar__logo svg{width:20px;height:20px;}
+.topbar__crumb{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;color:var(--text-tertiary);
+  letter-spacing:0.4px;
+}
+.topbar__crumb b{color:var(--text-primary);font-weight:600;font-size:13px;letter-spacing:-0.1px;}
+.topbar__crumb svg{width:11px;height:11px;}
+.topbar__back{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 12px;
+  font-size:12px;font-weight:600;color:var(--text-secondary);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  transition:color 120ms,border-color 120ms,background-color 120ms;
+}
+.topbar__back:hover{color:var(--text-primary);border-color:var(--neutral-0);background:rgba(255,255,255,0.03);}
+.topbar__back svg{width:12px;height:12px;}
+.topbar__right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.topbar__save{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);
+  letter-spacing:0.3px;
+}
+.topbar__save .save-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--success-500);
+  box-shadow:0 0 8px var(--success-500);
+}
+.topbar__exit{
+  font-size:12px;font-weight:600;color:var(--text-tertiary);
+  padding:7px 10px;border-radius:var(--r-md);
+  transition:color 120ms;
+}
+.topbar__exit:hover{color:var(--text-primary);}
+
+/* ====================================================================== */
+/*  STEPPER                                                               */
+/* ====================================================================== */
+.stepper{
+  background:var(--bg-default);
+  border-bottom:1px solid var(--border-default);
+  position:relative;z-index:10;
+}
+.stepper__inner{
+  max-width:1340px;margin:0 auto;
+  padding:28px 32px 24px;
+  display:flex;align-items:flex-start;gap:0;
+}
+.step{
+  flex:1;display:flex;flex-direction:column;gap:10px;
+  position:relative;
+  cursor:pointer;
+}
+.step__row{display:flex;align-items:center;gap:0;}
+.step__bullet{
+  flex-shrink:0;
+  width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:12px;font-weight:600;
+  border:1.5px solid var(--border-strong);
+  color:var(--text-tertiary);
+  background:var(--bg-default);
+  transition:all 200ms ease;
+  position:relative;z-index:2;
+}
+.step__line{
+  flex:1;height:1.5px;
+  background:var(--border-default);
+  margin:0 -1px;
+  transition:background 240ms ease;
+  position:relative;z-index:1;
+}
+.step:last-child .step__line{display:none;}
+.step__label{
+  font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-tertiary);
+  transition:color 200ms;
+  padding-left:2px;
+}
+.step__title{
+  font-size:14px;font-weight:600;letter-spacing:-0.2px;
+  color:var(--text-tertiary);
+  margin-top:-4px;padding-left:2px;
+  transition:color 200ms;
+}
+
+/* states */
+.step.is-done .step__bullet{
+  border-color:var(--brand-600);background:var(--brand-600);color:white;
+}
+.step.is-done .step__bullet .num{display:none;}
+.step.is-done .step__bullet .check{display:block;}
+.step.is-done .step__line{background:var(--brand-600);}
+.step.is-done .step__label{color:var(--text-secondary);}
+.step.is-done .step__title{color:var(--text-secondary);}
+
+.step.is-active .step__bullet{
+  border-color:var(--brand-600);
+  color:var(--brand-500);
+  background:var(--bg-default);
+  box-shadow:0 0 0 4px rgba(237,23,23,0.12);
+}
+.step.is-active .step__label{color:var(--brand-500);}
+.step.is-active .step__title{color:var(--text-primary);}
+
+.step__bullet .check{display:none;width:14px;height:14px;}
+
+/* ====================================================================== */
+/*  MAIN LAYOUT                                                           */
+/* ====================================================================== */
+.main{
+  max-width:1340px;margin:0 auto;
+  padding:48px 32px 96px;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 380px;
+  gap:48px;
+  position:relative;z-index:1;
+}
+.main--narrow{grid-template-columns:minmax(0, 1fr);max-width:980px;}
+
+.form-col{min-width:0;}
+.preview-col{
+  position:sticky;top:140px;align-self:start;
+  height:fit-content;
+}
+
+/* ====================================================================== */
+/*  STEP HEADER                                                           */
+/* ====================================================================== */
+.step-head{margin-bottom:36px;}
+.step-head__eyebrow{
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  color:var(--brand-500);letter-spacing:1.4px;
+  margin-bottom:14px;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.step-head__eyebrow::after{
+  content:"";width:48px;height:1px;
+  background:linear-gradient(90deg,var(--brand-500),transparent);
+}
+.step-head__title{
+  font-size:42px;font-weight:800;letter-spacing:-1.4px;line-height:1.05;
+  margin:0 0 14px;
+}
+.step-head__title em{font-style:italic;color:var(--brand-500);}
+.step-head__desc{
+  font-size:15px;color:var(--text-secondary);line-height:1.6;
+  max-width:580px;margin:0;
+}
+
+/* ====================================================================== */
+/*  STEP 1 — TYPE PICKER                                                  */
+/* ====================================================================== */
+.type-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  margin-bottom:32px;
+}
+.type-card{
+  position:relative;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:28px 24px 24px;
+  text-align:left;
+  transition:all 220ms ease;
+  cursor:pointer;
+  display:flex;flex-direction:column;gap:0;
+  overflow:hidden;
+}
+.type-card::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 20% 0%,var(--accent,transparent) 0%,transparent 60%);
+  opacity:0.08;pointer-events:none;
+  transition:opacity 240ms;
+}
+.type-card:hover{
+  border-color:var(--neutral-0);
+  background:var(--bg-card-hover);
+  transform:translateY(-2px);
+}
+.type-card:hover::before{opacity:0.18;}
+.type-card.is-selected{
+  border-color:var(--neutral-0);
+  background:var(--bg-card-hover);
+}
+.type-card.is-selected::before{opacity:0;}
+.type-card.is-selected .type-card__check{opacity:1;transform:scale(1);}
+
+.type-card--agent{--accent:var(--brand-500);}
+.type-card--prompt{--accent:var(--warning-500);}
+.type-card--tool{--accent:var(--success-500);}
+
+.type-card__check{
+  position:absolute;top:18px;right:18px;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--neutral-0);
+  display:grid;place-items:center;
+  opacity:0;transform:scale(0.6);
+  transition:all 200ms ease;
+}
+.type-card__check svg{width:11px;height:11px;color:var(--neutral-950);}
+
+.type-card__icon{
+  width:44px;height:44px;border-radius:10px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  display:grid;place-items:center;
+  margin-bottom:18px;
+  position:relative;
+}
+.type-card__icon::after{
+  content:"";position:absolute;inset:-1px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent) 0%,transparent 60%);
+  opacity:0.4;z-index:-1;filter:blur(8px);
+}
+.type-card__icon svg{width:22px;height:22px;color:var(--accent);}
+
+.type-card__name{
+  font-size:22px;font-weight:700;letter-spacing:-0.6px;
+  margin:0 0 6px;
+  display:flex;align-items:baseline;gap:10px;
+}
+.type-card__time{
+  font-family:var(--font-mono);font-size:10px;font-weight:500;
+  color:var(--text-tertiary);
+  padding:2px 7px;border-radius:var(--r-sm);
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border-default);
+}
+.type-card__desc{
+  font-size:13px;color:var(--text-secondary);line-height:1.55;
+  margin:0 0 18px;
+}
+.type-card__hint{
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--accent);
+  padding-top:14px;
+  border-top:1px solid var(--border-default);
+  display:flex;align-items:center;gap:6px;
+}
+.type-card__hint svg{width:12px;height:12px;}
+
+/* ====================================================================== */
+/*  AI BANNER                                                             */
+/* ====================================================================== */
+.ai-banner{
+  display:flex;align-items:flex-start;gap:14px;
+  background:linear-gradient(135deg,rgba(237,23,23,0.08),rgba(237,23,23,0.02));
+  border:1px solid rgba(237,23,23,0.25);
+  border-radius:var(--r-xl);
+  padding:16px 18px;
+  margin-bottom:24px;
+}
+.ai-banner__icon{
+  flex-shrink:0;width:32px;height:32px;border-radius:8px;
+  background:rgba(237,23,23,0.18);
+  display:grid;place-items:center;
+  color:var(--brand-300);
+  position:relative;
+}
+.ai-banner__icon::after{
+  content:"";position:absolute;inset:-2px;border-radius:10px;
+  background:radial-gradient(circle,rgba(237,23,23,0.4),transparent 70%);
+  z-index:-1;
+}
+.ai-banner__icon svg{width:16px;height:16px;}
+.ai-banner__body{flex:1;min-width:0;}
+.ai-banner__title{
+  font-size:13px;font-weight:700;
+  color:var(--brand-200);
+  margin:0 0 2px;
+  display:flex;align-items:center;gap:8px;
+}
+.ai-banner__title .badge{
+  font-family:var(--font-mono);font-size:9px;font-weight:600;
+  letter-spacing:0.6px;
+  padding:1px 6px;border-radius:var(--r-xs);
+  background:rgba(237,23,23,0.25);color:var(--brand-200);
+  border:1px solid rgba(237,23,23,0.3);
+}
+.ai-banner__desc{font-size:12.5px;color:var(--text-secondary);line-height:1.5;margin:0;}
+.ai-banner__cta{
+  flex-shrink:0;display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;
+  background:var(--brand-600);color:white;
+  border-radius:var(--r-md);
+  font-size:12px;font-weight:600;
+  transition:background 150ms;
+}
+.ai-banner__cta:hover{background:var(--brand-500);}
+.ai-banner__cta svg{width:11px;height:11px;}
+
+/* ====================================================================== */
+/*  FORM CARDS / FIELDS                                                   */
+/* ====================================================================== */
+.fcard{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:24px 24px 22px;
+  margin-bottom:14px;
+}
+.fcard__head{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--border-default);
+}
+.fcard__num{
+  font-family:var(--font-mono);font-size:10px;font-weight:600;
+  color:var(--brand-500);
+  padding:3px 7px;border-radius:var(--r-xs);
+  background:rgba(237,23,23,0.08);
+  border:1px solid rgba(237,23,23,0.18);
+  letter-spacing:0.5px;
+}
+.fcard__title{
+  font-size:15px;font-weight:700;letter-spacing:-0.2px;
+  margin:0;flex:1;
+}
+.fcard__optional{
+  font-family:var(--font-mono);font-size:10px;font-weight:500;
+  color:var(--text-tertiary);letter-spacing:0.4px;
+}
+.fcard__desc{
+  font-size:12.5px;color:var(--text-secondary);
+  margin:-12px 0 18px;line-height:1.5;
+}
+
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+.field__label{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;
+}
+.field__label-text{
+  font-size:12px;font-weight:600;letter-spacing:0.1px;
+  color:var(--text-primary);
+  display:inline-flex;align-items:center;gap:6px;
+}
+.field__label-text .required{color:var(--brand-500);font-size:11px;}
+.field__hint{
+  font-family:var(--font-mono);font-size:10.5px;
+  color:var(--text-tertiary);letter-spacing:0.2px;
+}
+.field__hint .ai-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 7px;border-radius:var(--r-sm);
+  background:rgba(237,23,23,0.08);
+  color:var(--brand-300);
+  border:1px solid rgba(237,23,23,0.2);
+  font-weight:500;
+  cursor:pointer;
+  transition:background 120ms;
+}
+.field__hint .ai-pill:hover{background:rgba(237,23,23,0.16);}
+.field__hint .ai-pill svg{width:9px;height:9px;}
+
+.input,.textarea,.select{
+  width:100%;
+  background:var(--bg-input);
+  border:1px solid var(--border-input);
+  border-radius:var(--r-md);
+  color:var(--text-primary);
+  font-size:13.5px;
+  padding:11px 14px;
+  transition:border-color 120ms,background 120ms;
+}
+.input:focus,.textarea:focus,.select:focus{
+  outline:none;
+  border-color:var(--brand-600);
+  background:var(--bg-subtle);
+}
+.input::placeholder,.textarea::placeholder{color:var(--text-tertiary);}
+.textarea{resize:vertical;min-height:96px;line-height:1.55;font-family:var(--font-display);}
+.textarea--code{
+  font-family:var(--font-mono);font-size:12.5px;line-height:1.65;
+  min-height:200px;
+  background:#0a0a0a;
+  border-color:var(--border-default);
+}
+.textarea--prompt{min-height:180px;font-size:14px;line-height:1.7;}
+
+.input-counter{
+  position:absolute;right:12px;bottom:8px;
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--text-tertiary);
+  pointer-events:none;
+}
+.input-wrap{position:relative;}
+
+/* Select wrapper */
+.select-wrap{position:relative;}
+.select-wrap::after{
+  content:"";position:absolute;right:14px;top:50%;
+  transform:translateY(-25%) rotate(45deg);
+  width:7px;height:7px;
+  border-right:1.5px solid var(--text-tertiary);
+  border-bottom:1.5px solid var(--text-tertiary);
+  pointer-events:none;
+}
+.select{appearance:none;-webkit-appearance:none;padding-right:38px;cursor:pointer;}
+
+/* Tag input */
+.tag-input{
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  background:var(--bg-input);
+  border:1px solid var(--border-input);
+  border-radius:var(--r-md);
+  padding:8px 12px;min-height:42px;
+  transition:border-color 120ms;
+}
+.tag-input:focus-within{border-color:var(--brand-600);background:var(--bg-subtle);}
+.tag-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 8px 4px 10px;
+  background:rgba(237,23,23,0.1);
+  border:1px solid rgba(237,23,23,0.25);
+  border-radius:var(--r-sm);
+  font-size:11.5px;font-weight:500;
+  color:var(--brand-200);
+  font-family:var(--font-mono);
+}
+.tag-chip button{
+  width:14px;height:14px;border-radius:50%;
+  display:grid;place-items:center;
+  color:var(--brand-300);
+  transition:background 120ms;
+}
+.tag-chip button:hover{background:rgba(237,23,23,0.2);color:white;}
+.tag-chip button svg{width:8px;height:8px;}
+.tag-input input{
+  flex:1;min-width:120px;
+  background:transparent;border:0;outline:0;
+  font-size:12.5px;color:var(--text-primary);
+  padding:4px 0;
+}
+.tag-input input::placeholder{color:var(--text-tertiary);}
+
+/* Multi-select chips (categories) */
+.chip-grid{
+  display:flex;flex-wrap:wrap;gap:7px;
+}
+.chip{
+  padding:7px 12px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  font-size:12px;font-weight:500;
+  color:var(--text-secondary);
+  cursor:pointer;
+  transition:all 120ms;
+}
+.chip:hover{border-color:var(--neutral-0);color:var(--text-primary);}
+.chip.is-selected{
+  background:rgba(255,255,255,0.08);
+  border-color:var(--neutral-0);
+  color:var(--text-primary);
+}
+.chip svg{width:10px;height:10px;display:inline-block;vertical-align:middle;margin-right:5px;}
+
+/* Cover uploader */
+.cover{
+  position:relative;
+  border:1.5px dashed var(--border-strong);
+  border-radius:var(--r-xl);
+  padding:32px 24px;
+  text-align:center;
+  background:rgba(255,255,255,0.015);
+  transition:border-color 150ms,background 150ms;
+  aspect-ratio:16/9;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;
+  cursor:pointer;
+  overflow:hidden;
+}
+.cover:hover{border-color:var(--brand-600);background:rgba(237,23,23,0.03);}
+.cover.has-image{
+  border-style:solid;border-color:var(--border-default);
+  padding:0;
+  background:radial-gradient(circle at 30% 40%,#6b46c1,#1e1b4b 70%);
+}
+.cover.has-image .cover__placeholder{display:none;}
+.cover.has-image .cover__overlay{display:flex;}
+.cover__icon{
+  width:42px;height:42px;border-radius:10px;
+  background:rgba(255,255,255,0.04);
+  display:grid;place-items:center;
+  color:var(--text-tertiary);
+}
+.cover__icon svg{width:18px;height:18px;}
+.cover__title{font-size:13px;font-weight:600;color:var(--text-primary);margin:0;}
+.cover__hint{
+  font-size:11.5px;color:var(--text-tertiary);
+  font-family:var(--font-mono);letter-spacing:0.3px;
+  margin:0;
+}
+.cover__overlay{
+  display:none;
+  position:absolute;inset:0;
+  align-items:flex-end;justify-content:flex-end;
+  padding:14px;
+  background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,0.7));
+}
+.cover__overlay button{
+  padding:7px 12px;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:var(--r-md);
+  font-size:11px;font-weight:600;color:white;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.cover__overlay button:hover{background:rgba(0,0,0,0.8);}
+.cover__overlay svg{width:11px;height:11px;}
+
+.cover-actions{
+  display:flex;gap:8px;
+  margin-top:12px;
+}
+.cover-action{
+  flex:1;
+  padding:11px 14px;
+  border:1px solid var(--border-default);
+  background:var(--bg-card);
+  border-radius:var(--r-md);
+  font-size:12px;font-weight:600;
+  color:var(--text-primary);
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  transition:all 150ms;
+}
+.cover-action:hover{border-color:var(--neutral-0);background:var(--bg-card-hover);}
+.cover-action--ai{
+  background:rgba(237,23,23,0.08);
+  border-color:rgba(237,23,23,0.4);
+  color:var(--brand-200);
+}
+.cover-action--ai:hover{
+  background:rgba(237,23,23,0.16);
+  border-color:var(--brand-500);
+  color:var(--brand-100);
+}
+.cover-action svg{width:13px;height:13px;}
+
+/* ====================================================================== */
+/*  STEP 3 — IMPLEMENTATION TABS                                          */
+/* ====================================================================== */
+.method-tabs{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  margin-bottom:24px;
+}
+.method-tab{
+  position:relative;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-lg);
+  padding:16px 18px;
+  text-align:left;
+  cursor:pointer;
+  transition:all 200ms;
+  display:flex;flex-direction:column;gap:6px;
+}
+.method-tab:hover{border-color:var(--neutral-0);background:var(--bg-card-hover);}
+.method-tab.is-active{
+  border-color:var(--neutral-0);
+  background:rgba(255,255,255,0.04);
+}
+.method-tab__head{
+  display:flex;align-items:center;justify-content:space-between;
+}
+.method-tab__name{
+  font-size:13px;font-weight:700;letter-spacing:-0.1px;
+  display:flex;align-items:center;gap:8px;
+}
+.method-tab__icon{
+  width:24px;height:24px;border-radius:6px;
+  background:rgba(255,255,255,0.04);
+  display:grid;place-items:center;color:var(--text-secondary);
+}
+.method-tab.is-active .method-tab__icon{
+  background:rgba(255,255,255,0.1);color:var(--text-primary);
+}
+.method-tab__icon svg{width:13px;height:13px;}
+.method-tab__radio{
+  width:16px;height:16px;border-radius:50%;
+  border:1.5px solid var(--border-strong);
+  position:relative;flex-shrink:0;
+}
+.method-tab.is-active .method-tab__radio{
+  border-color:var(--neutral-0);
+}
+.method-tab.is-active .method-tab__radio::after{
+  content:"";position:absolute;inset:3px;
+  border-radius:50%;background:var(--neutral-0);
+}
+.method-tab__desc{
+  font-size:11.5px;color:var(--text-tertiary);
+  line-height:1.45;
+}
+
+/* GitHub import block */
+.gh-import{
+  background:linear-gradient(135deg,rgba(237,23,23,0.05),rgba(237,23,23,0.01));
+  border:1px solid rgba(237,23,23,0.2);
+  border-radius:var(--r-xl);
+  padding:18px 20px;
+  margin-bottom:18px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.gh-import__head{display:flex;align-items:center;gap:10px;}
+.gh-import__icon{
+  width:30px;height:30px;border-radius:7px;
+  background:rgba(237,23,23,0.15);
+  display:grid;place-items:center;color:var(--brand-300);
+}
+.gh-import__icon svg{width:15px;height:15px;}
+.gh-import__title{font-size:13px;font-weight:700;margin:0;}
+.gh-import__title small{
+  display:block;font-weight:500;color:var(--text-tertiary);
+  font-size:11.5px;margin-top:2px;
+  font-family:var(--font-display);letter-spacing:0;
+}
+.gh-import__form{display:flex;gap:8px;}
+.gh-import__form .input{flex:1;}
+.btn-import{
+  padding:0 18px;
+  background:var(--brand-600);color:white;
+  border-radius:var(--r-md);
+  font-size:12px;font-weight:600;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:background 120ms;
+}
+.btn-import:hover{background:var(--brand-500);}
+.btn-import svg{width:11px;height:11px;}
+
+.gh-detected{
+  display:none;
+  padding-top:12px;border-top:1px solid rgba(237,23,23,0.15);
+  flex-direction:column;gap:8px;
+}
+.gh-detected.is-visible{display:flex;}
+.gh-detected__title{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  color:var(--success-400);letter-spacing:0.6px;
+  display:inline-flex;align-items:center;gap:6px;
+  margin-bottom:2px;
+}
+.gh-detected__title svg{width:10px;height:10px;}
+.gh-detected__rows{display:flex;flex-wrap:wrap;gap:8px;}
+.gh-detected__chip{
+  font-family:var(--font-mono);font-size:10.5px;
+  padding:4px 9px;
+  background:rgba(74,222,128,0.06);
+  border:1px solid rgba(74,222,128,0.2);
+  border-radius:var(--r-sm);
+  color:var(--success-400);
+}
+.gh-divider{
+  display:flex;align-items:center;gap:14px;
+  margin:24px 0 22px;
+  font-family:var(--font-mono);font-size:10.5px;
+  color:var(--text-tertiary);letter-spacing:1px;
+}
+.gh-divider::before,.gh-divider::after{
+  content:"";flex:1;height:1px;background:var(--border-default);
+}
+
+/* Package rows */
+.pkg-rows{display:flex;flex-direction:column;gap:8px;}
+.pkg-row{
+  display:flex;gap:8px;align-items:center;
+}
+.pkg-row__num{
+  flex-shrink:0;width:28px;
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--text-tertiary);
+  text-align:center;
+}
+.pkg-row .input{flex:1;font-family:var(--font-mono);font-size:12px;}
+.pkg-row__remove{
+  flex-shrink:0;width:32px;height:32px;
+  border-radius:var(--r-md);
+  border:1px solid var(--border-default);
+  display:grid;place-items:center;
+  color:var(--text-tertiary);
+  transition:all 120ms;
+}
+.pkg-row__remove:hover{color:var(--danger-400);border-color:var(--danger-700);background:rgba(239,68,68,0.05);}
+.pkg-row__remove svg{width:11px;height:11px;}
+
+.btn-add{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;
+  background:transparent;
+  border:1px dashed var(--border-strong);
+  border-radius:var(--r-md);
+  font-size:12px;font-weight:600;color:var(--text-secondary);
+  margin-top:10px;
+  transition:all 120ms;
+}
+.btn-add:hover{border-color:var(--brand-500);color:var(--brand-300);border-style:solid;background:rgba(237,23,23,0.04);}
+.btn-add svg{width:11px;height:11px;}
+
+/* Prompt templates */
+.prompt-templates{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  margin-bottom:18px;
+}
+.template-card{
+  text-align:left;
+  padding:14px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  transition:all 150ms;
+}
+.template-card:hover{border-color:var(--neutral-0);background:var(--bg-card-hover);}
+.template-card__icon{
+  width:24px;height:24px;border-radius:6px;
+  background:rgba(255,255,255,0.04);
+  display:grid;place-items:center;
+  color:var(--warning-400);
+  margin-bottom:8px;
+}
+.template-card__icon svg{width:13px;height:13px;}
+.template-card__name{font-size:12.5px;font-weight:600;margin:0 0 2px;}
+.template-card__desc{font-size:11px;color:var(--text-tertiary);line-height:1.4;margin:0;}
+
+/* Variables (auto-detected from prompt) */
+.var-detect{
+  background:rgba(251,191,36,0.05);
+  border:1px solid rgba(251,191,36,0.2);
+  border-radius:var(--r-md);
+  padding:12px 14px;
+  margin-top:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.var-detect__icon{
+  width:24px;height:24px;border-radius:6px;
+  background:rgba(251,191,36,0.15);
+  color:var(--warning-400);
+  display:grid;place-items:center;flex-shrink:0;
+}
+.var-detect__icon svg{width:12px;height:12px;}
+.var-detect__body{flex:1;font-size:12px;color:var(--text-secondary);}
+.var-detect__body strong{color:var(--warning-400);font-family:var(--font-mono);font-size:11.5px;}
+
+/* Pricing radio cards */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.price-card{
+  padding:14px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-lg);
+  cursor:pointer;
+  transition:all 150ms;
+  text-align:left;
+}
+.price-card:hover{border-color:var(--neutral-0);background:var(--bg-card-hover);}
+.price-card.is-selected{
+  border-color:var(--neutral-0);
+  background:rgba(255,255,255,0.03);
+}
+.price-card__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.price-card__name{font-size:13px;font-weight:700;letter-spacing:-0.1px;}
+.price-card__radio{
+  width:14px;height:14px;border-radius:50%;
+  border:1.5px solid var(--border-strong);
+  position:relative;
+}
+.price-card.is-selected .price-card__radio{border-color:var(--neutral-0);}
+.price-card.is-selected .price-card__radio::after{
+  content:"";position:absolute;inset:2.5px;border-radius:50%;background:var(--neutral-0);
+}
+.price-card__desc{font-size:11px;color:var(--text-tertiary);line-height:1.4;margin:0;}
+
+/* Use-case row */
+.usecase-row{
+  display:flex;gap:10px;
+  margin-bottom:10px;
+}
+.usecase-row__num{
+  flex-shrink:0;width:28px;
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--text-tertiary);text-align:center;
+  padding-top:14px;
+}
+.usecase-row__body{flex:1;display:flex;flex-direction:column;gap:8px;}
+.usecase-row__remove{
+  flex-shrink:0;width:32px;height:32px;
+  border-radius:var(--r-md);
+  border:1px solid var(--border-default);
+  display:grid;place-items:center;
+  color:var(--text-tertiary);
+  transition:all 120ms;align-self:flex-start;margin-top:6px;
+}
+.usecase-row__remove:hover{color:var(--danger-400);border-color:var(--danger-700);background:rgba(239,68,68,0.05);}
+.usecase-row__remove svg{width:11px;height:11px;}
+
+/* Link row */
+.link-row{
+  display:grid;grid-template-columns:200px 1fr 32px;gap:8px;
+  margin-bottom:8px;
+}
+.link-row__remove{
+  width:32px;height:32px;border-radius:var(--r-md);
+  border:1px solid var(--border-default);
+  display:grid;place-items:center;
+  color:var(--text-tertiary);
+  transition:all 120ms;
+}
+.link-row__remove:hover{color:var(--danger-400);border-color:var(--danger-700);}
+.link-row__remove svg{width:11px;height:11px;}
+
+/* Notice */
+.notice{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:14px 16px;
+  background:rgba(34,197,94,0.04);
+  border:1px solid rgba(34,197,94,0.18);
+  border-radius:var(--r-lg);
+  margin:18px 0 24px;
+}
+.notice__icon{
+  flex-shrink:0;width:24px;height:24px;border-radius:6px;
+  background:rgba(34,197,94,0.15);color:var(--success-400);
+  display:grid;place-items:center;
+}
+.notice__icon svg{width:12px;height:12px;}
+.notice__body{flex:1;}
+.notice__title{font-size:12.5px;font-weight:700;color:var(--success-400);margin:0 0 2px;}
+.notice__desc{font-size:11.5px;color:var(--text-secondary);line-height:1.55;margin:0;}
+
+/* ====================================================================== */
+/*  ACTION BAR (Back / Continue)                                          */
+/* ====================================================================== */
+.actions{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:32px;
+  padding-top:24px;
+  border-top:1px solid var(--border-default);
+}
+.actions__left{display:flex;align-items:center;gap:14px;}
+.actions__skip{
+  font-size:12px;color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 0;
+  transition:color 120ms;
+}
+.actions__skip:hover{color:var(--text-secondary);}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 20px;
+  font-size:13px;font-weight:600;letter-spacing:0.1px;
+  border-radius:var(--r-md);
+  transition:all 150ms;
+  white-space:nowrap;
+}
+.btn--ghost{
+  border:1px solid var(--border-default);color:var(--text-secondary);
+  background:var(--bg-card);
+}
+.btn--ghost:hover{border-color:var(--neutral-0);color:var(--text-primary);background:var(--bg-card-hover);}
+.btn--primary{
+  background:var(--brand-600);color:white;
+  box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 6px 20px -8px rgba(237,23,23,0.5);
+}
+.btn--primary:hover{background:var(--brand-500);transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 8px 24px -8px rgba(237,23,23,0.6);}
+.btn--primary:disabled{
+  background:var(--neutral-800);color:var(--text-disabled);cursor:not-allowed;
+  box-shadow:none;transform:none;
+}
+.btn--lg{padding:13px 24px;font-size:13.5px;}
+.btn svg{width:13px;height:13px;}
+
+/* ====================================================================== */
+/*  PREVIEW PANEL                                                         */
+/* ====================================================================== */
+.preview-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.preview-label{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  color:var(--text-tertiary);letter-spacing:1.4px;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.preview-label::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--success-500);
+  box-shadow:0 0 8px var(--success-500);
+  animation:livePulse 2s ease infinite;
+}
+@keyframes livePulse{
+  0%,100%{opacity:1;}
+  50%{opacity:0.5;}
+}
+.preview-toggle{
+  display:flex;background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:var(--r-md);padding:2px;
+  font-size:11px;font-weight:600;
+}
+.preview-toggle button{
+  padding:5px 9px;border-radius:var(--r-sm);
+  color:var(--text-tertiary);transition:all 120ms;
+}
+.preview-toggle button.is-active{
+  background:var(--bg-overlay);color:var(--text-primary);
+}
+
+/* The actual preview card mirrors marketplace card */
+.preview-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+  margin-bottom:16px;
+}
+.preview-card__image{
+  height:168px;
+  position:relative;
+  background:radial-gradient(circle at 30% 40%,#6b46c1,#1e1b4b 70%);
+  overflow:hidden;
+}
+.preview-card__image::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,0.85));
+}
+.preview-card__image-pattern{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.12) 1px,transparent 0);
+  background-size:14px 14px;
+  opacity:0.3;
+}
+.preview-card__tags{
+  position:absolute;top:10px;left:10px;
+  display:flex;gap:5px;z-index:2;
+}
+.preview-card__tag{
+  font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;
+  padding:3px 7px;border-radius:var(--r-sm);
+}
+.preview-card__tag--type{background:rgba(0,0,0,0.55);color:white;border:1px solid rgba(255,255,255,0.18);}
+.preview-card__tag--accent{background:var(--brand-600);color:white;}
+.preview-card__price{
+  position:absolute;top:10px;right:10px;z-index:2;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+  padding:5px 9px;border-radius:var(--r-md);
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:white;border:1px solid rgba(255,255,255,0.1);
+}
+.preview-card__price .currency{color:var(--brand-400);}
+.preview-card__body{padding:14px 16px 16px;}
+.preview-card__creator{
+  display:flex;align-items:center;gap:7px;margin-bottom:8px;
+  font-size:11px;color:var(--text-tertiary);
+}
+.preview-card__avatar{
+  width:20px;height:20px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand-600),#8b5cf6);
+  font-size:9px;font-weight:800;
+  color:white;display:grid;place-items:center;
+}
+.preview-card__title{
+  font-size:15px;font-weight:700;letter-spacing:-0.2px;
+  margin:0 0 5px;color:var(--text-primary);
+  min-height:18px;
+}
+.preview-card__title.is-empty{color:var(--text-tertiary);font-style:italic;font-weight:500;}
+.preview-card__desc{
+  font-size:11.5px;color:var(--text-secondary);line-height:1.5;
+  margin:0 0 10px;
+  display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;min-height:32px;
+}
+.preview-card__desc.is-empty{color:var(--text-tertiary);font-style:italic;}
+.preview-card__meta{
+  padding-top:10px;border-top:1px solid var(--border-default);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;
+}
+.preview-card__rating{color:var(--warning-500);letter-spacing:-1px;}
+.preview-card__usage{font-family:var(--font-mono);color:var(--text-tertiary);font-size:10.5px;}
+
+/* Preview tips */
+.preview-tips{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:18px;
+}
+.preview-tips__title{
+  font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-tertiary);
+  margin:0 0 12px;
+  display:flex;align-items:center;gap:8px;
+}
+.preview-tips__title::before{
+  content:"";width:14px;height:1px;background:var(--brand-500);
+}
+.preview-tips__list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;}
+.preview-tips__list li{
+  font-size:12px;color:var(--text-secondary);line-height:1.55;
+  padding-left:18px;position:relative;
+}
+.preview-tips__list li::before{
+  content:"";position:absolute;left:0;top:7px;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--brand-600);
+}
+.preview-tips__list li strong{color:var(--text-primary);font-weight:600;}
+
+/* ====================================================================== */
+/*  STEP VISIBILITY                                                       */
+/* ====================================================================== */
+.step-panel{display:none;}
+.step-panel.is-active{display:block;animation:fadeIn 240ms ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.method-panel{display:none;}
+.method-panel.is-active{display:block;animation:fadeIn 200ms ease;}
+
+.type-fields{display:none;}
+.type-fields.is-active{display:block;}
+
+/* ====================================================================== */
+/*  TOKENIZATION MODULE                                                  */
+/* ====================================================================== */
+.tk-block{
+  margin-top:14px;
+  display:flex;flex-direction:column;gap:14px;
+}
+
+/* Combo notice "Paid + Tokenized" */
+.tk-combo{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;
+  background:rgba(237,23,23,0.04);
+  border:1px solid rgba(237,23,23,0.18);
+  border-radius:var(--r-lg);
+}
+.tk-combo__icon{
+  flex-shrink:0;width:26px;height:26px;border-radius:6px;
+  background:rgba(237,23,23,0.12);color:var(--brand-300);
+  display:grid;place-items:center;
+}
+.tk-combo__icon svg{width:13px;height:13px;}
+.tk-combo__title{font-size:12.5px;font-weight:700;color:var(--brand-200);margin:0 0 2px;letter-spacing:-0.1px;}
+.tk-combo__desc{font-size:11.5px;color:var(--text-secondary);line-height:1.5;margin:0;}
+
+/* Section group inside tokenization */
+.tk-group{
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-lg);
+  padding:18px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.tk-group__head{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  color:var(--text-tertiary);letter-spacing:1.4px;text-transform:uppercase;
+  padding-bottom:12px;border-bottom:1px solid var(--border-default);
+}
+.tk-group__head::before{
+  content:"";width:14px;height:1px;background:var(--brand-500);
+}
+
+/* Sub-text under input (e.g. "≈ 0.001069 SOL") */
+.field__subnote{
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--text-tertiary);
+  margin-top:6px;letter-spacing:0.2px;
+}
+.field__helper{
+  font-size:11.5px;color:var(--text-tertiary);
+  margin-top:6px;line-height:1.45;
+}
+
+/* Wallet status card */
+.wallet-card{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;
+  background:rgba(34,197,94,0.04);
+  border:1px solid rgba(34,197,94,0.22);
+  border-radius:var(--r-md);
+}
+.wallet-card__icon{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;
+  background:rgba(34,197,94,0.15);color:var(--success-400);
+  display:grid;place-items:center;
+}
+.wallet-card__icon svg{width:14px;height:14px;}
+.wallet-card__body{flex:1;min-width:0;}
+.wallet-card__label{
+  font-size:12px;font-weight:700;color:var(--success-400);
+  margin:0 0 2px;letter-spacing:-0.1px;
+}
+.wallet-card__addr{
+  font-family:var(--font-mono);font-size:11.5px;color:var(--text-secondary);
+  letter-spacing:0.2px;
+}
+.wallet-card__edit{
+  width:30px;height:30px;border-radius:var(--r-md);
+  display:grid;place-items:center;color:var(--text-tertiary);
+  transition:color 120ms,background 120ms;
+}
+.wallet-card__edit:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.wallet-card__edit svg{width:12px;height:12px;}
+
+/* Cost notice with explicit numeric breakdown */
+.cost-card{
+  display:flex;gap:12px;
+  padding:14px 16px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-lg);
+}
+.cost-card__icon{
+  flex-shrink:0;width:26px;height:26px;border-radius:6px;
+  background:rgba(237,23,23,0.1);color:var(--brand-400);
+  display:grid;place-items:center;
+}
+.cost-card__icon svg{width:13px;height:13px;}
+.cost-card__body{flex:1;min-width:0;}
+.cost-card__title{
+  font-size:12.5px;font-weight:700;
+  color:var(--text-primary);margin:0 0 6px;letter-spacing:-0.1px;
+  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+}
+.cost-card__title .amount{
+  font-family:var(--font-mono);color:var(--brand-400);
+  font-size:13px;letter-spacing:0.2px;
+}
+.cost-card__title .plus{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:500;
+  color:var(--text-tertiary);
+  padding:1px 6px;border-radius:var(--r-xs);
+  background:rgba(255,255,255,0.04);border:1px solid var(--border-default);
+}
+.cost-card__rows{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none;}
+.cost-card__rows li{
+  font-size:11.5px;color:var(--text-secondary);line-height:1.5;
+  padding-left:12px;position:relative;
+}
+.cost-card__rows li::before{
+  content:"";position:absolute;left:0;top:8px;
+  width:4px;height:1px;background:var(--text-tertiary);
+}
+.cost-card__rows li code{
+  font-family:var(--font-mono);font-size:10.5px;
+  color:var(--brand-300);
+  background:rgba(237,23,23,0.06);
+  padding:1px 5px;border-radius:3px;
+  letter-spacing:0.2px;
+}
+.cost-card__link{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11.5px;font-weight:600;color:var(--brand-300);
+  margin-top:10px;
+  padding-top:10px;border-top:1px solid var(--border-default);
+}
+.cost-card__link:hover{color:var(--brand-200);}
+.cost-card__link svg{width:10px;height:10px;}
+
+/* Ticker input — uppercase enforcement and counter */
+.ticker-wrap{position:relative;}
+.ticker-wrap input{
+  font-family:var(--font-mono);
+  text-transform:uppercase;
+  letter-spacing:0.6px;
+  padding-right:60px;
+}
+.ticker-wrap input::placeholder{
+  text-transform:none;letter-spacing:0;
+}
+.ticker-counter{
+  position:absolute;right:12px;top:50%;
+  transform:translateY(-50%);
+  font-family:var(--font-mono);font-size:10.5px;
+  color:var(--text-tertiary);
+  pointer-events:none;
+}
+
+/* Frenzy mode toggle row */
+.frenzy-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  background:rgba(245,158,11,0.04);
+  border:1px solid rgba(245,158,11,0.22);
+  border-radius:var(--r-lg);
+}
+.frenzy-row__icon{
+  flex-shrink:0;width:30px;height:30px;border-radius:7px;
+  background:rgba(245,158,11,0.15);color:var(--warning-400);
+  display:grid;place-items:center;
+  position:relative;
+}
+.frenzy-row__icon::after{
+  content:"";position:absolute;inset:-2px;border-radius:9px;
+  background:radial-gradient(circle,rgba(245,158,11,0.35),transparent 70%);
+  z-index:-1;
+}
+.frenzy-row__icon svg{width:15px;height:15px;}
+.frenzy-row__body{flex:1;min-width:0;}
+.frenzy-row__title{
+  font-size:13px;font-weight:700;color:var(--warning-400);margin:0 0 2px;
+  display:flex;align-items:center;gap:8px;letter-spacing:-0.1px;
+}
+.frenzy-row__title .multiplier{
+  font-family:var(--font-mono);font-size:10px;
+  padding:2px 7px;border-radius:var(--r-xs);
+  background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.3);
+  letter-spacing:0.4px;
+}
+.frenzy-row__desc{font-size:11.5px;color:var(--text-secondary);margin:0;line-height:1.45;}
+
+/* iOS-style toggle */
+.toggle{
+  flex-shrink:0;
+  width:42px;height:24px;border-radius:var(--r-full);
+  background:var(--neutral-800);
+  border:1px solid var(--border-strong);
+  position:relative;cursor:pointer;
+  transition:background 200ms,border-color 200ms;
+}
+.toggle::after{
+  content:"";
+  position:absolute;top:2px;left:2px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--neutral-300);
+  transition:left 200ms cubic-bezier(0.4,0,0.2,1),background 200ms;
+}
+.toggle.is-on{
+  background:var(--warning-700);
+  border-color:var(--warning-500);
+}
+.toggle.is-on::after{
+  left:20px;background:var(--warning-400);
+}
+
+/* ====================================================================== */
+/*  PROTOCOL INFO CARDS (x402 / MCP)                                     */
+/* ====================================================================== */
+.proto-card{
+  display:flex;gap:14px;
+  padding:18px 20px;
+  border-radius:var(--r-xl);
+  margin-bottom:18px;
+  position:relative;
+  isolation:isolate;
+}
+.proto-card::before{
+  content:"";position:absolute;inset:0;
+  border-radius:var(--r-xl);
+  background:linear-gradient(135deg,var(--proto-color,var(--brand-500)) 0%,transparent 60%);
+  opacity:0.05;
+  z-index:-1;
+}
+.proto-card__icon{
+  flex-shrink:0;width:36px;height:36px;border-radius:8px;
+  background:rgba(255,255,255,0.04);
+  display:grid;place-items:center;
+  color:var(--proto-color,var(--brand-400));
+  position:relative;
+}
+.proto-card__icon::after{
+  content:"";position:absolute;inset:-2px;border-radius:10px;
+  background:radial-gradient(circle,var(--proto-color,var(--brand-500)),transparent 70%);
+  opacity:0.25;z-index:-1;filter:blur(6px);
+}
+.proto-card__icon svg{width:18px;height:18px;}
+.proto-card__body{flex:1;min-width:0;}
+.proto-card__title{
+  font-size:13px;font-weight:700;
+  color:var(--proto-color,var(--brand-300));
+  margin:0 0 4px;letter-spacing:-0.1px;
+  display:flex;align-items:center;gap:8px;
+  flex-wrap:wrap;
+}
+.proto-card__title .badge{
+  font-family:var(--font-mono);font-size:9px;font-weight:600;
+  padding:2px 6px;border-radius:var(--r-xs);
+  background:rgba(255,255,255,0.04);
+  color:var(--text-tertiary);
+  border:1px solid var(--border-default);
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+}
+.proto-card__lede{
+  font-size:12.5px;color:var(--text-secondary);
+  line-height:1.55;margin:0 0 10px;
+}
+.proto-card__list{
+  margin:0;padding:0;list-style:none;
+  display:flex;flex-direction:column;gap:6px;
+}
+.proto-card__list li{
+  font-size:12px;color:var(--text-secondary);
+  line-height:1.5;
+  padding-left:18px;position:relative;
+}
+.proto-card__list li::before{
+  content:"";
+  position:absolute;left:0;top:7px;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--proto-color,var(--brand-500));
+  opacity:0.85;
+}
+
+/* x402 variant — red */
+.proto-card--x402{
+  border:1px solid rgba(237,23,23,0.28);
+  --proto-color:var(--brand-400);
+}
+.proto-card--x402::before{opacity:0.06;}
+
+/* MCP variant — purple (Anthropic protocol identity) */
+.proto-card--mcp{
+  border:1px solid rgba(168,85,247,0.32);
+  --proto-color:#c084fc;
+}
+.proto-card--mcp::before{opacity:0.06;}
+.proto-card--mcp .proto-card__icon{color:#c084fc;}
+.proto-card--mcp .proto-card__icon::after{background:radial-gradient(circle,#a855f7,transparent 70%);}
+.proto-card--mcp .proto-card__title{color:#d8b4fe;}
+.proto-card--mcp .proto-card__list li::before{background:#c084fc;}
+
+/* Endpoint test result — appears after clicking Test */
+.endpoint-test{
+  display:none;
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:var(--r-md);
+  font-size:12px;
+  align-items:flex-start;gap:10px;
+}
+.endpoint-test.is-visible{display:flex;}
+.endpoint-test--ok{
+  background:rgba(34,197,94,0.05);
+  border:1px solid rgba(34,197,94,0.22);
+}
+.endpoint-test__icon{
+  flex-shrink:0;width:20px;height:20px;border-radius:50%;
+  background:rgba(34,197,94,0.18);color:var(--success-400);
+  display:grid;place-items:center;
+}
+.endpoint-test__icon svg{width:11px;height:11px;}
+.endpoint-test__body{flex:1;min-width:0;}
+.endpoint-test__title{
+  font-size:12px;font-weight:700;color:var(--success-400);
+  margin:0 0 2px;
+}
+.endpoint-test__rows{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;
+}
+.endpoint-test__chip{
+  font-family:var(--font-mono);font-size:10.5px;
+  padding:3px 8px;border-radius:var(--r-sm);
+  background:rgba(74,222,128,0.06);
+  border:1px solid rgba(74,222,128,0.2);
+  color:var(--success-400);
+}
+
+/* ====================================================================== */
+/*  RESPONSIVE                                                            */
+/* ====================================================================== */
+@media (max-width:1100px){
+  .main{grid-template-columns:1fr;}
+  .preview-col{position:static;order:-1;margin-bottom:24px;}
+  .preview-card{max-width:380px;}
+}
+@media (max-width:760px){
+  .topbar__inner{padding:12px 16px;flex-wrap:wrap;}
+  .stepper__inner{padding:20px 16px 16px;}
+  .step__title{display:none;}
+  .step__label{display:none;}
+  .main{padding:32px 16px 64px;}
+  .step-head__title{font-size:32px;}
+  .type-grid{grid-template-columns:1fr;}
+  .method-tabs{grid-template-columns:1fr;}
+  .price-grid{grid-template-columns:1fr;}
+  .prompt-templates{grid-template-columns:1fr;}
+  .link-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!--  TOP BAR                                                     -->
+<!-- ============================================================ -->
+<header class="topbar">
+  <div class="topbar__inner">
+    <a href="index.html" class="topbar__brand">
+      <span class="topbar__logo">
+        <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M25 4l8 4.6v9.3L25 22.5l-8-4.6V8.6L25 4z" fill="white"/>
+          <path d="M14 18l8 4.6v9.3L14 36.5l-8-4.6V22.6L14 18z" fill="white" opacity="0.85"/>
+          <path d="M36 18l8 4.6v9.3L36 36.5l-8-4.6V22.6L36 18z" fill="white" opacity="0.85"/>
+          <path d="M25 32l8 4.6v9.3L25 50.5l-8-4.6V36.6L25 32z" fill="white" opacity="0.7"/>
+        </svg>
+      </span>
+    </a>
+    <a href="index.html" class="topbar__back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Marketplace
+    </a>
+    <div class="topbar__crumb">
+      <span>Launch</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <b id="crumbType">New product</b>
+    </div>
+    <div class="topbar__right">
+      <span class="topbar__save">
+        <span class="save-dot"></span>
+        Saved <span id="saveTime">just now</span>
+      </span>
+      <a href="index.html" class="topbar__exit">Exit</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!--  STEPPER                                                     -->
+<!-- ============================================================ -->
+<nav class="stepper">
+  <div class="stepper__inner" id="stepper">
+    <div class="step is-active" data-step="1">
+      <div class="step__row">
+        <div class="step__bullet">
+          <span class="num">1</span>
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="step__line"></div>
+      </div>
+      <div class="step__label">Step 01</div>
+      <div class="step__title">Choose type</div>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step__row">
+        <div class="step__bullet">
+          <span class="num">2</span>
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="step__line"></div>
+      </div>
+      <div class="step__label">Step 02</div>
+      <div class="step__title">Basics</div>
+    </div>
+    <div class="step" data-step="3">
+      <div class="step__row">
+        <div class="step__bullet">
+          <span class="num">3</span>
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="step__line"></div>
+      </div>
+      <div class="step__label">Step 03</div>
+      <div class="step__title">Build</div>
+    </div>
+    <div class="step" data-step="4">
+      <div class="step__row">
+        <div class="step__bullet">
+          <span class="num">4</span>
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+      <div class="step__label">Step 04</div>
+      <div class="step__title">Listing</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<!--  MAIN                                                        -->
+<!-- ============================================================ -->
+<main class="main main--narrow" id="mainEl">
+
+  <div class="form-col">
+
+    <!-- =========================================================== -->
+    <!--  STEP 1 — TYPE PICKER                                       -->
+    <!-- =========================================================== -->
+    <section class="step-panel is-active" data-panel="1">
+      <header class="step-head">
+        <div class="step-head__eyebrow">SWARMS · LAUNCH NOW</div>
+        <h1 class="step-head__title">What are you <em>publishing?</em></h1>
+        <p class="step-head__desc">
+          Pick the product type that matches what you've built. You can always change this later — your work is auto-saved as you go.
+        </p>
+      </header>
+
+      <div class="type-grid">
+        <button class="type-card type-card--agent" data-type="agent">
+          <span class="type-card__check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div class="type-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/>
+            </svg>
+          </div>
+          <h3 class="type-card__name">
+            Agent
+            <span class="type-card__time">~3 min</span>
+          </h3>
+          <p class="type-card__desc">An AI agent that can autonomously perform tasks, call tools, and complete real-world work for users.</p>
+          <div class="type-card__hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Have working code? Pick this
+          </div>
+        </button>
+
+        <button class="type-card type-card--prompt" data-type="prompt">
+          <span class="type-card__check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div class="type-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/>
+            </svg>
+          </div>
+          <h3 class="type-card__name">
+            Prompt
+            <span class="type-card__time">~2 min</span>
+          </h3>
+          <p class="type-card__desc">A reusable prompt template with variables. Perfect for proven instructions you want to share or sell.</p>
+          <div class="type-card__hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Just text instructions? Pick this
+          </div>
+        </button>
+
+        <button class="type-card type-card--tool" data-type="tool">
+          <span class="type-card__check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div class="type-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
+          </div>
+          <h3 class="type-card__name">
+            Tool
+            <span class="type-card__time">~3 min</span>
+          </h3>
+          <p class="type-card__desc">A utility tool or API that agents can call — file conversion, data lookup, math operations, you name it.</p>
+          <div class="type-card__hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Have an API endpoint? Pick this
+          </div>
+        </button>
+      </div>
+
+      <div class="actions">
+        <div class="actions__left">
+          <a href="#" class="actions__skip">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Not sure which to choose?
+          </a>
+        </div>
+        <button class="btn btn--primary btn--lg" id="continueStep1" disabled>
+          Continue
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!--  STEP 2 — BASICS                                            -->
+    <!-- =========================================================== -->
+    <section class="step-panel" data-panel="2">
+      <header class="step-head">
+        <div class="step-head__eyebrow">STEP 02 · BASICS</div>
+        <h1 class="step-head__title">Tell us the <em>essentials.</em></h1>
+        <p class="step-head__desc">
+          Just three things that matter most. Start with a description — our AI will draft the rest from there.
+        </p>
+      </header>
+
+      <div class="ai-banner" id="aiBanner" style="display:none;">
+        <div class="ai-banner__icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z"/></svg>
+        </div>
+        <div class="ai-banner__body">
+          <h4 class="ai-banner__title">AI Assistant <span class="badge">READY</span></h4>
+          <p class="ai-banner__desc">Based on your description, I can suggest a name and generate cover art in one click.</p>
+        </div>
+        <button class="ai-banner__cta" id="aiAutoFill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Apply suggestions
+        </button>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard__head">
+          <span class="fcard__num">01</span>
+          <h3 class="fcard__title">Describe what it does</h3>
+        </div>
+        <p class="fcard__desc">A few sentences. Don't overthink — this becomes the marketplace pitch. Our AI uses it to fill in the rest.</p>
+
+        <div class="field">
+          <div class="input-wrap">
+            <textarea class="textarea" id="fDescription" rows="4" placeholder="e.g. An autonomous trading agent that monitors on-chain signals across 14 chains, detects unusual volume patterns, and executes pre-defined strategies through Jupiter and 0x..."></textarea>
+            <span class="input-counter"><span id="descCount">0</span> / 280</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard__head">
+          <span class="fcard__num">02</span>
+          <h3 class="fcard__title">Give it a name</h3>
+        </div>
+
+        <div class="field">
+          <div class="field__label">
+            <span class="field__label-text">Product name <span class="required">*</span></span>
+            <span class="field__hint">
+              <button class="ai-pill" id="suggestName" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Suggest from description
+              </button>
+            </span>
+          </div>
+          <input class="input" type="text" id="fName" placeholder="e.g. Vortex Quant Engine" />
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard__head">
+          <span class="fcard__num">03</span>
+          <h3 class="fcard__title">Cover image</h3>
+          <span class="fcard__optional">16:9 · ≤ 5MB</span>
+        </div>
+
+        <div class="cover" id="coverDrop">
+          <div class="cover__placeholder">
+            <div class="cover__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <h4 class="cover__title">Drag & drop or click to upload</h4>
+            <p class="cover__hint">JPG · PNG · WebP · GIF up to 5MB</p>
+          </div>
+          <div class="cover__overlay">
+            <button>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.6-7.16"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Replace
+            </button>
+          </div>
+        </div>
+
+        <div class="cover-actions">
+          <button class="cover-action cover-action--ai" id="aiGenCover">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Generate cover with AI
+          </button>
+          <button class="cover-action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload from computer
+          </button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--ghost" data-go="1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+        <button class="btn btn--primary btn--lg" data-go="3">
+          Continue to build
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!--  STEP 3 — BUILD                                             -->
+    <!-- =========================================================== -->
+    <section class="step-panel" data-panel="3">
+      <header class="step-head">
+        <div class="step-head__eyebrow">STEP 03 · BUILD</div>
+        <h1 class="step-head__title">Connect the <em>implementation.</em></h1>
+        <p class="step-head__desc" id="step3Desc">
+          Tell us how your agent runs. Pick the simplest path — most teams start with GitHub import.
+        </p>
+      </header>
+
+      <!-- ============ AGENT FIELDS ============ -->
+      <div class="type-fields" data-tf="agent">
+        <div class="method-tabs" id="methodTabs">
+          <button class="method-tab is-active" data-method="code">
+            <div class="method-tab__head">
+              <span class="method-tab__name">
+                <span class="method-tab__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </span>
+                Code
+              </span>
+              <span class="method-tab__radio"></span>
+            </div>
+            <p class="method-tab__desc">Paste your code or import from GitHub. Best for full control.</p>
+          </button>
+
+          <button class="method-tab" data-method="x402">
+            <div class="method-tab__head">
+              <span class="method-tab__name">
+                <span class="method-tab__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>
+                </span>
+                x402 URL
+              </span>
+              <span class="method-tab__radio"></span>
+            </div>
+            <p class="method-tab__desc">Already deployed? Point to your x402 endpoint.</p>
+          </button>
+
+          <button class="method-tab" data-method="mcp">
+            <div class="method-tab__head">
+              <span class="method-tab__name">
+                <span class="method-tab__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </span>
+                MCP URL
+              </span>
+              <span class="method-tab__radio"></span>
+            </div>
+            <p class="method-tab__desc">Hosting an MCP server? Connect it directly.</p>
+          </button>
+        </div>
+
+        <!-- Method panel: Code -->
+        <div class="method-panel is-active" data-method-panel="code">
+          <div class="gh-import">
+            <div class="gh-import__head">
+              <div class="gh-import__icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.31.47-2.38 1.24-3.22-.13-.31-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.87.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 0z"/>
+                </svg>
+              </div>
+              <h4 class="gh-import__title">
+                Import from GitHub
+                <small>Paste a public repo URL — we'll detect language, dependencies, and entry file automatically.</small>
+              </h4>
+            </div>
+            <div class="gh-import__form">
+              <input class="input" type="text" id="ghUrl" placeholder="https://github.com/your-org/your-agent" />
+              <button class="btn-import" id="ghImportBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Import
+              </button>
+            </div>
+            <div class="gh-detected" id="ghDetected">
+              <div class="gh-detected__title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Detected automatically
+              </div>
+              <div class="gh-detected__rows">
+                <span class="gh-detected__chip">Language: Python 3.11</span>
+                <span class="gh-detected__chip">3 packages</span>
+                <span class="gh-detected__chip">Entry: agent.py</span>
+                <span class="gh-detected__chip">247 lines</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gh-divider">— OR ENTER MANUALLY —</div>
+
+          <div class="fcard">
+            <div class="fcard__head">
+              <span class="fcard__num">01</span>
+              <h3 class="fcard__title">Runtime</h3>
+            </div>
+            <div class="field">
+              <div class="field__label">
+                <span class="field__label-text">Programming language <span class="required">*</span></span>
+              </div>
+              <div class="select-wrap">
+                <select class="select" id="lang">
+                  <option>Python 3.11</option>
+                  <option>Python 3.10</option>
+                  <option>TypeScript / Node.js 20</option>
+                  <option>JavaScript / Node.js 20</option>
+                  <option>Rust 1.75</option>
+                  <option>Go 1.22</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard__head">
+              <span class="fcard__num">02</span>
+              <h3 class="fcard__title">Dependencies</h3>
+              <span class="fcard__optional">Optional</span>
+            </div>
+            <p class="fcard__desc">Packages your agent needs at runtime. Leave blank if it has no dependencies.</p>
+
+            <div class="pkg-rows" id="pkgRows">
+              <div class="pkg-row">
+                <span class="pkg-row__num">📦 1</span>
+                <input class="input" type="text" placeholder="package name (e.g. requests)" />
+                <input class="input" type="text" placeholder="install command (e.g. pip install requests)" />
+                <button class="pkg-row__remove" data-remove="pkg">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            </div>
+            <button class="btn-add" id="addPkg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add dependency
+            </button>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard__head">
+              <span class="fcard__num">03</span>
+              <h3 class="fcard__title">Agent code</h3>
+            </div>
+            <p class="fcard__desc">Paste your implementation. Add type hints and docstrings — they help users understand the agent.</p>
+            <textarea class="textarea textarea--code" id="codeArea" placeholder="def run(input: str) -> str:&#10;    &quot;&quot;&quot;Entry point for the agent.&quot;&quot;&quot;&#10;    # ... your logic here&#10;    return result"></textarea>
+          </div>
+        </div>
+
+        <!-- Method panel: x402 -->
+        <div class="method-panel" data-method-panel="x402">
+          <div class="proto-card proto-card--x402">
+            <div class="proto-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/>
+              </svg>
+            </div>
+            <div class="proto-card__body">
+              <h4 class="proto-card__title">
+                x402-Compatible API
+                <span class="badge">Auto-discovery</span>
+              </h4>
+              <p class="proto-card__lede">x402 is a machine-readable catalog for API endpoints. When you provide an x402 URL, the system will automatically:</p>
+              <ul class="proto-card__list">
+                <li>Discover the API schema from the facilitator</li>
+                <li>Generate Python &amp; TypeScript code examples for users</li>
+                <li>Display integration instructions automatically</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard__head">
+              <span class="fcard__num">01</span>
+              <h3 class="fcard__title">x402 endpoint URL</h3>
+              <span class="fcard__optional">Required</span>
+            </div>
+
+            <div class="field">
+              <input class="input" type="text" id="x402Url" placeholder="https://api.example.com/endpoint" />
+              <p class="field__helper">Enter the full URL to your x402-compatible API endpoint. The system will fetch the schema automatically.</p>
+            </div>
+
+            <div class="field">
+              <div class="field__label">
+                <span class="field__label-text">Per-request price (USDC)</span>
+                <span class="field__hint">Auto-detected from x402 manifest</span>
+              </div>
+              <input class="input" type="text" placeholder="0.05" />
+            </div>
+
+            <button class="cover-action" id="x402TestBtn" style="margin-top:4px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Test endpoint &amp; fetch schema
+            </button>
+
+            <div class="endpoint-test endpoint-test--ok" id="x402TestResult">
+              <div class="endpoint-test__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="endpoint-test__body">
+                <h5 class="endpoint-test__title">Endpoint reachable · schema discovered</h5>
+                <div class="endpoint-test__rows">
+                  <span class="endpoint-test__chip">Status: 200 OK</span>
+                  <span class="endpoint-test__chip">Latency: 142 ms</span>
+                  <span class="endpoint-test__chip">3 operations</span>
+                  <span class="endpoint-test__chip">Price: $0.05 / req</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Method panel: MCP -->
+        <div class="method-panel" data-method-panel="mcp">
+          <div class="proto-card proto-card--mcp">
+            <div class="proto-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </div>
+            <div class="proto-card__body">
+              <h4 class="proto-card__title">
+                MCP (Model Context Protocol) Server
+                <span class="badge">Auto-discovery</span>
+              </h4>
+              <p class="proto-card__lede">MCP enables agents to discover and interact with services. When you provide an MCP server URL, the system will automatically:</p>
+              <ul class="proto-card__list">
+                <li>Connect to the MCP server and fetch the schema</li>
+                <li>Discover available tools and resources</li>
+                <li>Generate Python code examples using the MCP client</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard__head">
+              <span class="fcard__num">01</span>
+              <h3 class="fcard__title">MCP server URL</h3>
+              <span class="fcard__optional">Required</span>
+            </div>
+
+            <div class="field">
+              <input class="input" type="text" id="mcpUrl" placeholder="https://api.example.com/mcp" />
+              <p class="field__helper">Enter the base URL to your MCP server. The system will attempt to discover the schema at common endpoints.</p>
+            </div>
+
+            <div class="field">
+              <div class="field__label">
+                <span class="field__label-text">Authentication</span>
+              </div>
+              <div class="select-wrap">
+                <select class="select">
+                  <option>None (public)</option>
+                  <option>API key (header)</option>
+                  <option>Bearer token</option>
+                  <option>OAuth 2.0</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="cover-action" id="mcpTestBtn" style="margin-top:4px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Connect &amp; discover tools
+            </button>
+
+            <div class="endpoint-test endpoint-test--ok" id="mcpTestResult">
+              <div class="endpoint-test__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="endpoint-test__body">
+                <h5 class="endpoint-test__title">MCP server connected · schema discovered</h5>
+                <div class="endpoint-test__rows">
+                  <span class="endpoint-test__chip">SSE handshake OK</span>
+                  <span class="endpoint-test__chip">Latency: 88 ms</span>
+                  <span class="endpoint-test__chip">7 tools</span>
+                  <span class="endpoint-test__chip">2 resources</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ PROMPT FIELDS ============ -->
+      <div class="type-fields" data-tf="prompt">
+        <div class="fcard">
+          <div class="fcard__head">
+            <span class="fcard__num">01</span>
+            <h3 class="fcard__title">Quick start</h3>
+            <span class="fcard__optional">Optional</span>
+          </div>
+          <p class="fcard__desc">Pick a starting template, or write yours from scratch below.</p>
+          <div class="prompt-templates">
+            <button class="template-card" data-template="reviewer">
+              <div class="template-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+              <h4 class="template-card__name">Code reviewer</h4>
+              <p class="template-card__desc">Senior-level critique with severity ratings.</p>
+            </button>
+            <button class="template-card" data-template="writer">
+              <div class="template-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/></svg>
+              </div>
+              <h4 class="template-card__name">Content writer</h4>
+              <p class="template-card__desc">Structured long-form with tone matching.</p>
+            </button>
+            <button class="template-card" data-template="research">
+              <div class="template-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </div>
+              <h4 class="template-card__name">Research synth</h4>
+              <p class="template-card__desc">40-source synthesis with citations.</p>
+            </button>
+          </div>
+        </div>
+
+        <div class="fcard">
+          <div class="fcard__head">
+            <span class="fcard__num">02</span>
+            <h3 class="fcard__title">Prompt content</h3>
+          </div>
+          <p class="fcard__desc">Write clear instructions. Use <code style="color:var(--warning-400);font-family:var(--font-mono);font-size:11.5px;background:rgba(251,191,36,0.08);padding:1px 5px;border-radius:3px;">{{variable}}</code> syntax for placeholders — we'll detect them automatically.</p>
+          <textarea class="textarea textarea--prompt" id="promptArea" placeholder="You are an expert {{role}} reviewing {{input_type}}.&#10;&#10;Your task is to:&#10;1. Identify issues by severity (critical, major, minor)&#10;2. Suggest concrete fixes with code examples&#10;3. Highlight what's done well&#10;&#10;Format: structured markdown with headers."></textarea>
+
+          <div class="var-detect" id="varDetect" style="display:none;">
+            <div class="var-detect__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="var-detect__body">
+              Detected <strong id="varCount">2 variables</strong>: <span id="varList">{{role}}, {{input_type}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ TOOL FIELDS ============ -->
+      <div class="type-fields" data-tf="tool">
+        <div class="fcard">
+          <div class="fcard__head">
+            <span class="fcard__num">01</span>
+            <h3 class="fcard__title">Endpoint</h3>
+          </div>
+          <p class="fcard__desc">The API endpoint your tool calls. We'll inspect the response shape and auto-fill parameters when possible.</p>
+
+          <div class="field">
+            <div class="field__label">
+              <span class="field__label-text">URL <span class="required">*</span></span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <div class="select-wrap" style="width:120px;">
+                <select class="select"><option>POST</option><option>GET</option><option>PUT</option><option>DELETE</option></select>
+              </div>
+              <input class="input" type="text" placeholder="https://api.example.com/v1/convert" style="flex:1;" />
+              <button class="cover-action" style="flex:0 0 auto;width:auto;padding:0 16px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Test
+              </button>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field__label">
+              <span class="field__label-text">Authentication</span>
+            </div>
+            <div class="select-wrap">
+              <select class="select">
+                <option>None</option>
+                <option>API key (header)</option>
+                <option>Bearer token</option>
+                <option>OAuth 2.0</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="fcard">
+          <div class="fcard__head">
+            <span class="fcard__num">02</span>
+            <h3 class="fcard__title">Input schema</h3>
+            <span class="fcard__optional">JSON Schema</span>
+          </div>
+          <p class="fcard__desc">What does your tool accept? Paste a JSON schema or example payload — we'll convert it.</p>
+          <textarea class="textarea textarea--code" placeholder='{&#10;  &quot;type&quot;: &quot;object&quot;,&#10;  &quot;properties&quot;: {&#10;    &quot;url&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Source URL&quot; },&#10;    &quot;format&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;enum&quot;: [&quot;pdf&quot;, &quot;docx&quot;] }&#10;  },&#10;  &quot;required&quot;: [&quot;url&quot;]&#10;}' style="min-height:160px;"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--ghost" data-go="2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+        <button class="btn btn--primary btn--lg" data-go="4">
+          Continue to listing
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!--  STEP 4 — LISTING                                           -->
+    <!-- =========================================================== -->
+    <section class="step-panel" data-panel="4">
+      <header class="step-head">
+        <div class="step-head__eyebrow">STEP 04 · LISTING</div>
+        <h1 class="step-head__title">Make it <em>discoverable.</em></h1>
+        <p class="step-head__desc">
+          Everything below is optional but helps users find your product. Hit the AI shortcut and we'll fill it from your description.
+        </p>
+      </header>
+
+      <div class="ai-banner">
+        <div class="ai-banner__icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z"/></svg>
+        </div>
+        <div class="ai-banner__body">
+          <h4 class="ai-banner__title">AI Assistant <span class="badge">SAVES ~2 MIN</span></h4>
+          <p class="ai-banner__desc">Auto-fill categories, tags, and use cases from your description. You can edit anything after.</p>
+        </div>
+        <button class="ai-banner__cta" id="aiAutoListing">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Auto-fill all
+        </button>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard__head">
+          <span class="fcard__num">01</span>
+          <h3 class="fcard__title">Categories</h3>
+          <span class="fcard__optional">Pick up to 3</span>
+        </div>
+        <div class="chip-grid" id="catChips">
+          <button class="chip" data-cat="Trading">Trading</button>
+          <button class="chip" data-cat="Research">Research</button>
+          <button class="chip" data-cat="Marketing">Marketing</button>
+          <button class="chip" data-cat="Sales">Sales</button>
+          <button class="chip" data-cat="Operations">Operations</button>
+          <button class="chip" data-cat="Web3">Web3</button>
+          <button class="chip" data-cat="Productivity">Productivity</button>
+          <button class="chip" data-cat="Developer Tools">Developer Tools</button>
+          <button class="chip" data-cat="Design">Design</button>
+          <button class="chip" data-cat="Education">Education</button>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard__head">
+          <span class="fcard__num">02</span>
+          <h3 class="fcard__title">Tags</h3>
+          <span class="fcard__optional">Optional</span>
+        </div>
+        <div class="field">
+          <div class="field__label">
+            <span class="field__label-text">Searchable keywords</span>
+            <span class="field__hint">Press Enter to add</span>
+          </div>
+          <div class="tag-input" id="tagInput">
+            <span class="tag-chip">on-chain<button data-rm="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></span>
+            <span class="tag-chip">trading<button data-rm="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></span>
+            <input type="text" placeholder="Add a tag..." />
+          </div>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard__head">
+          <span class="fcard__num">03</span>
+          <h3 class="fcard__title">Use cases</h3>
+          <span class="fcard__optional">Optional</span>
+        </div>
+        <p class="fcard__desc">Concrete scenarios where your product shines. Helps buyers understand the fit.</p>
+        <div id="usecaseRows">
+          <div class="usecase-row">
+            <span class="usecase-row__num">✨ 1</span>
+            <div class="usecase-row__body">
+              <input class="input" type="text" placeholder="Title (e.g. Tracking memecoin pumps)" />
+              <textarea class="textarea" rows="2" placeholder="Describe the scenario in 1-2 sentences..."></textarea>
+            </div>
+            <button class="usecase-row__remove" data-remove="usecase">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn-add" id="addUseCase">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add use case
+        </button>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard__head">
+          <span class="fcard__num">04</span>
+          <h3 class="fcard__title">Links</h3>
+          <span class="fcard__optional">Optional</span>
+        </div>
+        <p class="fcard__desc">GitHub, docs, demo videos, Twitter — anywhere users can learn more.</p>
+
+        <div id="linkRows">
+          <div class="link-row">
+            <input class="input" type="text" placeholder="Label (e.g. GitHub)" value="GitHub" />
+            <input class="input" type="text" placeholder="https://example.com" />
+            <button class="link-row__remove" data-remove="link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn-add" id="addLink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add link
+        </button>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard__head">
+          <span class="fcard__num">05</span>
+          <h3 class="fcard__title">Pricing</h3>
+        </div>
+        <div class="price-grid" id="priceGrid">
+          <button class="price-card is-selected" data-price="free">
+            <div class="price-card__head">
+              <span class="price-card__name">Free</span>
+              <span class="price-card__radio"></span>
+            </div>
+            <p class="price-card__desc">Anyone can use. Best for getting traction quickly.</p>
+          </button>
+          <button class="price-card" data-price="paid">
+            <div class="price-card__head">
+              <span class="price-card__name">Paid</span>
+              <span class="price-card__radio"></span>
+            </div>
+            <p class="price-card__desc">Charge per run. You set the price in USDC.</p>
+          </button>
+          <button class="price-card" data-price="token">
+            <div class="price-card__head">
+              <span class="price-card__name">Tokenized</span>
+              <span class="price-card__radio"></span>
+            </div>
+            <p class="price-card__desc">Issue a token. Holders share revenue & access.</p>
+          </button>
+        </div>
+
+        <div id="priceDetail" style="margin-top:14px;display:none;">
+          <div class="field" data-price-field="paid">
+            <div class="field__label">
+              <span class="field__label-text">Price per run (USDC)</span>
+            </div>
+            <input class="input" type="text" placeholder="0.05" />
+          </div>
+          <div class="field" data-price-field="token" style="display:none;">
+            <div class="tk-block">
+
+              <!-- Combo notice (visible only when both Paid + Tokenized are intended) -->
+              <div class="tk-combo" id="tkCombo" style="display:none;">
+                <div class="tk-combo__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 12l8 10 8-10z"/></svg>
+                </div>
+                <div>
+                  <h4 class="tk-combo__title">Paid + Tokenized</h4>
+                  <p class="tk-combo__desc">Your product will be both paid (per-run access fee) and tokenized on-chain. Token holders share revenue.</p>
+                </div>
+              </div>
+
+              <!-- 01 · Token identity -->
+              <div class="tk-group">
+                <div class="tk-group__head">01 · Token identity</div>
+
+                <div class="field" style="margin:0;">
+                  <div class="field__label">
+                    <span class="field__label-text">Ticker name <span class="required">*</span></span>
+                    <span class="field__hint">Max 10 chars · A-Z 0-9</span>
+                  </div>
+                  <div class="ticker-wrap">
+                    <input class="input" type="text" id="tickerInput" maxlength="10" placeholder="e.g. AGENT, MYAGENT" />
+                    <span class="ticker-counter"><span id="tickerCount">0</span>/10</span>
+                  </div>
+                  <p class="field__helper">Enter a unique ticker symbol. We'll prefix it with <code style="font-family:var(--font-mono);font-size:11px;color:var(--brand-300);background:rgba(237,23,23,0.08);padding:1px 5px;border-radius:3px;">$</code> on the marketplace (e.g. $VORTEX).</p>
+                </div>
+
+                <div class="field" style="margin:0;">
+                  <div class="field__label">
+                    <span class="field__label-text">Quote mint <span class="required">*</span></span>
+                  </div>
+                  <div class="select-wrap">
+                    <select class="select">
+                      <option>SOL (Solana)</option>
+                      <option>USDC (Solana)</option>
+                      <option>USDT (Solana)</option>
+                    </select>
+                  </div>
+                  <p class="field__helper">The currency used to price your token on the bonding curve.</p>
+                </div>
+
+                <div class="field" style="margin:0;">
+                  <div class="field__label">
+                    <span class="field__label-text">Initial buy (SOL)</span>
+                    <span class="field__hint">Optional</span>
+                  </div>
+                  <input class="input" type="text" placeholder="e.g. 0.5" />
+                  <p class="field__helper">Amount of SOL to swap for your token immediately after creation. Leave empty to skip.</p>
+                </div>
+              </div>
+
+              <!-- 02 · Wallet (auto-detected) -->
+              <div class="tk-group">
+                <div class="tk-group__head">02 · Receiving wallet</div>
+
+                <div class="wallet-card">
+                  <div class="wallet-card__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="wallet-card__body">
+                    <h4 class="wallet-card__label">Wallet connected</h4>
+                    <span class="wallet-card__addr">6DvGwF...S3ASJU</span>
+                  </div>
+                  <button class="wallet-card__edit" aria-label="Edit address">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                </div>
+                <p class="field__helper" style="margin-top:0;">Your connected wallet will receive token fees automatically. Click the edit icon to use a different address.</p>
+              </div>
+
+              <!-- 03 · Cost breakdown -->
+              <div class="cost-card">
+                <div class="cost-card__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </div>
+                <div class="cost-card__body">
+                  <h4 class="cost-card__title">
+                    Tokenization cost <span class="amount">0.04 SOL</span>
+                    <span class="plus" id="tkComboPill" style="display:none;">+ Paid pricing</span>
+                  </h4>
+                  <ul class="cost-card__rows">
+                    <li>One-time on-chain fee of <code>0.04 SOL</code> covers token mint & bonding curve setup.</li>
+                    <li>After creation, you must <strong style="color:var(--text-primary);">buy your own tokens</strong> — they are not airdropped to creators.</li>
+                    <li id="tkComboCostRow" style="display:none;">Buyers also pay <strong style="color:var(--text-primary);"><span id="tkPriceUSD">$0.05</span> USD</strong> per run to access your product.</li>
+                  </ul>
+                  <a href="#" class="cost-card__link">
+                    Learn more about tokenization
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+
+              <!-- 04 · Frenzy mode -->
+              <div class="frenzy-row">
+                <div class="frenzy-row__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                  </svg>
+                </div>
+                <div class="frenzy-row__body">
+                  <h4 class="frenzy-row__title">
+                    Frenzy mode
+                    <span class="multiplier">2× FEES</span>
+                  </h4>
+                  <p class="frenzy-row__desc">Earn double trading fees on every transaction during Frenzy events.</p>
+                </div>
+                <button class="toggle" id="frenzyToggle" aria-label="Toggle frenzy mode" role="switch" aria-checked="false"></button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="notice">
+        <div class="notice__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </div>
+        <div class="notice__body">
+          <h4 class="notice__title">Quality validation</h4>
+          <p class="notice__desc">Submissions go through automated checks (security, quality, completeness) before going live. You'll see results within ~30 seconds.</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--ghost" data-go="3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+        <button class="btn btn--primary btn--lg" id="submitBtn">
+          Submit for review
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- =========================================================== -->
+  <!--  PREVIEW COLUMN                                             -->
+  <!-- =========================================================== -->
+  <aside class="preview-col" id="previewCol" style="display:none;">
+    <div class="preview-head">
+      <span class="preview-label">Live preview</span>
+    </div>
+
+    <div class="preview-card" id="previewCard">
+      <div class="preview-card__image">
+        <div class="preview-card__image-pattern"></div>
+        <div class="preview-card__tags">
+          <span class="preview-card__tag preview-card__tag--type" id="pvTagType">Agent</span>
+        </div>
+        <div class="preview-card__price"><span class="currency">$</span>0.00<span style="color:#777;font-size:9px;">/run</span></div>
+      </div>
+      <div class="preview-card__body">
+        <div class="preview-card__creator">
+          <span class="preview-card__avatar">YO</span>
+          <span>by <strong style="color:var(--text-secondary);">your.handle</strong></span>
+        </div>
+        <h3 class="preview-card__title is-empty" id="pvTitle">Your product name</h3>
+        <p class="preview-card__desc is-empty" id="pvDesc">Your description will appear here as you type.</p>
+        <div class="preview-card__meta">
+          <span class="preview-card__rating">★ ★ ★ ★ ★ <span style="color:var(--text-tertiary);font-family:var(--font-mono);font-size:10.5px;font-weight:500;">— · — </span></span>
+          <span class="preview-card__usage">0 runs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-tips">
+      <h4 class="preview-tips__title">Quick tips</h4>
+      <ul class="preview-tips__list" id="tipsList">
+        <li><strong>Strong descriptions</strong> get 3× more clicks. Mention the outcome, not the technology.</li>
+        <li><strong>Cover image</strong> matters more than you think — it's the first thing buyers see.</li>
+        <li><strong>Top 3 categories</strong> drive 80% of marketplace traffic. Choose carefully.</li>
+      </ul>
+    </div>
+  </aside>
+
+</main>
+
+<script>
+/* ====================================================================== */
+/*  STATE                                                                */
+/* ====================================================================== */
+const state = {
+  step: 1,
+  type: null,        // "agent" | "prompt" | "tool"
+  method: "code",    // for agent: "code" | "x402" | "mcp"
+  name: "",
+  desc: "",
+  price: "free",
+  cats: new Set(),
+};
+
+const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
+
+/* ====================================================================== */
+/*  STEPPER NAVIGATION                                                   */
+/* ====================================================================== */
+function setStep(n) {
+  state.step = n;
+  // panels
+  $$(".step-panel").forEach(p => p.classList.toggle("is-active", +p.dataset.panel === n));
+  // stepper visual
+  $$("#stepper .step").forEach(s => {
+    const sn = +s.dataset.step;
+    s.classList.toggle("is-active", sn === n);
+    s.classList.toggle("is-done", sn < n);
+  });
+  // type-fields visibility on step 3
+  if (n === 3) {
+    $$(".type-fields").forEach(tf => tf.classList.toggle("is-active", tf.dataset.tf === state.type));
+    updateStep3Description();
+  }
+  // preview col only after step 1
+  $("#previewCol").style.display = (n >= 2 && state.type) ? "" : "none";
+  $("#mainEl").classList.toggle("main--narrow", n === 1 || !state.type);
+
+  // scroll to top of main panel smoothly
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+$$('[data-go]').forEach(btn => btn.addEventListener("click", () => setStep(+btn.dataset.go)));
+
+// stepper item clickable (only goes back to a finished step)
+$$("#stepper .step").forEach(s => s.addEventListener("click", () => {
+  const n = +s.dataset.step;
+  if (n < state.step || s.classList.contains("is-done")) setStep(n);
+}));
+
+/* ====================================================================== */
+/*  STEP 1 — TYPE SELECTION                                              */
+/* ====================================================================== */
+$$(".type-card").forEach(c => c.addEventListener("click", () => {
+  $$(".type-card").forEach(x => x.classList.remove("is-selected"));
+  c.classList.add("is-selected");
+  state.type = c.dataset.type;
+  $("#continueStep1").disabled = false;
+  $("#crumbType").textContent = state.type[0].toUpperCase() + state.type.slice(1);
+  updatePreview();
+}));
+
+$("#continueStep1").addEventListener("click", () => setStep(2));
+
+function updateStep3Description() {
+  const desc = {
+    agent:  "Tell us how your agent runs. Pick the simplest path — most teams start with GitHub import.",
+    prompt: "Drop in your prompt. Use {{variable}} for placeholders — we'll detect them automatically.",
+    tool:   "Connect your API endpoint. We'll inspect it and auto-fill input parameters when possible."
+  };
+  $("#step3Desc").textContent = desc[state.type] || desc.agent;
+}
+
+/* ====================================================================== */
+/*  STEP 2 — BASICS + AI                                                 */
+/* ====================================================================== */
+const fName = $("#fName"), fDesc = $("#fDescription"), descCount = $("#descCount");
+const aiBanner = $("#aiBanner");
+
+fDesc.addEventListener("input", () => {
+  state.desc = fDesc.value;
+  descCount.textContent = state.desc.length;
+  if (state.desc.length > 280) descCount.style.color = "var(--danger-400)";
+  else descCount.style.color = "";
+  // show AI banner once description is meaningful
+  aiBanner.style.display = state.desc.trim().length >= 40 ? "" : "none";
+  updatePreview();
+});
+fName.addEventListener("input", () => {
+  state.name = fName.value;
+  updatePreview();
+});
+
+$("#suggestName").addEventListener("click", () => {
+  // simulated AI: derive a name from first words
+  if (!state.desc.trim()) {
+    fName.placeholder = "Write a description first ↑";
+    fName.focus();
+    return;
+  }
+  const suggestions = {
+    agent:  ["Vortex Quant Engine", "Atlas Signal Hunter", "Helios Trading Core", "Synapse Alpha Bot"],
+    prompt: ["Senior Code Critic", "Long-form Composer Pro", "Research Synthesizer", "Strategy Architect"],
+    tool:   ["FormatBridge API", "DataStream Tool", "ConvertCore", "Inspector Toolkit"]
+  };
+  const list = suggestions[state.type] || suggestions.agent;
+  fName.value = list[Math.floor(Math.random() * list.length)];
+  state.name = fName.value;
+  fName.style.background = "rgba(237,23,23,0.08)";
+  setTimeout(() => fName.style.background = "", 600);
+  updatePreview();
+});
+
+$("#aiAutoFill").addEventListener("click", () => {
+  $("#suggestName").click();
+  // simulate cover generation
+  setTimeout(() => $("#aiGenCover").click(), 200);
+});
+
+$("#aiGenCover").addEventListener("click", () => {
+  const cover = $("#coverDrop");
+  cover.classList.add("has-image");
+  // randomize a colorful gradient background
+  const gradients = [
+    "radial-gradient(circle at 30% 40%, #6b46c1, #1e1b4b 70%)",
+    "radial-gradient(circle at 70% 50%, #ed1717, #2a0303 70%)",
+    "radial-gradient(circle at 50% 35%, #0ea5e9, #0c2540 70%)",
+    "radial-gradient(circle at 60% 40%, #f59e0b, #3b2200 70%)",
+    "radial-gradient(circle at 40% 60%, #22c55e, #052e16 70%)",
+  ];
+  const bg = gradients[Math.floor(Math.random() * gradients.length)];
+  cover.style.background = bg;
+  // sync preview card image
+  $("#previewCard .preview-card__image").style.background = bg;
+});
+
+/* ====================================================================== */
+/*  STEP 3 — METHOD TABS (agent only)                                    */
+/* ====================================================================== */
+$$(".method-tab").forEach(t => t.addEventListener("click", () => {
+  $$(".method-tab").forEach(x => x.classList.remove("is-active"));
+  t.classList.add("is-active");
+  state.method = t.dataset.method;
+  $$(".method-panel").forEach(p => p.classList.toggle("is-active", p.dataset.methodPanel === state.method));
+}));
+
+// GitHub import simulation
+$("#ghImportBtn").addEventListener("click", () => {
+  const url = $("#ghUrl").value.trim();
+  if (!url) { $("#ghUrl").focus(); return; }
+  $("#ghDetected").classList.add("is-visible");
+  // pre-fill code area as if we read it
+  const samplePy = `# Auto-imported from ${url}\nimport requests\nfrom typing import Dict\n\ndef run(input_text: str) -> Dict:\n    """Main entry. Receives user query, returns structured response."""\n    response = requests.post("https://api.example.com/v1", json={"q": input_text})\n    return response.json()\n`;
+  $("#codeArea").value = samplePy;
+});
+
+// Add / remove dynamic rows
+let pkgCount = 1;
+$("#addPkg").addEventListener("click", () => {
+  pkgCount++;
+  const row = document.createElement("div");
+  row.className = "pkg-row";
+  row.innerHTML = `
+    <span class="pkg-row__num">📦 ${pkgCount}</span>
+    <input class="input" type="text" placeholder="package name" />
+    <input class="input" type="text" placeholder="install command" />
+    <button class="pkg-row__remove" data-remove="pkg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>`;
+  $("#pkgRows").appendChild(row);
+});
+
+let useCount = 1;
+$("#addUseCase").addEventListener("click", () => {
+  useCount++;
+  const row = document.createElement("div");
+  row.className = "usecase-row";
+  row.innerHTML = `
+    <span class="usecase-row__num">✨ ${useCount}</span>
+    <div class="usecase-row__body">
+      <input class="input" type="text" placeholder="Title" />
+      <textarea class="textarea" rows="2" placeholder="Describe the scenario..."></textarea>
+    </div>
+    <button class="usecase-row__remove" data-remove="usecase">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>`;
+  $("#usecaseRows").appendChild(row);
+});
+
+$("#addLink").addEventListener("click", () => {
+  const row = document.createElement("div");
+  row.className = "link-row";
+  row.innerHTML = `
+    <input class="input" type="text" placeholder="Label" />
+    <input class="input" type="text" placeholder="https://example.com" />
+    <button class="link-row__remove" data-remove="link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>`;
+  $("#linkRows").appendChild(row);
+});
+
+// global remove
+document.addEventListener("click", e => {
+  const btn = e.target.closest("[data-remove]");
+  if (!btn) return;
+  btn.closest(".pkg-row, .usecase-row, .link-row")?.remove();
+});
+
+// remove tag chips
+document.addEventListener("click", e => {
+  const btn = e.target.closest("[data-rm='tag']");
+  if (!btn) return;
+  btn.closest(".tag-chip")?.remove();
+});
+// add tag on Enter
+$("#tagInput input").addEventListener("keydown", e => {
+  if (e.key !== "Enter" || !e.target.value.trim()) return;
+  e.preventDefault();
+  const chip = document.createElement("span");
+  chip.className = "tag-chip";
+  chip.innerHTML = `${e.target.value.trim()}<button data-rm="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+  e.target.parentElement.insertBefore(chip, e.target);
+  e.target.value = "";
+});
+
+// templates fill
+$$(".template-card").forEach(c => c.addEventListener("click", () => {
+  const samples = {
+    reviewer: "You are a senior {{language}} engineer reviewing pull requests.\n\nFor each diff, identify:\n1. Critical issues (security, data loss, race conditions)\n2. Major issues (performance, architecture)\n3. Minor issues (style, naming, docs)\n\nFor each, suggest a concrete fix with code.",
+    writer:   "You are an expert content writer for {{topic}}.\n\nWrite a {{length}}-word piece in the style of {{publication}}.\n\nStructure:\n- Hook (1 paragraph)\n- 3-5 main sections with subheaders\n- Practical takeaways\n- Strong closing line",
+    research: "Synthesize research on {{topic}} from at least 8 academic sources.\n\nDeliver:\n1. State of the field (current consensus)\n2. Key debates and open questions\n3. Recent breakthroughs ({{year_range}})\n4. Citation list with DOIs"
+  };
+  $("#promptArea").value = samples[c.dataset.template];
+  detectVars();
+}));
+
+// detect {{vars}} from prompt
+function detectVars() {
+  const text = $("#promptArea")?.value || "";
+  const matches = [...text.matchAll(/\{\{(\w+)\}\}/g)];
+  const unique = [...new Set(matches.map(m => m[0]))];
+  const detect = $("#varDetect");
+  if (!detect) return;
+  if (unique.length === 0) { detect.style.display = "none"; return; }
+  detect.style.display = "";
+  $("#varCount").textContent = unique.length + (unique.length === 1 ? " variable" : " variables");
+  $("#varList").textContent = unique.join(", ");
+}
+$("#promptArea")?.addEventListener("input", detectVars);
+
+/* ====================================================================== */
+/*  STEP 4 — LISTING                                                     */
+/* ====================================================================== */
+// Categories
+$$(".chip[data-cat]").forEach(c => c.addEventListener("click", () => {
+  if (c.classList.contains("is-selected")) {
+    c.classList.remove("is-selected");
+    state.cats.delete(c.dataset.cat);
+  } else if (state.cats.size < 3) {
+    c.classList.add("is-selected");
+    state.cats.add(c.dataset.cat);
+  }
+}));
+
+// Pricing
+$$(".price-card").forEach(p => p.addEventListener("click", () => {
+  $$(".price-card").forEach(x => x.classList.remove("is-selected"));
+  p.classList.add("is-selected");
+  state.price = p.dataset.price;
+  $("#priceDetail").style.display = state.price === "free" ? "none" : "";
+  $$("[data-price-field]").forEach(f =>
+    f.style.display = f.dataset.priceField === state.price ? "" : "none"
+  );
+  // Combo notice (placeholder for future multi-select; currently single radio)
+  const comboPill = $("#tkComboPill");
+  if (comboPill) comboPill.style.display = "none";
+  const comboRow = $("#tkComboCostRow");
+  if (comboRow) comboRow.style.display = "none";
+  updatePreview();
+}));
+
+// Ticker counter + uppercase enforce
+const tickerInput = $("#tickerInput"), tickerCount = $("#tickerCount");
+if (tickerInput) {
+  tickerInput.addEventListener("input", () => {
+    tickerInput.value = tickerInput.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    tickerCount.textContent = tickerInput.value.length;
+    tickerCount.style.color = tickerInput.value.length === 10
+      ? "var(--warning-400)" : "";
+  });
+}
+
+// Frenzy toggle
+const frenzyToggle = $("#frenzyToggle");
+if (frenzyToggle) {
+  frenzyToggle.addEventListener("click", () => {
+    const on = frenzyToggle.classList.toggle("is-on");
+    frenzyToggle.setAttribute("aria-checked", on);
+  });
+}
+
+// x402 / MCP endpoint testing — simulated success after a short delay
+function bindEndpointTest(btnId, urlId, resultId, label) {
+  const btn = $("#" + btnId);
+  const result = $("#" + resultId);
+  if (!btn || !result) return;
+  btn.addEventListener("click", () => {
+    const url = $("#" + urlId)?.value.trim();
+    if (!url) { $("#" + urlId)?.focus(); return; }
+    const original = btn.innerHTML;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg> ${label}…`;
+    btn.disabled = true;
+    result.classList.remove("is-visible");
+    setTimeout(() => {
+      btn.innerHTML = original;
+      btn.disabled = false;
+      result.classList.add("is-visible");
+    }, 1100);
+  });
+}
+bindEndpointTest("x402TestBtn", "x402Url", "x402TestResult", "Testing");
+bindEndpointTest("mcpTestBtn",  "mcpUrl",  "mcpTestResult",  "Connecting");
+
+// AI auto-fill listing
+$("#aiAutoListing").addEventListener("click", () => {
+  // pick 3 categories
+  const auto = ["Trading", "Web3", "Operations"];
+  $$(".chip[data-cat]").forEach(c => c.classList.remove("is-selected"));
+  state.cats.clear();
+  auto.forEach(cat => {
+    const chip = $(`.chip[data-cat="${cat}"]`);
+    if (chip) { chip.classList.add("is-selected"); state.cats.add(cat); }
+  });
+  // add tags
+  const tagInput = $("#tagInput");
+  ["analytics", "real-time", "multi-chain"].forEach(t => {
+    if (![...tagInput.querySelectorAll(".tag-chip")].some(c => c.textContent.includes(t))) {
+      const chip = document.createElement("span");
+      chip.className = "tag-chip";
+      chip.innerHTML = `${t}<button data-rm="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+      tagInput.insertBefore(chip, tagInput.querySelector("input"));
+    }
+  });
+  // fill first use case
+  const firstUse = $(".usecase-row");
+  if (firstUse) {
+    firstUse.querySelector('input[type="text"]').value = "Detecting unusual on-chain volume";
+    firstUse.querySelector("textarea").value = "Monitor wallet flows across 14 chains and surface anomalies in real time, before they hit social feeds.";
+  }
+});
+
+// Submit
+$("#submitBtn").addEventListener("click", e => {
+  e.preventDefault();
+  const btn = e.currentTarget;
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg> Validating...`;
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Submitted! Review in ~30s`;
+    btn.style.background = "var(--success-500)";
+    btn.style.boxShadow = "0 6px 20px -8px rgba(34,197,94,0.6)";
+  }, 1400);
+});
+
+/* ====================================================================== */
+/*  PREVIEW PANEL UPDATE                                                 */
+/* ====================================================================== */
+function updatePreview() {
+  const t = $("#pvTitle"), d = $("#pvDesc"), tag = $("#pvTagType");
+  if (state.name.trim()) {
+    t.textContent = state.name;
+    t.classList.remove("is-empty");
+  } else {
+    t.textContent = "Your product name";
+    t.classList.add("is-empty");
+  }
+  if (state.desc.trim()) {
+    d.textContent = state.desc;
+    d.classList.remove("is-empty");
+  } else {
+    d.textContent = "Your description will appear here as you type.";
+    d.classList.add("is-empty");
+  }
+  if (state.type) {
+    tag.textContent = state.type[0].toUpperCase() + state.type.slice(1);
+    const colors = {
+      agent:  { bg: "rgba(237,23,23,0.92)", color: "white" },
+      prompt: { bg: "rgba(245,158,11,0.92)", color: "#2a1700" },
+      tool:   { bg: "rgba(34,197,94,0.92)", color: "#052e16" }
+    };
+    Object.assign(tag.style, { background: colors[state.type].bg, color: colors[state.type].color, borderColor: "transparent" });
+  }
+}
+
+/* ====================================================================== */
+/*  SAVE INDICATOR                                                       */
+/* ====================================================================== */
+let lastSave = Date.now();
+setInterval(() => {
+  const sec = Math.floor((Date.now() - lastSave) / 1000);
+  $("#saveTime").textContent = sec < 5 ? "just now" : sec < 60 ? `${sec}s ago` : `${Math.floor(sec/60)}m ago`;
+}, 5000);
+// "save" on input
+document.addEventListener("input", () => { lastSave = Date.now(); $("#saveTime").textContent = "just now"; });
+
+/* spin keyframe */
+const styleEl = document.createElement("style");
+styleEl.textContent = `@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`;
+document.head.appendChild(styleEl);
+</script>
+</body>
+</html>

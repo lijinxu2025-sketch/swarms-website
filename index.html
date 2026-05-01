@@ -129,8 +129,8 @@ body::before {
   align-items: center;
   padding: 18px 0 20px;
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: 64px;
+  height: calc(100vh - 64px);
   background: var(--bg-default);
 }
 .sb__logo {
@@ -186,6 +186,81 @@ body::before {
 /* ===== Main canvas ===== */
 .main { padding: 28px 56px 96px; }
 .container { max-width: 1180px; margin: 0 auto; }
+
+/* ====================================================================== */
+/*  TOPBAR (global navigation)                                            */
+/* ====================================================================== */
+.topbar {
+  grid-column: 1 / -1;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 32px 0 24px;
+  border-bottom: 1px solid var(--border-default);
+  background: rgba(10, 10, 10, 0.78);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+.topbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.topbar__link {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.1px;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+.topbar__link:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+.topbar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.topbar__btn svg { width: 14px; height: 14px; }
+.topbar__btn--launch {
+  background: var(--brand-600);
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 24px -10px rgba(237,23,23,0.55);
+}
+.topbar__btn--launch:hover { background: var(--brand-500); }
+.topbar__btn--launch:active { transform: translateY(1px); }
+.topbar__btn--wallet {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+.topbar__btn--wallet:hover { background: rgba(255,255,255,0.04); border-color: var(--neutral-500); }
+.topbar__avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ed1717 0%, #8b5cf6 100%);
+  border: 1.5px solid var(--neutral-800);
+  margin-left: 8px;
+  cursor: pointer;
+  transition: border-color 120ms ease;
+}
+.topbar__avatar:hover { border-color: var(--neutral-500); }
 
 /* ====================================================================== */
 /*  TOP HEADER                                                            */
@@ -1114,6 +1189,24 @@ body::before {
 </head>
 <body>
 <div class="app">
+
+  <!-- ============================================================ -->
+  <!--  TOPBAR (global)                                             -->
+  <!-- ============================================================ -->
+  <header class="topbar">
+    <nav class="topbar__nav" aria-label="Top navigation">
+      <a class="topbar__link" href="#">How It Works</a>
+      <a class="topbar__btn topbar__btn--launch" href="launch.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+        Launch
+      </a>
+      <button class="topbar__btn topbar__btn--wallet" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 1 0-4h4v4z"/></svg>
+        Connect Wallet
+      </button>
+      <div class="topbar__avatar" role="button" tabindex="0" aria-label="Account"></div>
+    </nav>
+  </header>
 
   <!-- ============================================================ -->
   <!--  SIDEBAR                                                     -->
