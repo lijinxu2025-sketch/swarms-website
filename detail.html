@@ -1,0 +1,3841 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quant Trader Agent · Swarms Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+:root {
+  /* Brand */
+  --brand-50:#FFF1F1;--brand-100:#FFDFDF;--brand-200:#FFC5C5;--brand-300:#FF9D9D;
+  --brand-400:#FF6464;--brand-500:#FF3434;--brand-600:#ED1717;--brand-700:#C80D0D;
+  --brand-800:#A50F0F;--brand-900:#881414;--brand-950:#4A0505;
+  /* Neutral */
+  --neutral-0:#FFFFFF;--neutral-100:#F2F2F2;--neutral-200:#DDDDDD;--neutral-300:#BBBBBB;
+  --neutral-400:#999999;--neutral-500:#777777;--neutral-600:#555555;--neutral-700:#333333;
+  --neutral-800:#1F1F1F;--neutral-900:#111111;--neutral-950:#0A0A0A;
+  /* Status */
+  --success-400:#4ADE80;--success-500:#22C55E;--success-700:#15803D;--success-950:#052E16;
+  --warning-400:#FBBF24;--warning-500:#F59E0B;--warning-700:#B45309;--warning-950:#451A03;
+  --danger-400:#F87171;--danger-500:#EF4444;--danger-700:#B91C1C;--danger-950:#450A0A;
+  /* Semantic */
+  --bg-default:var(--neutral-950);--bg-subtle:var(--neutral-900);--bg-overlay:var(--neutral-800);
+  --bg-card:#131313;--bg-card-hover:#181818;--bg-input:#0F0F0F;
+  --text-primary:var(--neutral-0);--text-secondary:var(--neutral-400);
+  --text-tertiary:var(--neutral-500);--text-disabled:var(--neutral-600);
+  --border-default:var(--neutral-800);--border-strong:var(--neutral-700);
+  --font-display:"Montserrat",system-ui,-apple-system,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",monospace;
+  --r-xs:2px;--r-sm:4px;--r-md:6px;--r-lg:8px;--r-xl:12px;--r-2xl:16px;--r-full:9999px;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-display);background:var(--bg-default);color:var(--text-primary);
+  font-size:14px;line-height:1.5;font-weight:400;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:0;background:transparent;color:inherit;padding:0;}
+input,textarea,select{font-family:inherit;color:inherit;}
+a{color:inherit;text-decoration:none;}
+img,svg{display:block;max-width:100%;}
+::selection{background:var(--brand-600);color:white;}
+
+/* Subtle grid texture */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+
+/* ====================================================================== */
+/*  TOPBAR                                                                */
+/* ====================================================================== */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,10,10,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border-default);
+}
+.topbar__inner{
+  max-width:1340px;margin:0 auto;
+  padding:12px 32px;
+  display:flex;align-items:center;gap:18px;
+}
+.tb__logo{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--brand-600);
+  display:grid;place-items:center;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 6px 20px -6px rgba(237,23,23,0.5);
+  flex-shrink:0;
+}
+.tb__logo svg{width:20px;height:20px;}
+.tb__search{
+  flex:1;max-width:520px;position:relative;
+}
+.tb__search input{
+  width:100%;padding:9px 14px 9px 38px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  color:var(--text-primary);font-size:12.5px;
+  transition:border-color 120ms,background 120ms;
+}
+.tb__search input::placeholder{color:var(--text-tertiary);}
+.tb__search input:focus{outline:none;border-color:var(--brand-600);background:var(--bg-subtle);}
+.tb__search svg{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  width:14px;height:14px;color:var(--text-tertiary);
+}
+.tb__search .kbd{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:var(--font-mono);font-size:9.5px;color:var(--text-tertiary);
+  padding:2px 6px;border:1px solid var(--border-default);
+  border-radius:var(--r-xs);background:var(--bg-subtle);
+}
+.tb__nav{display:flex;align-items:center;gap:4px;}
+.tb__link{
+  padding:7px 12px;
+  font-size:12px;font-weight:600;color:var(--text-secondary);
+  border-radius:var(--r-md);
+  transition:color 120ms,background 120ms;
+}
+.tb__link:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.tb__right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb__wallet{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 12px;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--text-primary);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  background:var(--bg-card);
+  transition:border-color 120ms;
+}
+.tb__wallet:hover{border-color:var(--neutral-0);}
+.tb__wallet .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--success-500);
+  box-shadow:0 0 6px var(--success-500);
+}
+.tb__avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand-600),#8b5cf6);
+  border:1.5px solid var(--neutral-800);
+  flex-shrink:0;
+}
+.tb__launch{
+  padding:7px 14px;
+  background:var(--brand-600);color:white;
+  border-radius:var(--r-md);
+  font-size:12px;font-weight:600;
+  transition:background 120ms;
+}
+.tb__launch:hover{background:var(--brand-500);}
+
+/* ====================================================================== */
+/*  BREADCRUMB                                                            */
+/* ====================================================================== */
+.crumb{
+  max-width:1340px;margin:0 auto;
+  padding:18px 32px 0;
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--text-tertiary);
+  display:flex;align-items:center;gap:8px;
+  letter-spacing:0.4px;
+}
+.crumb a:hover{color:var(--text-primary);}
+.crumb svg{width:10px;height:10px;}
+.crumb .active{color:var(--text-primary);}
+
+/* ====================================================================== */
+/*  HERO — 16:9 banner-style                                              */
+/* ====================================================================== */
+.hero{
+  max-width:1340px;margin:0 auto;
+  padding:24px 32px 0;
+  display:flex;flex-direction:column;gap:24px;
+  position:relative;z-index:1;
+}
+
+/* The banner — cover image fills width, info overlays on top */
+.hero__banner{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  max-height:520px;
+  border-radius:var(--r-2xl);
+  overflow:hidden;
+  border:1px solid var(--border-default);
+  background:radial-gradient(circle at 30% 30%,#1a4d3e 0%,#062315 70%);
+  isolation:isolate;
+}
+
+/* Cover image fills the banner */
+.hero__banner-image{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:center;
+  pointer-events:none;
+}
+
+/* Bottom gradient fade ensures text legibility */
+.hero__banner-fade{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0) 35%,
+    rgba(10,10,10,0.5) 65%,
+    rgba(10,10,10,0.92) 100%
+  );
+  pointer-events:none;
+}
+
+/* Top-left tag pinned on banner */
+.hero__banner-tag{
+  position:absolute;top:18px;left:18px;
+  z-index:3;
+  font-family:var(--font-mono);font-size:10px;font-weight:600;
+  letter-spacing:0.6px;text-transform:uppercase;
+  padding:5px 11px;border-radius:var(--r-sm);
+  background:rgba(0,0,0,0.55);color:white;
+  border:1px solid rgba(255,255,255,0.18);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  display:inline-flex;align-items:center;gap:7px;
+}
+.hero__banner-tag .dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--brand-500);
+  box-shadow:0 0 8px var(--brand-500);
+}
+
+/* Top-right action icons floating on banner */
+.hero__banner-icons{
+  position:absolute;top:18px;right:18px;
+  z-index:3;
+  display:flex;gap:6px;
+}
+.hero__banner-icons .btn--icon{
+  background:rgba(0,0,0,0.55);
+  border-color:rgba(255,255,255,0.18);
+  color:white;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  width:38px;height:38px;
+}
+.hero__banner-icons .btn--icon:hover{
+  background:rgba(0,0,0,0.75);
+  border-color:rgba(255,255,255,0.4);
+}
+.hero__banner-icons .btn--icon.is-active{
+  background:rgba(237,23,23,0.85);
+  border-color:var(--brand-500);
+  color:white;
+}
+
+/* Title block overlaying bottom of banner */
+.hero__banner-meta{
+  position:absolute;
+  left:32px;right:32px;bottom:30px;
+  z-index:3;
+  display:flex;flex-direction:column;gap:14px;
+  pointer-events:none;
+}
+.hero__banner-meta > *{pointer-events:auto;}
+
+.hero__type{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--brand-300);
+  text-shadow:0 1px 8px rgba(0,0,0,0.6);
+  align-self:flex-start;
+}
+.hero__type::after{
+  content:"";width:36px;height:1px;
+  background:linear-gradient(90deg,var(--brand-400),transparent);
+}
+
+.hero__title{
+  font-size:64px;font-weight:800;letter-spacing:-2px;line-height:0.95;
+  margin:0;
+  color:white;
+  text-shadow:0 2px 20px rgba(0,0,0,0.4);
+  max-width:760px;
+}
+.hero__title em{font-style:italic;color:var(--brand-400);}
+
+.hero__byline{
+  display:flex;align-items:center;gap:20px;
+  flex-wrap:wrap;
+}
+.hero__creator{
+  display:flex;align-items:center;gap:9px;
+  font-size:13px;color:rgba(255,255,255,0.85);
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:6px 12px 6px 6px;
+  border-radius:var(--r-full);
+  border:1px solid rgba(255,255,255,0.12);
+  transition:background 120ms,border-color 120ms;
+}
+.hero__creator:hover{background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.3);}
+.hero__creator-av{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,#0ea5e9,#6366f1);
+  font-size:10px;font-weight:800;color:white;
+  display:grid;place-items:center;letter-spacing:-0.3px;
+  flex-shrink:0;
+}
+.hero__creator strong{color:white;font-weight:600;margin-left:1px;}
+.hero__creator .verified{
+  width:14px;height:14px;border-radius:50%;
+  background:var(--brand-600);color:white;
+  display:inline-grid;place-items:center;
+  font-size:8px;font-weight:800;
+  margin-left:3px;
+}
+.hero__rating{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;
+  color:rgba(255,255,255,0.85);
+  text-shadow:0 1px 6px rgba(0,0,0,0.5);
+}
+.hero__rating .stars{color:var(--warning-400);letter-spacing:-1px;font-size:14px;}
+.hero__rating .val{font-family:var(--font-mono);font-weight:600;color:white;}
+.hero__rating .count{color:rgba(255,255,255,0.6);font-family:var(--font-mono);font-size:11px;}
+.hero__usage{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:11px;
+  color:rgba(255,255,255,0.6);
+  text-shadow:0 1px 6px rgba(0,0,0,0.5);
+}
+.hero__usage svg{width:11px;height:11px;}
+.hero__usage strong{color:rgba(255,255,255,0.85);font-weight:600;}
+
+/* Below-banner row: lede, chips, CTAs */
+.hero__below{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:32px;flex-wrap:wrap;
+}
+.hero__below-left{flex:1;min-width:280px;display:flex;flex-direction:column;gap:14px;}
+.hero__lede{
+  font-size:15px;line-height:1.65;color:var(--text-secondary);
+  margin:0;max-width:720px;
+}
+.hero__chips{display:flex;flex-wrap:wrap;gap:6px;}
+.hchip{
+  font-size:11px;font-weight:600;
+  padding:5px 10px;
+  border:1px solid var(--border-default);
+  background:var(--bg-card);
+  border-radius:var(--r-sm);
+  color:var(--text-secondary);
+  transition:border-color 120ms,color 120ms;
+}
+.hchip:hover{border-color:var(--neutral-0);color:var(--text-primary);}
+
+.hero__actions{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  flex-shrink:0;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 16px;
+  font-size:12.5px;font-weight:600;
+  border-radius:var(--r-md);
+  transition:all 150ms;white-space:nowrap;
+}
+.btn svg{width:13px;height:13px;}
+.btn--primary{
+  background:var(--brand-600);color:white;
+  box-shadow:0 1px 0 rgba(255,255,255,0.1) inset;
+}
+.btn--primary:hover{background:var(--brand-500);transform:translateY(-1px);}
+.btn--ghost{
+  border:1px solid var(--border-default);
+  background:var(--bg-card);
+  color:var(--text-secondary);
+}
+.btn--ghost:hover{color:var(--text-primary);border-color:var(--neutral-0);background:var(--bg-card-hover);}
+.btn--icon{
+  padding:0;width:36px;height:36px;
+  display:grid;place-items:center;
+  border:1px solid var(--border-default);
+  background:var(--bg-card);
+  border-radius:var(--r-md);
+  color:var(--text-secondary);
+  transition:all 150ms;
+}
+.btn--icon:hover{color:var(--text-primary);border-color:var(--neutral-0);background:var(--bg-card-hover);}
+.btn--icon svg{width:14px;height:14px;}
+.btn--icon.is-active{color:var(--brand-500);border-color:var(--brand-700);background:rgba(237,23,23,0.06);}
+
+/* ====================================================================== */
+/*  MAIN GRID (left content + right sticky trade)                         */
+/* ====================================================================== */
+.main{
+  max-width:1340px;margin:0 auto;
+  padding:36px 32px 96px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 380px;
+  gap:36px;
+  position:relative;z-index:1;
+}
+.content-col{min-width:0;}
+.trade-col{
+  position:sticky;top:74px;
+  align-self:start;
+  height:fit-content;
+}
+
+/* ====================================================================== */
+/*  TABS                                                                  */
+/* ====================================================================== */
+.tabs{
+  display:flex;gap:0;
+  border-bottom:1px solid var(--border-default);
+  margin-bottom:28px;
+  position:sticky;top:62px;
+  background:var(--bg-default);
+  z-index:5;
+  padding-top:6px;
+}
+.tab{
+  position:relative;
+  padding:14px 20px 16px;
+  font-size:13px;font-weight:600;
+  color:var(--text-tertiary);letter-spacing:-0.1px;
+  transition:color 120ms;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.tab:hover{color:var(--text-secondary);}
+.tab.is-active{color:var(--text-primary);}
+.tab.is-active::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;
+  height:2px;background:var(--brand-600);
+}
+.tab__count{
+  font-family:var(--font-mono);font-size:10px;font-weight:500;
+  color:var(--text-tertiary);
+  padding:2px 6px;border-radius:var(--r-xs);
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border-default);
+}
+.tab.is-active .tab__count{color:var(--text-secondary);}
+
+.tab-panel{display:none;animation:fadeIn 200ms ease;}
+.tab-panel.is-active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ====================================================================== */
+/*  SECTION                                                               */
+/* ====================================================================== */
+.section{margin-bottom:36px;}
+.section__head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:16px;
+}
+.section__title{
+  font-size:20px;font-weight:700;letter-spacing:-0.4px;
+  margin:0;
+}
+.section__title-num{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  color:var(--brand-500);letter-spacing:1.2px;
+  margin-bottom:4px;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.section__title-num::before{content:"";width:14px;height:1px;background:var(--brand-500);}
+.section__more{
+  font-size:11px;font-weight:600;color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:5px;
+  transition:color 120ms;
+}
+.section__more:hover{color:var(--text-primary);}
+.section__more svg{width:10px;height:10px;}
+
+.prose{
+  font-size:14px;line-height:1.72;color:var(--text-secondary);
+}
+.prose p{margin:0 0 14px;}
+.prose p:last-child{margin-bottom:0;}
+.prose strong{color:var(--text-primary);font-weight:600;}
+.prose h4{
+  font-size:13.5px;font-weight:700;color:var(--text-primary);
+  margin:22px 0 8px;letter-spacing:-0.1px;
+}
+
+/* Stat row inside Overview */
+.stat-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border-default);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+  margin-bottom:28px;
+}
+.stat-cell{
+  background:var(--bg-card);
+  padding:16px 18px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.stat-cell__label{
+  font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-tertiary);
+}
+.stat-cell__value{
+  font-family:var(--font-mono);font-size:18px;font-weight:600;
+  color:var(--text-primary);letter-spacing:-0.3px;
+}
+.stat-cell__value .delta{
+  font-size:11px;margin-left:6px;font-weight:500;
+}
+.stat-cell__value .delta--up{color:var(--success-400);}
+.stat-cell__value .delta--down{color:var(--danger-400);}
+.stat-cell__sub{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);}
+
+/* ====================================================================== */
+/*  PROMPT VIEWER                                                         */
+/* ====================================================================== */
+.viewer{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+}
+.viewer__head{
+  display:flex;align-items:center;
+  border-bottom:1px solid var(--border-default);
+  padding:0 6px 0 18px;
+}
+.viewer__modes{display:flex;gap:0;flex:1;}
+.viewer__mode{
+  padding:14px 14px;
+  font-size:12px;font-weight:600;
+  color:var(--text-tertiary);
+  position:relative;
+  transition:color 120ms;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.viewer__mode svg{width:12px;height:12px;}
+.viewer__mode:hover{color:var(--text-secondary);}
+.viewer__mode.is-active{color:var(--text-primary);}
+.viewer__mode.is-active::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;
+  height:2px;background:var(--brand-500);
+}
+.viewer__actions{display:flex;align-items:center;gap:4px;}
+.viewer__action{
+  padding:7px 9px;
+  font-size:11px;font-weight:600;
+  color:var(--text-secondary);
+  border-radius:var(--r-sm);
+  display:inline-flex;align-items:center;gap:5px;
+  transition:all 120ms;
+}
+.viewer__action:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.viewer__action svg{width:11px;height:11px;}
+
+.viewer__body{padding:24px 26px;max-height:560px;overflow-y:auto;}
+.viewer__body::-webkit-scrollbar{width:8px;}
+.viewer__body::-webkit-scrollbar-track{background:transparent;}
+.viewer__body::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px;}
+
+.viewer__body--code{
+  padding:0;background:#0a0a0a;
+  font-family:var(--font-mono);font-size:12.5px;line-height:1.7;
+}
+.viewer__body--code pre{
+  margin:0;padding:24px 26px;overflow-x:auto;
+  color:var(--text-secondary);
+}
+.viewer__body--code .tok-key{color:var(--brand-300);}
+.viewer__body--code .tok-str{color:var(--success-400);}
+.viewer__body--code .tok-com{color:var(--text-disabled);font-style:italic;}
+.viewer__body--code .tok-fn{color:var(--warning-400);}
+
+.panel-hidden{display:none;}
+
+/* ====================================================================== */
+/*  REVIEWS                                                               */
+/* ====================================================================== */
+.reviews-summary{
+  display:grid;
+  grid-template-columns:200px 1fr;gap:32px;
+  padding:24px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  margin-bottom:24px;
+  align-items:center;
+}
+.review-score{text-align:center;}
+.review-score__big{
+  font-family:var(--font-mono);font-size:54px;font-weight:600;
+  color:var(--text-primary);line-height:1;letter-spacing:-2px;
+  margin-bottom:6px;
+}
+.review-score__stars{color:var(--warning-500);font-size:16px;letter-spacing:-1px;margin-bottom:6px;}
+.review-score__count{font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);}
+.review-bars{display:flex;flex-direction:column;gap:8px;}
+.review-bar{
+  display:grid;grid-template-columns:18px 1fr 36px;
+  align-items:center;gap:10px;
+  font-family:var(--font-mono);font-size:11px;
+}
+.review-bar__num{color:var(--text-secondary);font-weight:600;}
+.review-bar__track{
+  height:6px;background:rgba(255,255,255,0.06);
+  border-radius:var(--r-full);overflow:hidden;
+}
+.review-bar__fill{
+  height:100%;background:var(--warning-500);
+  border-radius:var(--r-full);
+}
+.review-bar__count{color:var(--text-tertiary);text-align:right;}
+
+.review-list{display:flex;flex-direction:column;gap:12px;}
+.review-item.is-hidden{display:none;}
+
+/* Toggle button below the list */
+.review-toggle{
+  margin-top:14px;
+  width:100%;
+  padding:12px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  font-size:12.5px;font-weight:600;
+  color:var(--text-secondary);
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  transition:all 150ms;
+}
+.review-toggle:hover{
+  color:var(--text-primary);
+  border-color:var(--neutral-0);
+  background:var(--bg-card-hover);
+}
+.review-toggle svg{
+  width:13px;height:13px;
+  transition:transform 240ms cubic-bezier(0.4,0,0.2,1);
+}
+.review-toggle.is-expanded svg{transform:rotate(180deg);}
+.review-toggle__count{
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  color:var(--text-tertiary);
+  margin-left:2px;
+}
+.review-item{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:18px 20px;
+}
+.review-item__head{
+  display:flex;align-items:center;gap:12px;margin-bottom:8px;
+}
+.review-item__avatar{
+  width:32px;height:32px;border-radius:50%;
+  font-size:11px;font-weight:800;color:white;
+  display:grid;place-items:center;
+  flex-shrink:0;
+}
+.av--a{background:linear-gradient(135deg,#ed1717,#8b5cf6);}
+.av--b{background:linear-gradient(135deg,#0ea5e9,#22c55e);}
+.av--c{background:linear-gradient(135deg,#f59e0b,#ec4899);}
+.review-item__name{font-size:13px;font-weight:600;flex:1;}
+.review-item__meta{
+  font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);
+}
+.review-item__rating{color:var(--warning-500);letter-spacing:-1px;font-size:12px;margin-bottom:6px;}
+.review-item__body{font-size:13px;line-height:1.6;color:var(--text-secondary);margin:0 0 10px;}
+.review-item__actions{display:flex;gap:14px;align-items:center;}
+.review-item__action{
+  font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:5px;
+  transition:color 120ms;
+  position:relative;
+  padding:4px 0;
+}
+.review-item__action:hover{color:var(--text-primary);}
+.review-item__action svg{width:11px;height:11px;transition:transform 200ms;}
+
+/* Like button — heart icon with bouncy active state */
+.review-item__like{
+  -webkit-tap-highlight-color:transparent;
+}
+.review-item__like svg{
+  transition:transform 240ms cubic-bezier(0.34,1.56,0.64,1),fill 200ms,stroke 200ms;
+  fill:none;
+  stroke:currentColor;
+}
+.review-item__like.is-liked{
+  color:var(--brand-500);
+}
+.review-item__like.is-liked svg{
+  fill:var(--brand-500);
+  stroke:var(--brand-500);
+}
+.review-item__like.is-animating svg{
+  animation:likePop 480ms cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes likePop{
+  0%   { transform:scale(1);}
+  30%  { transform:scale(0.78);}
+  60%  { transform:scale(1.32);}
+  100% { transform:scale(1);}
+}
+/* Floating "+1" / "-1" indicator */
+.like-float{
+  position:absolute;left:50%;top:0;
+  transform:translateX(-50%);
+  font-family:var(--font-mono);font-size:11px;font-weight:700;
+  color:var(--brand-500);
+  pointer-events:none;
+  opacity:0;
+  animation:likeFloat 900ms cubic-bezier(0.4,0,0.2,1) forwards;
+}
+.like-float--down{color:var(--text-tertiary);}
+@keyframes likeFloat{
+  0%   { opacity:0;transform:translate(-50%,4px) scale(0.6);}
+  20%  { opacity:1;transform:translate(-50%,-4px) scale(1.1);}
+  60%  { opacity:1;transform:translate(-50%,-18px) scale(1);}
+  100% { opacity:0;transform:translate(-50%,-30px) scale(0.9);}
+}
+/* Tiny burst particles around heart */
+.like-burst{
+  position:absolute;left:50%;top:50%;
+  width:0;height:0;pointer-events:none;
+  z-index:1;
+}
+.like-burst span{
+  position:absolute;
+  width:3px;height:3px;border-radius:50%;
+  background:var(--brand-500);
+  opacity:0;
+  --bx:0px;--by:0px;
+}
+.review-item__like.is-animating .like-burst span{
+  animation:burst 600ms ease-out forwards;
+}
+.review-item__like.is-animating .like-burst span:nth-child(1){--bx:14px; --by:-10px;}
+.review-item__like.is-animating .like-burst span:nth-child(2){--bx:-14px;--by:-10px;}
+.review-item__like.is-animating .like-burst span:nth-child(3){--bx:0px;  --by:-16px;}
+.review-item__like.is-animating .like-burst span:nth-child(4){--bx:10px; --by:8px; animation-delay:60ms;}
+.review-item__like.is-animating .like-burst span:nth-child(5){--bx:-10px;--by:8px; animation-delay:60ms;}
+@keyframes burst{
+  0%   { opacity:1;transform:translate(0,0) scale(0.4);}
+  60%  { opacity:1;}
+  100% { opacity:0;transform:translate(var(--bx),var(--by)) scale(1);}
+}
+
+/* ===== Reply composer (inline) ===== */
+.reply-composer{
+  margin-top:14px;
+  padding:12px 14px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  display:none;
+  animation:replyIn 220ms cubic-bezier(0.34,1.2,0.64,1);
+}
+.reply-composer.is-open{display:block;}
+@keyframes replyIn{
+  from{opacity:0;transform:translateY(-6px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.reply-composer__hint{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:10.5px;
+  color:var(--text-tertiary);
+  margin-bottom:8px;
+}
+.reply-composer__hint .at{color:var(--brand-400);font-weight:600;}
+.reply-composer textarea{
+  width:100%;min-height:60px;resize:vertical;
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-sm);
+  color:var(--text-primary);
+  font-family:var(--font-display);font-size:12.5px;line-height:1.55;
+  padding:9px 11px;
+  transition:border-color 120ms;
+}
+.reply-composer textarea:focus{outline:none;border-color:var(--neutral-0);background:var(--bg-subtle);}
+.reply-composer__foot{
+  display:flex;justify-content:flex-end;gap:8px;
+  margin-top:8px;
+}
+.reply-composer__btn{
+  padding:7px 14px;
+  font-size:11.5px;font-weight:600;
+  border-radius:var(--r-sm);
+  display:inline-flex;align-items:center;gap:5px;
+  transition:all 150ms;
+}
+.reply-composer__btn--cancel{
+  color:var(--text-tertiary);
+  background:transparent;border:1px solid var(--border-default);
+}
+.reply-composer__btn--cancel:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.reply-composer__btn--submit{
+  color:white;
+  background:var(--brand-600);
+  box-shadow:0 1px 0 rgba(255,255,255,0.1) inset;
+}
+.reply-composer__btn--submit:hover{background:var(--brand-500);}
+.reply-composer__btn--submit:disabled{
+  background:var(--neutral-800);color:var(--text-disabled);
+  cursor:not-allowed;box-shadow:none;
+}
+.reply-composer__btn svg{width:11px;height:11px;}
+
+/* ===== Threaded replies (children of a review-item) ===== */
+.review-replies{
+  margin-top:14px;
+  padding-left:18px;
+  position:relative;
+  display:flex;flex-direction:column;gap:12px;
+}
+/* Thread line on the left */
+.review-replies::before{
+  content:"";
+  position:absolute;left:6px;top:6px;bottom:6px;
+  width:1px;
+  background:var(--border-default);
+}
+.review-reply{
+  position:relative;
+  padding:10px 12px 10px 14px;
+  background:rgba(255,255,255,0.015);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  animation:replyIn 240ms cubic-bezier(0.34,1.2,0.64,1);
+}
+/* Connector dot bridging thread line → reply card */
+.review-reply::before{
+  content:"";
+  position:absolute;left:-12px;top:18px;
+  width:11px;height:1px;
+  background:var(--border-default);
+}
+.review-reply__head{
+  display:flex;align-items:center;gap:9px;
+  margin-bottom:5px;
+}
+.review-reply__avatar{
+  width:22px;height:22px;border-radius:50%;
+  font-size:9.5px;font-weight:800;color:white;
+  display:grid;place-items:center;letter-spacing:-0.3px;
+  flex-shrink:0;
+}
+.review-reply__name{
+  font-size:12px;font-weight:600;color:var(--text-primary);
+}
+.review-reply__name .self-tag{
+  font-family:var(--font-mono);font-size:8.5px;font-weight:600;
+  letter-spacing:0.6px;text-transform:uppercase;
+  padding:1px 5px;border-radius:var(--r-xs);
+  background:rgba(237,23,23,0.1);
+  border:1px solid rgba(237,23,23,0.25);
+  color:var(--brand-300);
+  margin-left:4px;
+}
+.review-reply__meta{
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--text-tertiary);
+  margin-left:auto;
+}
+.review-reply__body{
+  font-size:12.5px;line-height:1.55;color:var(--text-secondary);
+  margin:0 0 6px;
+  padding-left:31px; /* align with name (avatar 22 + gap 9) */
+}
+.review-reply__body .mention{
+  color:var(--brand-400);font-weight:600;
+}
+.review-reply__actions{
+  padding-left:31px;
+  display:flex;gap:12px;
+}
+.review-reply__action{
+  font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);
+  transition:color 120ms;padding:2px 0;
+}
+.review-reply__action:hover{color:var(--text-primary);}
+
+/* Toggle for many replies */
+.review-replies__toggle{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 0;
+  margin-top:-2px;align-self:flex-start;
+  transition:color 120ms;
+}
+.review-replies__toggle:hover{color:var(--text-primary);}
+.review-replies__toggle svg{width:11px;height:11px;transition:transform 200ms;}
+.review-replies__toggle.is-expanded svg{transform:rotate(180deg);}
+.review-reply.is-collapsed{display:none;}
+
+.review-form{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:18px;margin-bottom:24px;
+}
+.review-form textarea{
+  width:100%;min-height:80px;resize:vertical;
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  color:var(--text-primary);font-family:var(--font-display);
+  font-size:13px;line-height:1.55;padding:11px 14px;
+  transition:border-color 120ms;
+}
+.review-form textarea:focus{outline:none;border-color:var(--brand-600);background:var(--bg-subtle);}
+.review-form__foot{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:10px;
+}
+.review-form__rate{
+  display:flex;align-items:center;gap:6px;
+  font-size:11.5px;color:var(--text-tertiary);
+}
+.review-form__stars{display:flex;gap:2px;}
+.review-form__star{
+  font-size:18px;color:var(--neutral-700);cursor:pointer;
+  transition:color 120ms;
+}
+.review-form__star:hover,
+.review-form__star.is-on{color:var(--warning-500);}
+
+/* ====================================================================== */
+/*  CHAT (Interactive Chat module)                                        */
+/* ====================================================================== */
+.chat-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  height:640px;
+  margin-bottom:24px;
+}
+
+/* Top toolbar: model picker + search toggle + clear + expand */
+.chat-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 12px;
+  border-bottom:1px solid var(--border-default);
+  background:rgba(255,255,255,0.01);
+}
+.chat-bar__model-label{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:11px;font-weight:600;color:var(--text-tertiary);
+  letter-spacing:0.3px;
+  margin-right:2px;
+}
+.chat-bar__model-label::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--success-500);
+  box-shadow:0 0 6px var(--success-500);
+}
+.chat-bar__select-wrap{
+  position:relative;
+}
+.chat-bar__select-wrap::after{
+  content:"";position:absolute;right:12px;top:50%;
+  transform:translateY(-25%) rotate(45deg);
+  width:6px;height:6px;
+  border-right:1.5px solid var(--text-tertiary);
+  border-bottom:1.5px solid var(--text-tertiary);
+  pointer-events:none;
+}
+.chat-bar__select{
+  appearance:none;-webkit-appearance:none;
+  padding:6px 28px 6px 11px;
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  color:var(--text-primary);
+  font-family:var(--font-mono);font-size:11.5px;font-weight:600;
+  cursor:pointer;
+  transition:border-color 120ms;
+}
+.chat-bar__select:focus,.chat-bar__select:hover{
+  outline:none;border-color:var(--neutral-0);
+}
+
+.chat-bar__spacer{flex:1;}
+
+.chat-bar__btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 11px;
+  font-size:11.5px;font-weight:600;
+  color:var(--text-secondary);
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  transition:all 120ms;
+}
+.chat-bar__btn:hover{color:var(--text-primary);border-color:var(--neutral-0);background:var(--bg-card-hover);}
+.chat-bar__btn.is-active{color:var(--brand-300);border-color:var(--brand-700);background:rgba(237,23,23,0.06);}
+.chat-bar__btn svg{width:11px;height:11px;}
+
+.chat-bar__icon{
+  width:30px;height:30px;border-radius:var(--r-md);
+  display:grid;place-items:center;
+  color:var(--text-tertiary);
+  border:1px solid transparent;
+  transition:all 120ms;
+}
+.chat-bar__icon:hover{color:var(--text-primary);border-color:var(--border-default);background:var(--bg-card-hover);}
+.chat-bar__icon svg{width:13px;height:13px;}
+
+/* Message stream */
+.chat-stream{
+  flex:1;overflow-y:auto;
+  padding:24px 28px;
+  display:flex;flex-direction:column;gap:18px;
+  background:#0c0c0c;
+}
+.chat-stream::-webkit-scrollbar{width:8px;}
+.chat-stream::-webkit-scrollbar-track{background:transparent;}
+.chat-stream::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px;}
+
+/* A single message */
+.msg{
+  display:flex;flex-direction:column;gap:6px;
+  max-width:78%;
+  animation:msgIn 240ms ease;
+}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.msg--user{align-self:flex-end;align-items:flex-end;}
+.msg--ai{align-self:flex-start;align-items:flex-start;}
+
+.msg__bubble{
+  padding:14px 18px;
+  border-radius:var(--r-xl);
+  font-size:13px;line-height:1.65;
+  border:1px solid var(--border-default);
+  position:relative;
+}
+.msg--user .msg__bubble{
+  background:var(--bg-card);
+  color:var(--text-primary);
+  border-bottom-right-radius:4px;
+}
+.msg--ai .msg__bubble{
+  background:transparent;
+  color:var(--text-secondary);
+  border-color:var(--border-default);
+  border-bottom-left-radius:4px;
+  font-family:var(--font-mono);
+  font-size:12px;
+  line-height:1.7;
+}
+.msg--ai .msg__bubble strong{color:var(--text-primary);font-weight:600;}
+.msg--ai.is-streaming .msg__bubble::after{
+  content:"";display:inline-block;
+  width:7px;height:14px;margin-left:2px;
+  vertical-align:middle;
+  background:var(--brand-500);
+  animation:caret 1s step-end infinite;
+}
+@keyframes caret{50%{opacity:0;}}
+
+.msg__avatar{
+  width:24px;height:24px;border-radius:50%;
+  flex-shrink:0;
+  background-size:cover;background-position:center;
+  border:1px solid var(--border-default);
+}
+.msg__avatar--user{
+  background:linear-gradient(135deg,#0ea5e9 0%,#6366f1 60%,#a855f7 100%);
+}
+.msg__avatar--ai{
+  background:radial-gradient(circle at 30% 30%,#1a4d3e,#062315 70%);
+  position:relative;
+  overflow:hidden;
+}
+.msg__avatar--ai::after{
+  content:"$Q";
+  position:absolute;inset:0;
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:9px;font-weight:700;
+  color:rgba(74,222,128,0.7);
+  letter-spacing:-0.5px;
+}
+
+/* Bubble actions on hover */
+.msg__actions{
+  display:flex;gap:2px;
+  opacity:0;
+  transition:opacity 150ms;
+  margin-top:2px;
+}
+.msg:hover .msg__actions{opacity:1;}
+.msg__action{
+  padding:4px 7px;
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--text-tertiary);
+  border-radius:var(--r-sm);
+  display:inline-flex;align-items:center;gap:4px;
+  transition:all 120ms;
+}
+.msg__action:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.msg__action svg{width:10px;height:10px;}
+
+/* Empty state shown before first message */
+.chat-empty{
+  flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;
+  padding:40px 20px;
+  text-align:center;
+}
+.chat-empty__icon{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(237,23,23,0.08);
+  border:1px solid rgba(237,23,23,0.2);
+  color:var(--brand-400);
+  display:grid;place-items:center;
+  margin-bottom:6px;
+}
+.chat-empty__icon svg{width:22px;height:22px;}
+.chat-empty__title{font-size:14px;font-weight:700;color:var(--text-primary);margin:0;}
+.chat-empty__desc{
+  font-size:12.5px;color:var(--text-secondary);
+  margin:0;max-width:340px;line-height:1.55;
+}
+.chat-empty__suggestions{
+  display:flex;flex-wrap:wrap;gap:6px;justify-content:center;
+  margin-top:10px;max-width:480px;
+}
+.chat-suggest{
+  padding:7px 12px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  font-size:11.5px;color:var(--text-secondary);
+  transition:all 120ms;
+}
+.chat-suggest:hover{color:var(--text-primary);border-color:var(--neutral-0);background:var(--bg-card-hover);}
+
+/* Composer */
+.chat-composer{
+  border-top:1px solid var(--border-default);
+  padding:14px 18px 12px;
+  background:var(--bg-card);
+}
+.chat-composer__input-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-lg);
+  padding:6px 6px 6px 10px;
+  transition:border-color 120ms;
+}
+.chat-composer__input-row:focus-within{border-color:var(--neutral-0);}
+.chat-composer__attach{
+  width:30px;height:30px;border-radius:var(--r-sm);
+  display:grid;place-items:center;
+  color:var(--text-tertiary);flex-shrink:0;
+  transition:color 120ms,background 120ms;
+}
+.chat-composer__attach:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.chat-composer__attach svg{width:14px;height:14px;}
+.chat-composer__input{
+  flex:1;background:transparent;border:0;outline:0;
+  color:var(--text-primary);
+  font-family:var(--font-display);font-size:13px;
+  padding:8px 4px;
+  line-height:1.45;resize:none;
+  min-height:36px;max-height:140px;
+}
+.chat-composer__input::placeholder{color:var(--text-tertiary);}
+.chat-composer__send{
+  width:34px;height:34px;border-radius:var(--r-md);
+  background:var(--brand-600);color:white;
+  display:grid;place-items:center;flex-shrink:0;
+  transition:all 150ms;
+  box-shadow:0 1px 0 rgba(255,255,255,0.1) inset;
+}
+.chat-composer__send:hover{background:var(--brand-500);transform:translateY(-1px);}
+.chat-composer__send:disabled{
+  background:var(--neutral-800);color:var(--text-disabled);cursor:not-allowed;
+  box-shadow:none;transform:none;
+}
+.chat-composer__send svg{width:13px;height:13px;}
+.chat-composer__hint{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:8px;
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--text-tertiary);
+  letter-spacing:0.3px;
+}
+.chat-composer__hint kbd{
+  display:inline-block;
+  padding:1px 5px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xs);
+  color:var(--text-secondary);
+  font-family:var(--font-mono);font-size:9.5px;font-weight:500;
+}
+
+/* Image previews above composer */
+.chat-images{
+  display:flex;gap:6px;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+}
+.chat-image-preview{
+  position:relative;
+  width:48px;height:48px;border-radius:var(--r-sm);
+  background:var(--bg-overlay);
+  border:1px solid var(--border-default);
+  background-size:cover;background-position:center;
+}
+.chat-image-preview__remove{
+  position:absolute;top:-4px;right:-4px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--neutral-900);
+  border:1px solid var(--border-strong);
+  color:var(--text-secondary);
+  display:grid;place-items:center;
+  font-size:8px;font-weight:700;
+  cursor:pointer;
+  transition:all 120ms;
+}
+.chat-image-preview__remove:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+
+/* ====================================================================== */
+/*  TOKEN CHART (Candlestick / OHLC)                                     */
+/* ====================================================================== */
+.chart-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:0;
+  margin-bottom:24px;
+  overflow:hidden;
+}
+
+/* Top toolbar — interval, indicators, mode, view actions */
+.chart-toolbar{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 14px;
+  border-bottom:1px solid var(--border-default);
+  background:rgba(255,255,255,0.01);
+  font-family:var(--font-mono);font-size:11px;
+  flex-wrap:wrap;
+}
+.chart-toolbar__group{
+  display:flex;align-items:center;gap:2px;
+  padding-right:10px;border-right:1px solid var(--border-default);
+}
+.chart-toolbar__group:last-child{border-right:0;padding-right:0;margin-left:auto;}
+.chart-tool{
+  padding:5px 9px;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--text-tertiary);
+  border-radius:var(--r-sm);
+  display:inline-flex;align-items:center;gap:5px;
+  transition:all 120ms;
+}
+.chart-tool:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.chart-tool.is-active{color:var(--text-primary);background:var(--bg-overlay);}
+.chart-tool svg{width:11px;height:11px;}
+.chart-tool--brand{color:var(--brand-400);}
+.chart-tool--brand:hover{color:var(--brand-300);background:rgba(237,23,23,0.06);}
+
+/* OHLC info row */
+.chart-info{
+  padding:14px 18px 6px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.chart-info__pair{
+  font-size:13px;font-weight:700;color:var(--text-primary);
+  letter-spacing:-0.1px;
+}
+.chart-info__pair small{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:500;
+  color:var(--text-tertiary);
+  margin-left:8px;
+  letter-spacing:0.4px;
+}
+.chart-info__live{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  color:var(--success-400);letter-spacing:0.6px;text-transform:uppercase;
+}
+.chart-info__live::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--success-500);
+  box-shadow:0 0 8px var(--success-500);
+  animation:livePulse 2s infinite;
+}
+
+.chart-ohlc{
+  padding:0 18px 12px;
+  display:flex;align-items:center;gap:14px;
+  flex-wrap:wrap;
+  font-family:var(--font-mono);font-size:11px;
+}
+.chart-ohlc span{color:var(--text-tertiary);}
+.chart-ohlc strong{color:var(--text-primary);font-weight:600;margin-left:3px;}
+.chart-ohlc .up{color:var(--success-400);}
+.chart-ohlc .vol-label{color:var(--success-400);}
+
+/* Chart canvas */
+.chart-canvas{
+  position:relative;
+  width:100%;
+  height:300px;
+  background:#0a0a0a;
+  overflow:hidden;
+}
+.chart-canvas svg{display:block;width:100%;height:100%;}
+
+/* Y-axis labels (price + market-cap dual) */
+.chart-yaxis{
+  position:absolute;top:0;right:0;bottom:30px;
+  width:60px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:8px 8px 8px 0;
+  font-family:var(--font-mono);font-size:9.5px;
+  color:var(--text-tertiary);
+  text-align:right;
+  pointer-events:none;
+}
+.chart-yaxis__current{
+  background:var(--success-500);
+  color:#052e16;font-weight:700;
+  padding:2px 5px;border-radius:2px;
+  align-self:flex-end;
+}
+
+/* X-axis labels */
+.chart-xaxis{
+  position:absolute;left:0;right:60px;bottom:0;
+  height:30px;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 14px;
+  border-top:1px solid var(--border-default);
+  background:rgba(255,255,255,0.01);
+  font-family:var(--font-mono);font-size:9.5px;
+  color:var(--text-tertiary);
+}
+
+/* Chart bottom — ranges + footer */
+.chart-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 18px;
+  border-top:1px solid var(--border-default);
+  background:rgba(255,255,255,0.01);
+  flex-wrap:wrap;gap:10px;
+}
+.chart-ranges{display:flex;gap:1px;}
+.chart-range{
+  padding:5px 11px;
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  color:var(--text-tertiary);
+  border-radius:var(--r-sm);
+  transition:all 120ms;
+}
+.chart-range:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.chart-range.is-active{color:var(--text-primary);background:var(--bg-overlay);}
+.chart-foot__credit{
+  font-family:var(--font-mono);font-size:10.5px;
+  color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:6px;
+}
+.chart-foot__credit a{color:var(--brand-400);}
+.chart-foot__credit a:hover{color:var(--brand-300);}
+.chart-foot__credit svg{width:11px;height:11px;}
+
+/* ====================================================================== */
+/*  RECENT TRADES TABLE                                                  */
+/* ====================================================================== */
+.trades-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  margin-bottom:24px;
+  overflow:hidden;
+}
+.trades-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;
+  border-bottom:1px solid var(--border-default);
+}
+.trades-head__title{
+  font-size:13.5px;font-weight:700;
+  letter-spacing:-0.1px;
+  margin:0;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.trades-head__title::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--brand-500);
+}
+.trades-head__live{
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  color:var(--success-400);letter-spacing:1px;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.trades-head__live::before{
+  content:"";width:5px;height:5px;border-radius:50%;
+  background:var(--success-500);
+  box-shadow:0 0 6px var(--success-500);
+  animation:livePulse 2s infinite;
+}
+
+.trades-table{
+  width:100%;border-collapse:collapse;
+  font-size:12px;
+  table-layout:fixed;
+}
+.trades-table thead th{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-tertiary);
+  text-align:right;
+  padding:10px 14px;
+  border-bottom:1px solid var(--border-default);
+  background:rgba(255,255,255,0.01);
+}
+.trades-table thead th:first-child,
+.trades-table thead th:nth-child(2){text-align:left;}
+.trades-table tbody td{
+  padding:11px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  font-family:var(--font-mono);font-size:11.5px;
+  text-align:right;
+  color:var(--text-secondary);
+}
+.trades-table tbody td:first-child,
+.trades-table tbody td:nth-child(2){text-align:left;}
+.trades-table tbody tr:last-child td{border-bottom:0;}
+.trades-table tbody tr:hover td{background:rgba(255,255,255,0.02);}
+
+.trade-account{
+  display:inline-flex;align-items:center;gap:8px;
+  font-weight:500;color:var(--text-primary);
+}
+.trade-account__av{
+  width:18px;height:18px;border-radius:50%;
+  flex-shrink:0;
+  background:linear-gradient(135deg,#a855f7,#6366f1);
+}
+.trade-account__av.av--orange{background:linear-gradient(135deg,#f59e0b,#ef4444);}
+.trade-account__av.av--green{background:linear-gradient(135deg,#22c55e,#0ea5e9);}
+.trade-account__av.av--pink{background:linear-gradient(135deg,#ec4899,#a855f7);}
+
+.trade-side{
+  display:inline-flex;align-items:center;gap:4px;
+  font-weight:700;font-size:11px;
+}
+.trade-side--buy{color:var(--success-400);}
+.trade-side--sell{color:var(--danger-400);}
+.trade-side svg{width:11px;height:11px;}
+
+.trade-amount{color:var(--text-primary);font-weight:500;}
+.trade-amount.is-empty{color:var(--text-disabled);}
+.trade-time{color:var(--text-tertiary);font-size:10.5px;}
+.trade-txn{
+  width:24px;height:24px;border-radius:var(--r-sm);
+  display:inline-grid;place-items:center;
+  color:var(--text-tertiary);
+  transition:all 120ms;
+}
+.trade-txn:hover{color:var(--text-primary);background:rgba(255,255,255,0.06);}
+.trade-txn svg{width:11px;height:11px;}
+
+.trades-foot{
+  display:flex;align-items:center;justify-content:center;
+  padding:12px;
+  border-top:1px solid var(--border-default);
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--text-tertiary);
+  transition:color 120ms;
+  cursor:pointer;
+}
+.trades-foot:hover{color:var(--text-primary);}
+.trades-foot svg{width:11px;height:11px;margin-left:6px;}
+
+/* Tokenization details (full grid) */
+.tk-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--border-default);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+}
+.tk-cell{
+  background:var(--bg-card);
+  padding:14px 18px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.tk-cell__label{
+  font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-tertiary);
+}
+.tk-cell__value{
+  font-family:var(--font-mono);font-size:13px;font-weight:500;
+  color:var(--text-primary);
+  word-break:break-all;
+  display:flex;align-items:center;gap:6px;
+}
+.tk-cell__copy{
+  flex-shrink:0;width:22px;height:22px;border-radius:var(--r-sm);
+  display:grid;place-items:center;
+  color:var(--text-tertiary);
+  transition:all 120ms;
+}
+.tk-cell__copy:hover{color:var(--text-primary);background:rgba(255,255,255,0.06);}
+.tk-cell__copy svg{width:11px;height:11px;}
+
+/* ====================================================================== */
+/*  TRADE CARD (sticky right)                                             */
+/* ====================================================================== */
+.trade{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-2xl);
+  overflow:hidden;
+}
+.trade__price{
+  padding:22px 22px 18px;
+  border-bottom:1px solid var(--border-default);
+}
+.trade__price-row{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:8px;
+}
+.trade__price-label{
+  font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:7px;
+}
+.trade__price-label .live{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--success-500);
+  box-shadow:0 0 8px var(--success-500);
+  animation:livePulse 2s infinite;
+}
+@keyframes livePulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+.trade__ticker{
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--text-tertiary);
+}
+.trade__price-big{
+  font-family:var(--font-mono);font-size:36px;font-weight:600;
+  color:var(--text-primary);letter-spacing:-1.2px;line-height:1;
+  margin-bottom:8px;
+}
+.trade__delta{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:12px;font-weight:600;
+  color:var(--success-400);
+}
+.trade__delta svg{width:12px;height:12px;}
+.trade__delta-sub{
+  color:var(--text-tertiary);font-weight:500;font-size:11px;
+  margin-left:4px;
+}
+
+/* Mini stats inside trade card */
+.trade__minis{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-bottom:1px solid var(--border-default);
+}
+.trade-mini{
+  padding:12px 14px;
+  display:flex;flex-direction:column;gap:2px;
+  border-right:1px solid var(--border-default);
+}
+.trade-mini:last-child{border-right:0;}
+.trade-mini__label{
+  font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-tertiary);
+}
+.trade-mini__value{
+  font-family:var(--font-mono);font-size:12px;font-weight:600;
+  color:var(--text-primary);
+}
+
+/* Buy/Sell tabs */
+.trade__tabs{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-bottom:1px solid var(--border-default);
+}
+.trade__tab{
+  padding:12px;font-size:12.5px;font-weight:700;
+  color:var(--text-tertiary);letter-spacing:-0.1px;
+  position:relative;
+  transition:color 120ms,background 120ms;
+}
+.trade__tab:hover{color:var(--text-secondary);}
+.trade__tab.is-active{color:var(--text-primary);background:rgba(255,255,255,0.02);}
+.trade__tab.is-active::after{
+  content:"";position:absolute;left:14px;right:14px;bottom:0;
+  height:2px;background:var(--brand-600);
+}
+.trade__tab.is-active[data-side="sell"]::after{background:var(--danger-500);}
+
+.trade__form{padding:18px 18px 22px;}
+
+.amount-field{margin-bottom:14px;}
+.amount-field__label{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;
+}
+.amount-field__label-text{
+  font-size:11px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;
+  color:var(--text-tertiary);
+}
+.amount-field__balance{
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--text-tertiary);
+}
+.amount-field__balance b{color:var(--text-secondary);font-weight:600;}
+.amount-input{
+  display:flex;align-items:center;
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  padding:0 14px;
+  transition:border-color 120ms;
+}
+.amount-input:focus-within{border-color:var(--neutral-0);}
+.amount-input input{
+  flex:1;background:transparent;border:0;outline:0;
+  color:var(--text-primary);
+  font-family:var(--font-mono);font-size:18px;font-weight:600;
+  padding:14px 0;letter-spacing:-0.4px;
+  min-width:0;
+}
+.amount-input input::placeholder{color:var(--text-disabled);font-weight:500;}
+.amount-input__token{
+  display:flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:13px;font-weight:600;
+  color:var(--text-secondary);
+}
+.amount-input__token-icon{
+  width:20px;height:20px;border-radius:50%;
+  background:linear-gradient(135deg,#22c55e,#0ea5e9);
+  font-size:9px;font-weight:800;color:white;
+  display:grid;place-items:center;
+}
+
+.quick-buys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:18px;}
+.quick-buy{
+  padding:7px 0;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--text-secondary);
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-sm);
+  transition:all 120ms;
+}
+.quick-buy:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.quick-buy.is-active{color:var(--text-primary);border-color:var(--neutral-0);background:rgba(255,255,255,0.04);}
+
+.trade__receive{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;
+  background:rgba(255,255,255,0.02);
+  border:1px dashed var(--border-default);
+  border-radius:var(--r-md);
+  margin-bottom:14px;
+  font-family:var(--font-mono);font-size:11.5px;
+}
+.trade__receive-label{color:var(--text-tertiary);}
+.trade__receive-value{color:var(--text-primary);font-weight:600;}
+
+.trade__cta{
+  width:100%;padding:13px;
+  background:var(--brand-600);color:white;
+  border-radius:var(--r-md);
+  font-size:13px;font-weight:700;letter-spacing:0.2px;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  transition:all 150ms;
+  box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 6px 20px -8px rgba(237,23,23,0.5);
+}
+.trade__cta:hover{background:var(--brand-500);transform:translateY(-1px);}
+.trade__cta svg{width:14px;height:14px;}
+.trade__cta--sell{background:var(--danger-600,#DC2626);box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 6px 20px -8px rgba(220,38,38,0.5);}
+.trade__cta--sell:hover{background:var(--danger-500);}
+
+/* External exchanges */
+.trade__exch{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;
+  border-top:1px solid var(--border-default);
+  background:rgba(255,255,255,0.01);
+}
+.trade__exch-label{
+  font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-tertiary);
+}
+.trade__exch-icons{display:flex;gap:6px;}
+.exch-icon{
+  width:30px;height:30px;border-radius:var(--r-md);
+  border:1px solid var(--border-default);
+  background:var(--bg-input);
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  color:var(--text-secondary);
+  transition:all 120ms;
+  position:relative;
+}
+.exch-icon:hover{border-color:var(--neutral-0);color:var(--text-primary);background:var(--bg-card-hover);}
+.exch-icon[data-tooltip]:hover::after{
+  content:attr(data-tooltip);
+  position:absolute;bottom:calc(100% + 6px);left:50%;
+  transform:translateX(-50%);
+  font-family:var(--font-display);font-size:10.5px;font-weight:600;
+  padding:5px 9px;background:var(--neutral-800);color:var(--text-primary);
+  border-radius:var(--r-sm);
+  white-space:nowrap;
+  z-index:10;letter-spacing:0;
+  border:1px solid var(--border-strong);
+}
+
+/* Token contract collapsible */
+.trade__details{
+  border-top:1px solid var(--border-default);
+}
+.trade__details summary{
+  list-style:none;cursor:pointer;
+  padding:12px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;
+  color:var(--text-secondary);
+  transition:color 120ms;
+}
+.trade__details summary::-webkit-details-marker{display:none;}
+.trade__details summary:hover{color:var(--text-primary);}
+.trade__details summary svg{
+  width:11px;height:11px;
+  transition:transform 200ms;
+}
+.trade__details[open] summary svg{transform:rotate(180deg);}
+.trade__details-body{
+  padding:0 18px 16px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.trade__details-row{
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--font-mono);font-size:11px;
+  gap:8px;
+}
+.trade__details-row .lbl{color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px;font-size:9.5px;font-weight:700;}
+.trade__details-row .val{color:var(--text-primary);font-weight:500;display:inline-flex;align-items:center;gap:5px;min-width:0;}
+.trade__details-row .val span{overflow:hidden;text-overflow:ellipsis;}
+.trade__details-row button{
+  width:18px;height:18px;border-radius:3px;
+  display:grid;place-items:center;
+  color:var(--text-tertiary);flex-shrink:0;
+  transition:all 120ms;
+}
+.trade__details-row button:hover{color:var(--text-primary);background:rgba(255,255,255,0.06);}
+.trade__details-row button svg{width:9px;height:9px;}
+
+/* ====================================================================== */
+/*  RELATED ITEMS — full marketplace-style cards                          */
+/* ====================================================================== */
+.related{
+  margin-top:60px;padding-top:36px;
+  border-top:1px solid var(--border-default);
+}
+.rel-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+}
+.rel-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+  transition:border-color 200ms,background-color 200ms,transform 200ms;
+  position:relative;
+  display:flex;flex-direction:column;
+  cursor:pointer;
+}
+.rel-card:hover{
+  border-color:var(--neutral-0);
+  background:var(--bg-card-hover);
+  transform:translateY(-2px);
+}
+.rel-card:hover .rel-card__title{color:var(--neutral-0);}
+.rel-card:hover .rel-card__img-fade{opacity:1;}
+
+/* Card image */
+.rel-card__img{
+  height:168px;
+  position:relative;
+  overflow:hidden;
+}
+.rel-card__img-bg{position:absolute;inset:0;}
+.rel-card__img-fade{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,0.85));
+  opacity:0.85;
+  transition:opacity 240ms;
+  z-index:2;
+}
+.rel-card__img-pattern{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.12) 1px,transparent 0);
+  background-size:14px 14px;
+  opacity:0.3;
+  z-index:1;
+}
+/* When the image-bg has a real photo, hide the dot-pattern overlay */
+.rc-yuki ~ .rel-card__img-pattern,
+.rc-claw ~ .rel-card__img-pattern,
+.rc-crca ~ .rel-card__img-pattern{display:none;}
+
+/* Real product images (mirror marketplace home cards) */
+.rc-yuki{
+  background:#3a0606 url('image/figma/yuki.png') center/cover no-repeat;
+}
+.rc-claw{
+  background:#2a0303 url('image/figma/clawpay-s1.png') center/cover no-repeat;
+}
+.rc-crca{
+  background:#444 url('image/figma/cr-ca-agent.png') center/cover no-repeat;
+}
+
+/* Pinned tags top-left */
+.rel-card__tags{
+  position:absolute;top:10px;left:10px;
+  /* leave room for the price pill on the right (~92px wide + 10px gap) */
+  right:112px;
+  display:flex;gap:4px;flex-wrap:wrap;
+  z-index:3;
+}
+.rel-tag{
+  font-size:9px;font-weight:700;
+  letter-spacing:0.4px;text-transform:uppercase;
+  padding:3px 6px;
+  border-radius:var(--r-sm);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  display:inline-flex;align-items:center;gap:3px;
+  white-space:nowrap;
+  line-height:1.2;
+}
+.rel-tag--earner{background:rgba(237,23,23,0.92);color:white;}
+.rel-tag--prompt{background:rgba(245,158,11,0.92);color:#2a1700;}
+.rel-tag--agent{
+  background:rgba(0,0,0,0.55);color:white;
+  border:1px solid rgba(255,255,255,0.18);
+}
+.rel-tag svg{width:9px;height:9px;}
+
+/* Pinned price top-right */
+.rel-card__price{
+  position:absolute;top:10px;right:10px;
+  z-index:3;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:5px 9px;
+  border-radius:var(--r-md);
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:white;
+  border:1px solid rgba(255,255,255,0.1);
+  display:inline-flex;align-items:center;gap:3px;
+  white-space:nowrap;
+  line-height:1.2;
+}
+.rel-card__price .currency{color:var(--brand-400);font-weight:600;}
+.rel-card__price .unit{color:var(--text-tertiary);font-weight:500;font-size:9px;}
+
+/* Card body */
+.rel-card__body{
+  padding:16px 18px 18px;
+  display:flex;flex-direction:column;
+  flex:1;
+}
+
+.rel-card__creator{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:10px;
+}
+.rel-card__creator-av{
+  width:22px;height:22px;border-radius:50%;
+  font-size:9.5px;font-weight:800;
+  display:grid;place-items:center;
+  color:white;flex-shrink:0;
+  letter-spacing:-0.3px;
+}
+.av-yk{background:linear-gradient(135deg,#22c55e,#0ea5e9);}
+.av-fz{background:linear-gradient(135deg,#f97316,#ec4899);}
+.av-il{background:linear-gradient(135deg,#22c55e,#16a34a);}
+.rel-card__creator-name{
+  font-size:11.5px;color:var(--text-tertiary);font-weight:500;
+}
+.rel-card__creator-name strong{
+  color:var(--text-secondary);font-weight:600;margin-right:4px;
+}
+.rel-card__verified{
+  width:12px;height:12px;
+  background:var(--brand-600);border-radius:50%;
+  display:inline-grid;place-items:center;
+  margin-left:2px;
+}
+.rel-card__verified::before{
+  content:"✓";font-size:8px;color:white;font-weight:800;line-height:1;
+}
+
+.rel-card__title{
+  font-size:17px;font-weight:700;
+  letter-spacing:-0.3px;
+  margin:0 0 6px;
+  line-height:1.2;
+  transition:color 200ms;
+}
+.rel-card__desc{
+  font-size:12px;
+  color:var(--text-secondary);
+  line-height:1.55;
+  margin:0 0 14px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* 30-Day earnings strip */
+.rel-card__profit{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9px 12px;
+  background:rgba(237,23,23,0.06);
+  border:1px solid rgba(237,23,23,0.18);
+  border-radius:var(--r-md);
+  margin-bottom:14px;
+}
+.rel-card__profit-label{
+  font-size:10px;font-weight:700;
+  letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--brand-400);
+}
+.rel-card__profit-value{
+  font-family:var(--font-mono);font-size:13px;font-weight:600;
+  color:var(--text-primary);
+}
+.rel-card__profit-value .delta{
+  color:var(--success-400);
+  font-size:10.5px;margin-left:6px;
+}
+
+/* Footer meta — rating + usage */
+.rel-card__meta{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:12px;
+  border-top:1px solid var(--border-default);
+  margin-top:auto;
+}
+.rel-card__rating{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;font-weight:600;
+}
+.rel-card__rating-stars{
+  color:var(--warning-500);font-size:11px;letter-spacing:-1px;
+}
+.rel-card__rating-value{
+  font-family:var(--font-mono);color:var(--text-primary);
+}
+.rel-card__rating-count{
+  color:var(--text-tertiary);font-size:11px;font-weight:500;
+}
+.rel-card__usage{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;color:var(--text-tertiary);
+  font-family:var(--font-mono);font-weight:500;
+}
+.rel-card__usage svg{width:12px;height:12px;}
+.rel-card__usage strong{color:var(--text-secondary);font-weight:600;}
+
+/* ====================================================================== */
+/*  RESPONSIVE                                                            */
+/* ====================================================================== */
+@media (max-width:1100px){
+  .main{grid-template-columns:1fr;}
+  .trade-col{position:static;order:-1;margin-bottom:24px;}
+  .trade{max-width:520px;margin:0 auto;}
+  .stat-row{grid-template-columns:repeat(2,1fr);}
+  .rel-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:760px){
+  .topbar__inner{padding:12px 16px;flex-wrap:wrap;}
+  .tb__nav,.tb__wallet,.tb__launch{display:none;}
+  .crumb{padding:14px 16px 0;}
+  .hero{padding:18px 16px 0;gap:18px;}
+  .hero__banner{aspect-ratio:4/3;}
+  .hero__banner-meta{left:18px;right:18px;bottom:18px;gap:10px;}
+  .hero__title{font-size:32px;letter-spacing:-1px;}
+  .hero__byline{gap:10px;}
+  .hero__creator{font-size:12px;padding:5px 10px 5px 5px;}
+  .hero__below{flex-direction:column;}
+  .main{padding:24px 16px 64px;}
+  .reviews-summary{grid-template-columns:1fr;text-align:center;}
+  .tk-grid{grid-template-columns:1fr;}
+  .rel-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!--  TOPBAR                                                      -->
+<!-- ============================================================ -->
+<header class="topbar">
+  <div class="topbar__inner">
+    <a href="index.html" class="tb__logo" aria-label="Swarms">
+      <svg viewBox="0 0 50 50" fill="none">
+        <path d="M25 4l8 4.6v9.3L25 22.5l-8-4.6V8.6L25 4z" fill="white"/>
+        <path d="M14 18l8 4.6v9.3L14 36.5l-8-4.6V22.6L14 18z" fill="white" opacity="0.85"/>
+        <path d="M36 18l8 4.6v9.3L36 36.5l-8-4.6V22.6L36 18z" fill="white" opacity="0.85"/>
+        <path d="M25 32l8 4.6v9.3L25 50.5l-8-4.6V36.6L25 32z" fill="white" opacity="0.7"/>
+      </svg>
+    </a>
+    <div class="tb__search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search agents, prompts, tools, users…" />
+      <span class="kbd">⌘K</span>
+    </div>
+    <nav class="tb__nav">
+      <a href="#" class="tb__link">How it works</a>
+      <a href="launch.html" class="tb__launch">+ Launch</a>
+    </nav>
+    <div class="tb__right">
+      <button class="tb__wallet">
+        <span class="dot"></span>
+        6DvG…ASJU
+      </button>
+      <span class="tb__avatar"></span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!--  BREADCRUMB                                                  -->
+<!-- ============================================================ -->
+<nav class="crumb">
+  <a href="index.html">Marketplace</a>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  <a href="#">Prompts</a>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  <span class="active">Quant Trader Agent</span>
+</nav>
+
+<!-- ============================================================ -->
+<!--  HERO — 16:9 Banner                                          -->
+<!-- ============================================================ -->
+<section class="hero">
+
+  <!-- 16:9 cover banner with overlay info -->
+  <div class="hero__banner">
+    <span class="hero__banner-tag">
+      <span class="dot"></span>
+      Tokenized · Prompt
+    </span>
+
+    <div class="hero__banner-icons">
+      <button class="btn--icon" id="bookmarkBtn" title="Bookmark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </button>
+      <button class="btn--icon" title="Share">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+      <button class="btn--icon" title="Export to AI">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      </button>
+    </div>
+
+    <!-- Cover image -->
+    <img class="hero__banner-image" src="image/figma/detail-hero.png" alt="Quant Trader Agent" />
+
+    <!-- Bottom gradient mask -->
+    <div class="hero__banner-fade"></div>
+
+    <!-- Overlay meta block at bottom -->
+    <div class="hero__banner-meta">
+      <div class="hero__type">PROMPT · QUANTITATIVE ANALYSIS</div>
+      <h1 class="hero__title">Quant Trader <em>Agent.</em></h1>
+      <div class="hero__byline">
+        <a class="hero__creator" href="#">
+          <span class="hero__creator-av">TF</span>
+          <span>by <strong>x402-tunedforai</strong><span class="verified">✓</span></span>
+        </a>
+        <span class="hero__rating">
+          <span class="stars">★★★★★</span>
+          <span class="val">4.9</span>
+          <span class="count">(10)</span>
+        </span>
+        <span class="hero__usage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <strong>48.2K</strong> runs
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Below banner: lede + chips on left, CTAs on right -->
+  <div class="hero__below">
+    <div class="hero__below-left">
+      <p class="hero__lede">
+        An elite quantitative analyst specializing in comprehensive financial analysis across all asset classes and market conditions. Synthesizes technical indicators, fundamentals, and sentiment in real time.
+      </p>
+      <div class="hero__chips">
+        <span class="hchip">Finance Agent</span>
+        <span class="hchip">Quant Agent</span>
+        <span class="hchip">Stock Analysis</span>
+        <span class="hchip">Trading</span>
+      </div>
+    </div>
+
+    <div class="hero__actions">
+      <a href="#trade" class="btn btn--primary">
+        Buy $QUANTAGENT
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#prompt" class="btn btn--ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        View prompt
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!--  MAIN GRID                                                   -->
+<!-- ============================================================ -->
+<main class="main">
+
+  <!-- ===== LEFT: CONTENT ===== -->
+  <div class="content-col">
+
+    <!-- TABS -->
+    <div class="tabs" id="tabs">
+      <button class="tab is-active" data-tab="overview">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Overview
+      </button>
+      <button class="tab" data-tab="chat">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Chat
+        <span class="tab__count">Try</span>
+      </button>
+      <button class="tab" data-tab="prompt">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Prompt
+      </button>
+      <button class="tab" data-tab="reviews">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Reviews
+        <span class="tab__count">10</span>
+      </button>
+      <button class="tab" data-tab="stats">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Stats &amp; Token
+      </button>
+    </div>
+
+    <!-- ============= OVERVIEW PANEL ============= -->
+    <div class="tab-panel is-active" data-panel="overview">
+      <!-- Snapshot stats -->
+      <div class="stat-row">
+        <div class="stat-cell">
+          <span class="stat-cell__label">Token Price</span>
+          <span class="stat-cell__value">$0.0032<span class="delta delta--up">↑ 12.4%</span></span>
+          <span class="stat-cell__sub">24h</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-cell__label">Market Cap</span>
+          <span class="stat-cell__value">$3,156</span>
+          <span class="stat-cell__sub">USD</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-cell__label">Liquidity</span>
+          <span class="stat-cell__value">$1,829</span>
+          <span class="stat-cell__sub">LP pool</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-cell__label">Total Runs</span>
+          <span class="stat-cell__value">48.2K</span>
+          <span class="stat-cell__sub">All time</span>
+        </div>
+      </div>
+
+      <section class="section">
+        <header class="section__head">
+          <div>
+            <div class="section__title-num">01 / ABOUT</div>
+            <h2 class="section__title">About this prompt</h2>
+          </div>
+        </header>
+        <div class="prose">
+          <p>
+            <strong>Quant Trader Agent</strong> is an elite quantitative analyst specializing in comprehensive financial analysis across all asset classes and market conditions. It synthesizes technical indicators, fundamental data, and market sentiment to deliver institution-grade insights.
+          </p>
+
+          <h4>Analytical Framework</h4>
+          <p>
+            When analyzing any security, the agent operates with the rigor of a seasoned quant — combining classical chart patterns with statistical models, momentum analysis, and on-chain data. Technical analysis incorporates support/resistance levels, volume profiles, and momentum indicators across multiple timeframes.
+          </p>
+          <p>
+            On the fundamental side, it dissects financial statements, cash flow patterns, and competitive positioning. The agent triangulates findings from independent angles before delivering a verdict.
+          </p>
+
+          <h4>Communication Style</h4>
+          <p>
+            Output is structured: confident but intellectually honest, precise with numbers and timeframes, never making guarantees about future price movement. Every recommendation includes three intermediate price targets — near-term, medium, and ambitious — each with explicit reasoning.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <header class="section__head">
+          <div>
+            <div class="section__title-num">02 / RELATED LINKS</div>
+            <h2 class="section__title">Related links</h2>
+          </div>
+        </header>
+        <div class="hero__chips">
+          <a class="hchip" href="#">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:5px;"><path d="M22.46 6c-.85.38-1.78.64-2.75.76 1-.6 1.76-1.55 2.12-2.68-.93.55-1.96.95-3.06 1.17a4.83 4.83 0 0 0-8.23 4.4A13.7 13.7 0 0 1 1.64 4.16a4.83 4.83 0 0 0 1.5 6.45c-.79-.02-1.53-.24-2.18-.6v.06a4.83 4.83 0 0 0 3.87 4.74 4.84 4.84 0 0 1-2.18.08 4.83 4.83 0 0 0 4.5 3.35A9.69 9.69 0 0 1 0 19.54 13.66 13.66 0 0 0 7.39 21.8c8.86 0 13.7-7.34 13.7-13.7 0-.21 0-.42-.02-.63A9.78 9.78 0 0 0 22.46 6z"/></svg>
+            Twitter
+          </a>
+          <a class="hchip" href="#">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:5px;"><path d="M12 0a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.31.47-2.38 1.24-3.22-.13-.31-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.87.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 0z"/></svg>
+            GitHub
+          </a>
+          <a class="hchip" href="#">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Documentation
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============= CHAT PANEL ============= -->
+    <div class="tab-panel" data-panel="chat">
+      <header class="section__head" style="margin-bottom:16px;">
+        <div>
+          <div class="section__title-num">INTERACTIVE CHAT</div>
+          <h2 class="section__title">Try this prompt in real-time</h2>
+        </div>
+      </header>
+
+      <div class="chat-card" id="chatCard">
+
+        <!-- Toolbar -->
+        <div class="chat-bar">
+          <span class="chat-bar__model-label">Model:</span>
+          <div class="chat-bar__select-wrap">
+            <select class="chat-bar__select" id="chatModel">
+              <option>gpt-5.4</option>
+              <option>claude-sonnet-4-7</option>
+              <option>claude-opus-4-7</option>
+              <option>gemini-3-pro</option>
+              <option>llama-4-405b</option>
+            </select>
+          </div>
+          <span class="chat-bar__spacer"></span>
+          <button class="chat-bar__btn" id="chatSearch" title="Toggle web search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>
+            Search
+          </button>
+          <button class="chat-bar__icon" id="chatClear" title="Clear chat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          </button>
+          <button class="chat-bar__icon" title="Fullscreen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          </button>
+        </div>
+
+        <!-- Message stream -->
+        <div class="chat-stream" id="chatStream">
+          <div class="msg msg--user">
+            <div class="msg__bubble">hey</div>
+          </div>
+
+          <div class="msg msg--ai" style="display:flex;flex-direction:row;gap:10px;align-items:flex-start;max-width:78%;">
+            <div class="msg__avatar msg__avatar--ai"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+              <div class="msg__bubble">Hello! How can I assist you today with your <strong>financial analysis</strong> or trading inquiries?</div>
+              <div class="msg__actions">
+                <button class="msg__action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy
+                </button>
+                <button class="msg__action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  Regenerate
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg msg--user">
+            <div class="msg__bubble">what's your name, purpose, and capabilities?</div>
+          </div>
+
+          <div class="msg msg--ai" style="display:flex;flex-direction:row;gap:10px;align-items:flex-start;max-width:78%;">
+            <div class="msg__avatar msg__avatar--ai"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+              <div class="msg__bubble">My name is <strong>Quant Trader Agent</strong>. My purpose is to provide comprehensive financial analysis across all asset classes and market conditions. I specialize in synthesizing technical indicators, fundamental valuations, market sentiment, and macroeconomic trends into actionable intelligence with precise price targets and risk parameters.<br><br>My capabilities include evaluating individual stocks and securities with multi-dimensional analysis, assessing market momentum and trend sustainability, analyzing support and resistance dynamics, conducting sector and peer comparisons, evaluating risk-reward scenarios, and providing data-driven market intelligence for investment decision-making. <strong>How can I assist you today?</strong></div>
+              <div class="msg__actions">
+                <button class="msg__action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy
+                </button>
+                <button class="msg__action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  Regenerate
+                </button>
+                <button class="msg__action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                </button>
+                <button class="msg__action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Composer -->
+        <div class="chat-composer">
+          <div class="chat-images" id="chatImages" style="display:none;"></div>
+          <div class="chat-composer__input-row">
+            <button class="chat-composer__attach" title="Attach images" id="chatAttach">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><polyline points="21 15 16 10 5 21"/></svg>
+            </button>
+            <textarea class="chat-composer__input" id="chatInput" rows="1" placeholder="Type your message..."></textarea>
+            <button class="chat-composer__send" id="chatSend" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+          <div class="chat-composer__hint">
+            <span><kbd>Enter</kbd> to send · <kbd>Shift</kbd>+<kbd>Enter</kbd> new line · Images (max 4)</span>
+            <span><span id="charCount">0</span> chars</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============= PROMPT PANEL ============= -->
+    <div class="tab-panel" data-panel="prompt">
+      <div class="viewer">
+        <div class="viewer__head">
+          <div class="viewer__modes" id="viewerModes">
+            <button class="viewer__mode is-active" data-mode="rendered">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Rendered
+            </button>
+            <button class="viewer__mode" data-mode="markdown">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              Markdown
+            </button>
+            <button class="viewer__mode" data-mode="api">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>
+              Prompt API
+            </button>
+            <button class="viewer__mode" data-mode="framework">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/><line x1="2" y1="15.5" x2="12" y2="8.5"/><line x1="12" y1="8.5" x2="22" y2="15.5"/></svg>
+              Framework
+            </button>
+          </div>
+          <div class="viewer__actions">
+            <button class="viewer__action" id="copyBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="copyText">Copy</span>
+            </button>
+            <button class="viewer__action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </button>
+            <button class="viewer__action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              Try in Chat
+            </button>
+          </div>
+        </div>
+
+        <div class="viewer__body" data-body="rendered">
+          <div class="prose">
+            <p>You are <strong>Quant Trader Agent</strong>, a highly sophisticated quantitative analyst with deep expertise across global financial markets. You think in probabilities, not certainties.</p>
+
+            <h4>Your Analytical Framework</h4>
+            <p>When analyzing any security, you operate with the rigor of a seasoned quant. Your technical analysis incorporates classical chart patterns, momentum indicators across multiple timeframes, volume profiles, and support/resistance levels.</p>
+            <p>On the fundamental side, you dissect financial statements, cash flow patterns, and competitive positioning. You triangulate findings from independent angles.</p>
+
+            <h4>Your Communication Style</h4>
+            <p>When presenting your analysis, you structure your response clearly. You are <strong>precise with numbers</strong> and specific about timeframes. Your tone is confident but intellectually honest.</p>
+
+            <h4>Setting Price Targets</h4>
+            <p>You establish <strong>three intermediate price targets</strong> that represent meaningful milestones — a near-term target, a medium-term target reflecting trend continuation, and an ambitious third target.</p>
+            <p>For each target, you specify the exact price level, expected timeframe, and the conditions that would invalidate your thesis.</p>
+
+            <h4>Critical Guidelines</h4>
+            <p>You never make guarantees about future price movements. You stay current with market conditions and respect the inherent uncertainty of financial markets.</p>
+          </div>
+        </div>
+
+        <div class="viewer__body viewer__body--code panel-hidden" data-body="markdown">
+<pre><span class="tok-com"># Quant Trader Agent</span>
+
+You are <span class="tok-str">"Quant Trader Agent"</span>, a highly sophisticated
+quantitative analyst with deep expertise across global financial markets.
+You think in probabilities, not certainties.
+
+<span class="tok-com">## Your Analytical Framework</span>
+
+When analyzing any security, you operate with the rigor of a seasoned quant.
+Your technical analysis incorporates:
+
+- Classical chart patterns
+- Momentum indicators across multiple timeframes
+- Volume profiles
+- Support &amp; resistance levels
+
+On the fundamental side, you dissect financial statements, cash flow patterns,
+and competitive positioning.
+
+<span class="tok-com">## Your Communication Style</span>
+
+When presenting your analysis, you structure your response clearly. You are
+<span class="tok-key">**precise with numbers**</span> and specific about timeframes. Your tone is
+confident but intellectually honest.
+
+<span class="tok-com">## Setting Price Targets</span>
+
+You establish <span class="tok-key">**three intermediate price targets**</span> that represent
+meaningful milestones — a near-term target, a medium-term target reflecting
+trend continuation, and an ambitious third target.
+
+For each target, you specify:
+- the exact price level
+- expected timeframe
+- conditions that would invalidate your thesis
+
+<span class="tok-com">## Critical Guidelines</span>
+
+You never make guarantees about future price movements. You stay current with
+market conditions and respect the inherent uncertainty of financial markets.</pre>
+        </div>
+
+        <div class="viewer__body viewer__body--code panel-hidden" data-body="api">
+<pre><span class="tok-com"># ─── Endpoint ────────────────────────────────────</span>
+
+  POST  https://swarms.world/api/prompt/quant-trader-agent/run
+
+<span class="tok-com"># ─── cURL ────────────────────────────────────────</span>
+
+<span class="tok-fn">curl</span> -X POST https://swarms.world/api/prompt/quant-trader-agent/run \
+  -H <span class="tok-str">"Authorization: Bearer $SWARMS_API_KEY"</span> \
+  -H <span class="tok-str">"Content-Type: application/json"</span> \
+  -d <span class="tok-str">'{
+    "input": "Analyze NVDA — current setup, key levels, 3 price targets",
+    "stream": false,
+    "model": "claude-sonnet-4-7"
+  }'</span>
+
+<span class="tok-com"># ─── Python SDK ──────────────────────────────────</span>
+
+<span class="tok-key">from</span> swarms <span class="tok-key">import</span> Prompt
+
+prompt = Prompt.<span class="tok-fn">load</span>(<span class="tok-str">"quant-trader-agent"</span>)
+result = prompt.<span class="tok-fn">run</span>(
+    input=<span class="tok-str">"Analyze NVDA"</span>,
+    stream=<span class="tok-key">False</span>,
+)
+
+<span class="tok-fn">print</span>(result.output)
+
+<span class="tok-com"># ─── TypeScript SDK ──────────────────────────────</span>
+
+<span class="tok-key">import</span> { Prompt } <span class="tok-key">from</span> <span class="tok-str">"@swarms/sdk"</span>;
+
+<span class="tok-key">const</span> prompt = <span class="tok-key">await</span> Prompt.<span class="tok-fn">load</span>(<span class="tok-str">"quant-trader-agent"</span>);
+<span class="tok-key">const</span> { output } = <span class="tok-key">await</span> prompt.<span class="tok-fn">run</span>({
+  input: <span class="tok-str">"Analyze NVDA"</span>,
+});
+
+<span class="tok-fn">console</span>.<span class="tok-fn">log</span>(output);
+</pre>
+        </div>
+
+        <div class="viewer__body viewer__body--code panel-hidden" data-body="framework">
+<pre><span class="tok-com"># ─── Use inside the Swarms Agent Framework ───────</span>
+<span class="tok-com"># Compose this prompt with tools, memory, and other agents.</span>
+
+<span class="tok-key">from</span> swarms <span class="tok-key">import</span> Agent, Prompt
+<span class="tok-key">from</span> swarms.tools <span class="tok-key">import</span> stock_data, news_search
+
+<span class="tok-com"># 1. Load the prompt as an Agent's system prompt</span>
+quant_prompt = Prompt.<span class="tok-fn">load</span>(<span class="tok-str">"quant-trader-agent"</span>)
+
+<span class="tok-com"># 2. Wrap it in an Agent with tools + memory</span>
+trader = <span class="tok-fn">Agent</span>(
+    name=<span class="tok-str">"QuantTrader"</span>,
+    system_prompt=quant_prompt.template,
+    model=<span class="tok-str">"claude-sonnet-4-7"</span>,
+    tools=[stock_data, news_search],
+    memory=<span class="tok-str">"vector"</span>,
+    max_loops=<span class="tok-str">3</span>,
+)
+
+<span class="tok-com"># 3. Run it on a portfolio</span>
+tickers = [<span class="tok-str">"NVDA"</span>, <span class="tok-str">"AAPL"</span>, <span class="tok-str">"TSLA"</span>]
+
+<span class="tok-key">for</span> ticker <span class="tok-key">in</span> tickers:
+    analysis = trader.<span class="tok-fn">run</span>(<span class="tok-str">f"Analyze {ticker}"</span>)
+    <span class="tok-fn">print</span>(<span class="tok-str">f"\n=== {ticker} ===\n"</span>, analysis)
+
+<span class="tok-com"># ─── Multi-Agent Orchestration ───────────────────</span>
+<span class="tok-com"># Combine with a Risk Manager and a Portfolio Allocator</span>
+
+<span class="tok-key">from</span> swarms <span class="tok-key">import</span> SequentialWorkflow
+
+workflow = <span class="tok-fn">SequentialWorkflow</span>(
+    agents=[trader, risk_agent, allocator_agent],
+    max_loops=<span class="tok-str">1</span>,
+)
+
+result = workflow.<span class="tok-fn">run</span>(<span class="tok-str">"Build me a 5-stock momentum portfolio"</span>)
+</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============= REVIEWS PANEL ============= -->
+    <div class="tab-panel" data-panel="reviews">
+      <div class="reviews-summary">
+        <div class="review-score">
+          <div class="review-score__big">4.9</div>
+          <div class="review-score__stars">★★★★★</div>
+          <div class="review-score__count">Based on 10 reviews</div>
+        </div>
+        <div class="review-bars">
+          <div class="review-bar">
+            <span class="review-bar__num">5</span>
+            <div class="review-bar__track"><div class="review-bar__fill" style="width:90%;"></div></div>
+            <span class="review-bar__count">9</span>
+          </div>
+          <div class="review-bar">
+            <span class="review-bar__num">4</span>
+            <div class="review-bar__track"><div class="review-bar__fill" style="width:10%;"></div></div>
+            <span class="review-bar__count">1</span>
+          </div>
+          <div class="review-bar">
+            <span class="review-bar__num">3</span>
+            <div class="review-bar__track"><div class="review-bar__fill" style="width:0;"></div></div>
+            <span class="review-bar__count">0</span>
+          </div>
+          <div class="review-bar">
+            <span class="review-bar__num">2</span>
+            <div class="review-bar__track"><div class="review-bar__fill" style="width:0;"></div></div>
+            <span class="review-bar__count">0</span>
+          </div>
+          <div class="review-bar">
+            <span class="review-bar__num">1</span>
+            <div class="review-bar__track"><div class="review-bar__fill" style="width:0;"></div></div>
+            <span class="review-bar__count">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-form">
+        <textarea placeholder="Join the discussion! Leave a comment below..."></textarea>
+        <div class="review-form__foot">
+          <div class="review-form__rate">
+            <span>Your rating:</span>
+            <div class="review-form__stars" id="rateStars">
+              <span class="review-form__star" data-rate="1">★</span>
+              <span class="review-form__star" data-rate="2">★</span>
+              <span class="review-form__star" data-rate="3">★</span>
+              <span class="review-form__star" data-rate="4">★</span>
+              <span class="review-form__star" data-rate="5">★</span>
+            </div>
+          </div>
+          <button class="btn btn--primary">
+            Post review
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="review-list" id="reviewList">
+        <article class="review-item" data-review-id="r1">
+          <header class="review-item__head">
+            <span class="review-item__avatar av--a">RB</span>
+            <span class="review-item__name">rainbowkode</span>
+            <span class="review-item__meta">5 months ago</span>
+          </header>
+          <div class="review-item__rating">★★★★★</div>
+          <p class="review-item__body">Best market analysis tool I've used. Period. The price targets are framed in a way that's actually actionable, not just backward-looking.</p>
+          <div class="review-item__actions">
+            <button class="review-item__action review-item__like" data-likes="6">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <span class="like-count">6</span>
+              <span class="like-burst"><span></span><span></span><span></span><span></span><span></span></span>
+            </button>
+            <button class="review-item__action review-item__reply-btn" data-target="r1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+              Reply
+            </button>
+          </div>
+
+          <!-- Existing replies thread -->
+          <div class="review-replies">
+            <button class="review-replies__toggle is-expanded" data-toggle-replies>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              <span data-toggle-text>Hide 2 replies</span>
+            </button>
+
+            <div class="review-reply">
+              <header class="review-reply__head">
+                <span class="review-reply__avatar av--c">TF</span>
+                <span class="review-reply__name">x402-tunedforai<span class="self-tag">Author</span></span>
+                <span class="review-reply__meta">5 months ago</span>
+              </header>
+              <p class="review-reply__body"><span class="mention">@rainbowkode</span> appreciate the kind words! v2.1 just dropped — even tighter target framing for momentum names.</p>
+              <div class="review-reply__actions">
+                <button class="review-reply__action">♥ 3</button>
+                <button class="review-reply__action review-reply__reply-btn" data-target="r1">Reply</button>
+              </div>
+            </div>
+
+            <div class="review-reply">
+              <header class="review-reply__head">
+                <span class="review-reply__avatar av--b">SE</span>
+                <span class="review-reply__name">Sean</span>
+                <span class="review-reply__meta">4 months ago</span>
+              </header>
+              <p class="review-reply__body">+1, the actionable part is what sets it apart from regular sentiment summarizers.</p>
+              <div class="review-reply__actions">
+                <button class="review-reply__action">♥ 1</button>
+                <button class="review-reply__action review-reply__reply-btn" data-target="r1">Reply</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="review-item" data-review-id="r2">
+          <header class="review-item__head">
+            <span class="review-item__avatar av--b">Z0</span>
+            <span class="review-item__name">Zeroc00l</span>
+            <span class="review-item__meta">4 months ago</span>
+          </header>
+          <div class="review-item__rating">★★★★★</div>
+          <p class="review-item__body">I'm really loving this, it's working flawlessly across the equities I've thrown at it. The framework section is gold — finally an agent that explains its reasoning instead of just spitting out a price.</p>
+          <div class="review-item__actions">
+            <button class="review-item__action review-item__like" data-likes="2">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <span class="like-count">2</span>
+              <span class="like-burst"><span></span><span></span><span></span><span></span><span></span></span>
+            </button>
+            <button class="review-item__action review-item__reply-btn" data-target="r2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+              Reply
+            </button>
+          </div>
+        </article>
+
+        <article class="review-item is-hidden" data-review-id="r3">
+          <header class="review-item__head">
+            <span class="review-item__avatar av--c">SE</span>
+            <span class="review-item__name">Sean</span>
+            <span class="review-item__meta">3 months ago</span>
+          </header>
+          <div class="review-item__rating">★★★★★</div>
+          <p class="review-item__body">The "three price targets" structure is brilliant. Saves me from analysis paralysis when I'm scanning multiple tickers in a session.</p>
+          <div class="review-item__actions">
+            <button class="review-item__action review-item__like" data-likes="3">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <span class="like-count">3</span>
+              <span class="like-burst"><span></span><span></span><span></span><span></span><span></span></span>
+            </button>
+            <button class="review-item__action review-item__reply-btn" data-target="r3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+              Reply
+            </button>
+          </div>
+        </article>
+
+        <article class="review-item is-hidden" data-review-id="r4">
+          <header class="review-item__head">
+            <span class="review-item__avatar av--a">BB</span>
+            <span class="review-item__name">Bitbot</span>
+            <span class="review-item__meta">2 months ago</span>
+          </header>
+          <div class="review-item__rating">★★★★☆</div>
+          <p class="review-item__body">Solid agent. The macro framing is a bit verbose for my taste but the targets are well-reasoned. Wish there was a "concise mode" toggle.</p>
+          <div class="review-item__actions">
+            <button class="review-item__action review-item__like" data-likes="1">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <span class="like-count">1</span>
+              <span class="like-burst"><span></span><span></span><span></span><span></span><span></span></span>
+            </button>
+            <button class="review-item__action review-item__reply-btn" data-target="r4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+              Reply
+            </button>
+          </div>
+        </article>
+
+        <article class="review-item is-hidden" data-review-id="r5">
+          <header class="review-item__head">
+            <span class="review-item__avatar av--b">FS</span>
+            <span class="review-item__name">frUItswarms</span>
+            <span class="review-item__meta">3 weeks ago</span>
+          </header>
+          <div class="review-item__rating">★★★★★</div>
+          <p class="review-item__body">Tested it across 40 tickers in my watchlist. Hit-rate on near-term targets is solid — about 6 out of 10. That's enough to justify the cost for me.</p>
+          <div class="review-item__actions">
+            <button class="review-item__action review-item__like" data-likes="4">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <span class="like-count">4</span>
+              <span class="like-burst"><span></span><span></span><span></span><span></span><span></span></span>
+            </button>
+            <button class="review-item__action review-item__reply-btn" data-target="r5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+              Reply
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <button class="review-toggle" id="reviewToggle">
+        <span id="reviewToggleText">Show all reviews</span>
+        <span class="review-toggle__count" id="reviewToggleCount">(3 more)</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+
+    <!-- ============= STATS PANEL ============= -->
+    <div class="tab-panel" data-panel="stats">
+
+      <!-- ===== Token Chart ===== -->
+      <div class="chart-card">
+        <!-- Toolbar -->
+        <div class="chart-toolbar">
+          <div class="chart-toolbar__group">
+            <button class="chart-tool is-active">5m</button>
+            <button class="chart-tool" title="Indicators">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+            </button>
+            <button class="chart-tool" title="Fx">f<sub>x</sub></button>
+            <button class="chart-tool" title="Layouts">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </button>
+          </div>
+          <div class="chart-toolbar__group">
+            <span class="chart-tool" style="cursor:default;">Price /</span>
+            <button class="chart-tool chart-tool--brand is-active">MCAP</button>
+          </div>
+          <div class="chart-toolbar__group">
+            <button class="chart-tool is-active">USD</button>
+            <span class="chart-tool" style="cursor:default;color:var(--text-disabled);">/</span>
+            <button class="chart-tool">SOL</button>
+          </div>
+          <div class="chart-toolbar__group">
+            <button class="chart-tool chart-tool--brand">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Dev Buys
+            </button>
+          </div>
+          <div class="chart-toolbar__group">
+            <button class="chart-tool" title="Undo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+            </button>
+            <button class="chart-tool" title="Redo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg>
+            </button>
+            <button class="chart-tool" title="Settings">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
+            <button class="chart-tool" title="Fullscreen">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            </button>
+            <button class="chart-tool" title="Snapshot">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pair / Live -->
+        <div class="chart-info">
+          <div>
+            <span class="chart-info__pair">QUANTAGENT/USD <small>(Market Cap) · 5 · Meteora DAMM V2</small></span>
+          </div>
+          <span class="chart-info__live">Live</span>
+        </div>
+
+        <!-- OHLC + Volume row -->
+        <div class="chart-ohlc">
+          <span>O<strong>3,011.38</strong></span>
+          <span>H<strong>3,159.94</strong></span>
+          <span>L<strong>3,011.38</strong></span>
+          <span>C<strong>3,159.94</strong></span>
+          <span class="up">↑ 148.56 (+4.93%)</span>
+          <span style="margin-left:auto;" class="vol-label">Volume SMA <strong style="color:var(--success-400);">49</strong></span>
+        </div>
+
+        <!-- Chart canvas -->
+        <div class="chart-canvas">
+          <svg viewBox="0 0 800 300" preserveAspectRatio="none">
+            <!-- Background grid -->
+            <g stroke="rgba(255,255,255,0.04)" stroke-width="1">
+              <line x1="0" y1="40"  x2="740" y2="40"/>
+              <line x1="0" y1="90"  x2="740" y2="90"/>
+              <line x1="0" y1="140" x2="740" y2="140"/>
+              <line x1="0" y1="190" x2="740" y2="190"/>
+            </g>
+            <!-- Current price horizontal dashed line -->
+            <line x1="0" y1="105" x2="740" y2="105"
+                  stroke="rgba(34,197,94,0.4)" stroke-width="1" stroke-dasharray="3 3"/>
+
+            <!-- Candlesticks: each candle has a wick and a body. green=up, red=down -->
+            <!-- Upward leg (early) -->
+            <g>
+              <!-- candle 1 -->
+              <line x1="20" y1="180" x2="20" y2="200" stroke="#22C55E" stroke-width="1"/>
+              <rect x="16" y="185" width="8" height="13" fill="#22C55E"/>
+              <line x1="38" y1="170" x2="38" y2="195" stroke="#22C55E" stroke-width="1"/>
+              <rect x="34" y="175" width="8" height="18" fill="#22C55E"/>
+              <line x1="56" y1="160" x2="56" y2="185" stroke="#22C55E" stroke-width="1"/>
+              <rect x="52" y="165" width="8" height="18" fill="#22C55E"/>
+              <line x1="74" y1="150" x2="74" y2="178" stroke="#22C55E" stroke-width="1"/>
+              <rect x="70" y="155" width="8" height="20" fill="#22C55E"/>
+              <line x1="92" y1="140" x2="92" y2="170" stroke="#22C55E" stroke-width="1"/>
+              <rect x="88" y="145" width="8" height="22" fill="#22C55E"/>
+            </g>
+
+            <!-- Sharp drop (red candles) -->
+            <g>
+              <line x1="110" y1="60"  x2="110" y2="155" stroke="#EF4444" stroke-width="1"/>
+              <rect x="106" y="65" width="8" height="85" fill="#EF4444"/>
+              <line x1="128" y1="80"  x2="128" y2="170" stroke="#EF4444" stroke-width="1"/>
+              <rect x="124" y="85" width="8" height="80" fill="#EF4444"/>
+              <line x1="146" y1="100" x2="146" y2="180" stroke="#EF4444" stroke-width="1"/>
+              <rect x="142" y="105" width="8" height="70" fill="#EF4444"/>
+              <line x1="164" y1="115" x2="164" y2="195" stroke="#EF4444" stroke-width="1"/>
+              <rect x="160" y="120" width="8" height="70" fill="#EF4444"/>
+              <line x1="182" y1="125" x2="182" y2="200" stroke="#EF4444" stroke-width="1"/>
+              <rect x="178" y="130" width="8" height="65" fill="#EF4444"/>
+              <line x1="200" y1="135" x2="200" y2="200" stroke="#EF4444" stroke-width="1"/>
+              <rect x="196" y="140" width="8" height="55" fill="#EF4444"/>
+              <line x1="218" y1="142" x2="218" y2="195" stroke="#EF4444" stroke-width="1"/>
+              <rect x="214" y="147" width="8" height="45" fill="#EF4444"/>
+              <line x1="236" y1="148" x2="236" y2="190" stroke="#EF4444" stroke-width="1"/>
+              <rect x="232" y="152" width="8" height="35" fill="#EF4444"/>
+              <line x1="254" y1="155" x2="254" y2="185" stroke="#EF4444" stroke-width="1"/>
+              <rect x="250" y="158" width="8" height="25" fill="#EF4444"/>
+            </g>
+
+            <!-- Sideways consolidation -->
+            <g>
+              <line x1="280" y1="148" x2="280" y2="172" stroke="#EF4444" stroke-width="1"/>
+              <rect x="276" y="152" width="8" height="18" fill="#EF4444"/>
+              <line x1="298" y1="145" x2="298" y2="165" stroke="#22C55E" stroke-width="1"/>
+              <rect x="294" y="150" width="8" height="14" fill="#22C55E"/>
+              <line x1="316" y1="148" x2="316" y2="170" stroke="#22C55E" stroke-width="1"/>
+              <rect x="312" y="152" width="8" height="16" fill="#22C55E"/>
+              <line x1="334" y1="143" x2="334" y2="160" stroke="#22C55E" stroke-width="1"/>
+              <rect x="330" y="148" width="8" height="11" fill="#22C55E"/>
+              <line x1="352" y1="145" x2="352" y2="160" stroke="#EF4444" stroke-width="1"/>
+              <rect x="348" y="148" width="8" height="11" fill="#EF4444"/>
+              <line x1="370" y1="142" x2="370" y2="158" stroke="#22C55E" stroke-width="1"/>
+              <rect x="366" y="147" width="8" height="10" fill="#22C55E"/>
+              <line x1="388" y1="138" x2="388" y2="150" stroke="#22C55E" stroke-width="1"/>
+              <rect x="384" y="142" width="8" height="8" fill="#22C55E"/>
+              <line x1="406" y1="135" x2="406" y2="148" stroke="#22C55E" stroke-width="1"/>
+              <rect x="402" y="138" width="8" height="9" fill="#22C55E"/>
+              <line x1="424" y1="133" x2="424" y2="145" stroke="#EF4444" stroke-width="1"/>
+              <rect x="420" y="136" width="8" height="8" fill="#EF4444"/>
+              <line x1="442" y1="130" x2="442" y2="142" stroke="#22C55E" stroke-width="1"/>
+              <rect x="438" y="133" width="8" height="9" fill="#22C55E"/>
+              <line x1="460" y1="127" x2="460" y2="138" stroke="#22C55E" stroke-width="1"/>
+              <rect x="456" y="130" width="8" height="8" fill="#22C55E"/>
+              <line x1="478" y1="125" x2="478" y2="135" stroke="#22C55E" stroke-width="1"/>
+              <rect x="474" y="128" width="8" height="7" fill="#22C55E"/>
+              <line x1="496" y1="122" x2="496" y2="132" stroke="#EF4444" stroke-width="1"/>
+              <rect x="492" y="124" width="8" height="7" fill="#EF4444"/>
+              <line x1="514" y1="120" x2="514" y2="128" stroke="#22C55E" stroke-width="1"/>
+              <rect x="510" y="122" width="8" height="6" fill="#22C55E"/>
+              <line x1="532" y1="118" x2="532" y2="125" stroke="#22C55E" stroke-width="1"/>
+              <rect x="528" y="120" width="8" height="5" fill="#22C55E"/>
+              <line x1="550" y1="115" x2="550" y2="122" stroke="#22C55E" stroke-width="1"/>
+              <rect x="546" y="117" width="8" height="5" fill="#22C55E"/>
+              <line x1="568" y1="113" x2="568" y2="120" stroke="#EF4444" stroke-width="1"/>
+              <rect x="564" y="115" width="8" height="5" fill="#EF4444"/>
+              <line x1="586" y1="110" x2="586" y2="118" stroke="#22C55E" stroke-width="1"/>
+              <rect x="582" y="112" width="8" height="6" fill="#22C55E"/>
+              <line x1="604" y1="108" x2="604" y2="115" stroke="#22C55E" stroke-width="1"/>
+              <rect x="600" y="110" width="8" height="5" fill="#22C55E"/>
+              <line x1="622" y1="106" x2="622" y2="113" stroke="#22C55E" stroke-width="1"/>
+              <rect x="618" y="108" width="8" height="5" fill="#22C55E"/>
+              <line x1="640" y1="103" x2="640" y2="110" stroke="#22C55E" stroke-width="1"/>
+              <rect x="636" y="105" width="8" height="5" fill="#22C55E"/>
+              <line x1="658" y1="101" x2="658" y2="108" stroke="#22C55E" stroke-width="1"/>
+              <rect x="654" y="103" width="8" height="5" fill="#22C55E"/>
+              <line x1="676" y1="100" x2="676" y2="106" stroke="#22C55E" stroke-width="1"/>
+              <rect x="672" y="102" width="8" height="4" fill="#22C55E"/>
+              <line x1="694" y1="98"  x2="694" y2="105" stroke="#22C55E" stroke-width="1"/>
+              <rect x="690" y="100" width="8" height="5" fill="#22C55E"/>
+              <line x1="712" y1="96"  x2="712" y2="103" stroke="#22C55E" stroke-width="1"/>
+              <rect x="708" y="98" width="8" height="5" fill="#22C55E"/>
+            </g>
+
+            <!-- Volume bars at the bottom -->
+            <g opacity="0.55">
+              <rect x="16" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="34" y="248" width="8" height="10" fill="#22C55E"/>
+              <rect x="52" y="245" width="8" height="13" fill="#22C55E"/>
+              <rect x="70" y="240" width="8" height="18" fill="#22C55E"/>
+              <rect x="88" y="232" width="8" height="26" fill="#22C55E"/>
+              <rect x="106" y="220" width="8" height="38" fill="#EF4444"/>
+              <rect x="124" y="225" width="8" height="33" fill="#EF4444"/>
+              <rect x="142" y="230" width="8" height="28" fill="#EF4444"/>
+              <rect x="160" y="232" width="8" height="26" fill="#EF4444"/>
+              <rect x="178" y="240" width="8" height="18" fill="#EF4444"/>
+              <rect x="196" y="244" width="8" height="14" fill="#EF4444"/>
+              <rect x="214" y="248" width="8" height="10" fill="#EF4444"/>
+              <rect x="232" y="251" width="8" height="7"  fill="#EF4444"/>
+              <rect x="250" y="253" width="8" height="5"  fill="#EF4444"/>
+              <rect x="276" y="252" width="8" height="6"  fill="#EF4444"/>
+              <rect x="294" y="251" width="8" height="7"  fill="#22C55E"/>
+              <rect x="312" y="250" width="8" height="8"  fill="#22C55E"/>
+              <rect x="330" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="348" y="253" width="8" height="5"  fill="#EF4444"/>
+              <rect x="366" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="384" y="253" width="8" height="5"  fill="#22C55E"/>
+              <rect x="402" y="251" width="8" height="7"  fill="#22C55E"/>
+              <rect x="420" y="253" width="8" height="5"  fill="#EF4444"/>
+              <rect x="438" y="251" width="8" height="7"  fill="#22C55E"/>
+              <rect x="456" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="474" y="253" width="8" height="5"  fill="#22C55E"/>
+              <rect x="492" y="253" width="8" height="5"  fill="#EF4444"/>
+              <rect x="510" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="528" y="253" width="8" height="5"  fill="#22C55E"/>
+              <rect x="546" y="253" width="8" height="5"  fill="#22C55E"/>
+              <rect x="564" y="253" width="8" height="5"  fill="#EF4444"/>
+              <rect x="582" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="600" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="618" y="251" width="8" height="7"  fill="#22C55E"/>
+              <rect x="636" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="654" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="672" y="253" width="8" height="5"  fill="#22C55E"/>
+              <rect x="690" y="252" width="8" height="6"  fill="#22C55E"/>
+              <rect x="708" y="251" width="8" height="7"  fill="#22C55E"/>
+            </g>
+          </svg>
+
+          <!-- Y-axis labels -->
+          <div class="chart-yaxis">
+            <span>4,800</span>
+            <span>4,400</span>
+            <span>4,000</span>
+            <span>3,600</span>
+            <span class="chart-yaxis__current">3,159.94</span>
+            <span style="background:rgba(34,197,94,0.15);color:var(--success-400);padding:2px 5px;border-radius:2px;align-self:flex-end;">49</span>
+          </div>
+
+          <!-- X-axis labels -->
+          <div class="chart-xaxis">
+            <span>Apr 20</span>
+            <span>Apr 21</span>
+            <span>Apr 23</span>
+            <span>May 1</span>
+            <span>22:30</span>
+            <span>23:00</span>
+          </div>
+        </div>
+
+        <!-- Footer with ranges and credit -->
+        <div class="chart-foot">
+          <div class="chart-ranges">
+            <button class="chart-range">5y</button>
+            <button class="chart-range">1y</button>
+            <button class="chart-range">6m</button>
+            <button class="chart-range">3m</button>
+            <button class="chart-range">1m</button>
+            <button class="chart-range is-active">5d</button>
+            <button class="chart-range">1d</button>
+          </div>
+          <span class="chart-foot__credit">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            Powered by <a href="#">GeckoTerminal ↗</a>
+          </span>
+        </div>
+      </div>
+
+      <!-- ===== Recent Trades ===== -->
+      <div class="trades-card">
+        <div class="trades-head">
+          <h3 class="trades-head__title">Recent trades</h3>
+          <span class="trades-head__live">LIVE</span>
+        </div>
+
+        <table class="trades-table">
+          <thead>
+            <tr>
+              <th style="width:18%;">Account</th>
+              <th style="width:10%;">Type</th>
+              <th style="width:18%;">SOL</th>
+              <th style="width:24%;">QUANTAGENT</th>
+              <th style="width:14%;">Time</th>
+              <th style="width:8%;">TXN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av"></span>Bk2R…dKdb</span></td>
+              <td><span class="trade-side trade-side--buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>Buy</span></td>
+              <td><span class="trade-amount is-empty">—</span></td>
+              <td class="trade-amount">15.57M</td>
+              <td class="trade-time">1h ago</td>
+              <td><a class="trade-txn" href="#" title="View tx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av av--orange"></span>9Pko…sGuf</span></td>
+              <td><span class="trade-side trade-side--buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>Buy</span></td>
+              <td class="trade-amount">0.1000</td>
+              <td class="trade-amount">2.72M</td>
+              <td class="trade-time">2d ago</td>
+              <td><a class="trade-txn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av av--orange"></span>9Pko…sGuf</span></td>
+              <td><span class="trade-side trade-side--buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>Buy</span></td>
+              <td class="trade-amount">0.2020</td>
+              <td class="trade-amount">5.52M</td>
+              <td class="trade-time">2d ago</td>
+              <td><a class="trade-txn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av"></span>Bk2R…dKdb</span></td>
+              <td><span class="trade-side trade-side--buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>Buy</span></td>
+              <td><span class="trade-amount is-empty">—</span></td>
+              <td class="trade-amount">10.16M</td>
+              <td class="trade-time">3d ago</td>
+              <td><a class="trade-txn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av av--green"></span>4Khh…k5qx</span></td>
+              <td><span class="trade-side trade-side--sell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>Sell</span></td>
+              <td><span class="trade-amount is-empty">—</span></td>
+              <td class="trade-amount">3.00M</td>
+              <td class="trade-time">3d ago</td>
+              <td><a class="trade-txn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av av--pink"></span>FQ5r…Dd8d</span></td>
+              <td><span class="trade-side trade-side--buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>Buy</span></td>
+              <td><span class="trade-amount is-empty">—</span></td>
+              <td class="trade-amount">923.57K</td>
+              <td class="trade-time">4d ago</td>
+              <td><a class="trade-txn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av av--green"></span>4KDa…2w1q</span></td>
+              <td><span class="trade-side trade-side--sell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>Sell</span></td>
+              <td><span class="trade-amount is-empty">—</span></td>
+              <td class="trade-amount">1.05M</td>
+              <td class="trade-time">4d ago</td>
+              <td><a class="trade-txn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av av--pink"></span>7G1p…xRig</span></td>
+              <td><span class="trade-side trade-side--sell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>Sell</span></td>
+              <td class="trade-amount">4.08e-3</td>
+              <td class="trade-amount">3.61M</td>
+              <td class="trade-time">5d ago</td>
+              <td><a class="trade-txn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av av--orange"></span>6kME…Rrhy</span></td>
+              <td><span class="trade-side trade-side--sell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>Sell</span></td>
+              <td><span class="trade-amount is-empty">—</span></td>
+              <td class="trade-amount">10.40M</td>
+              <td class="trade-time">8d ago</td>
+              <td><a class="trade-txn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+            <tr>
+              <td><span class="trade-account"><span class="trade-account__av"></span>DaBH…Aj9n</span></td>
+              <td><span class="trade-side trade-side--sell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>Sell</span></td>
+              <td><span class="trade-amount is-empty">—</span></td>
+              <td class="trade-amount">100.63K</td>
+              <td class="trade-time">10d ago</td>
+              <td><a class="trade-txn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button class="trades-foot">
+          Load more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
+      <section class="section">
+        <header class="section__head">
+          <div>
+            <div class="section__title-num">03 / TOKEN DETAILS</div>
+            <h2 class="section__title">Tokenization details</h2>
+          </div>
+        </header>
+        <div class="tk-grid">
+          <div class="tk-cell">
+            <span class="tk-cell__label">Ticker symbol</span>
+            <span class="tk-cell__value">$QUANTAGENT</span>
+          </div>
+          <div class="tk-cell">
+            <span class="tk-cell__label">Total supply</span>
+            <span class="tk-cell__value">1,000,000,000</span>
+          </div>
+          <div class="tk-cell">
+            <span class="tk-cell__label">Market cap</span>
+            <span class="tk-cell__value">$3,156</span>
+          </div>
+          <div class="tk-cell">
+            <span class="tk-cell__label">24h volume</span>
+            <span class="tk-cell__value">$49</span>
+          </div>
+          <div class="tk-cell">
+            <span class="tk-cell__label">LP liquidity</span>
+            <span class="tk-cell__value">$1,829</span>
+          </div>
+          <div class="tk-cell">
+            <span class="tk-cell__label">Quote mint</span>
+            <span class="tk-cell__value">SOL · Solana</span>
+          </div>
+          <div class="tk-cell" style="grid-column:span 2;">
+            <span class="tk-cell__label">Contract address</span>
+            <span class="tk-cell__value">
+              GovbzFQAsXk8rGy5SL54u5Tw6rGaUGnqEypSUDfwswrm
+              <button class="tk-cell__copy" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </span>
+          </div>
+          <div class="tk-cell" style="grid-column:span 2;">
+            <span class="tk-cell__label">Pool address</span>
+            <span class="tk-cell__value">
+              3T8KV9xXhiguWbDUDGg4dbL4S8LF9PHWDFMV3ybXvWrG
+              <button class="tk-cell__copy" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============= RELATED ITEMS ============= -->
+    <section class="related">
+      <header class="section__head">
+        <div>
+          <div class="section__title-num">RELATED · YOU MIGHT LIKE</div>
+          <h2 class="section__title">Discover more prompts</h2>
+        </div>
+        <a href="#" class="section__more">
+          Browse all
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </header>
+
+      <div class="rel-grid">
+
+        <!-- Card 1: Yuki -->
+        <article class="rel-card">
+          <div class="rel-card__img">
+            <div class="rel-card__img-bg rc-yuki"></div>
+            <div class="rel-card__img-pattern"></div>
+            <div class="rel-card__img-fade"></div>
+            <div class="rel-card__tags">
+              <span class="rel-tag rel-tag--earner">⚡ #3 Earner</span>
+              <span class="rel-tag rel-tag--prompt">Prompt</span>
+            </div>
+            <div class="rel-card__price">
+              <span class="currency">$</span>0.07<span class="unit">/run</span>
+            </div>
+          </div>
+          <div class="rel-card__body">
+            <div class="rel-card__creator">
+              <div class="rel-card__creator-av av-yk">YK</div>
+              <span class="rel-card__creator-name">by <strong>Yuki</strong></span>
+            </div>
+            <h3 class="rel-card__title">Yuki</h3>
+            <p class="rel-card__desc">A romantic anime-style prompt collection for narrative stylists. Curated palettes, character framing presets, and dialogue scaffolds.</p>
+            <div class="rel-card__profit">
+              <span class="rel-card__profit-label">30D Earnings</span>
+              <span class="rel-card__profit-value">$12,860 <span class="delta">↑ 14%</span></span>
+            </div>
+            <div class="rel-card__meta">
+              <div class="rel-card__rating">
+                <span class="rel-card__rating-stars">★★★★☆</span>
+                <span class="rel-card__rating-value">4.7</span>
+                <span class="rel-card__rating-count">(287)</span>
+              </div>
+              <div class="rel-card__usage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <strong>34.8K</strong> runs
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2: ClawPay -->
+        <article class="rel-card">
+          <div class="rel-card__img">
+            <div class="rel-card__img-bg rc-claw"></div>
+            <div class="rel-card__img-pattern"></div>
+            <div class="rel-card__img-fade"></div>
+            <div class="rel-card__tags">
+              <span class="rel-tag rel-tag--earner">⚡ #4 Earner</span>
+              <span class="rel-tag rel-tag--prompt">Prompt</span>
+            </div>
+            <div class="rel-card__price">
+              <span class="currency">$</span>0.06<span class="unit">/run</span>
+            </div>
+          </div>
+          <div class="rel-card__body">
+            <div class="rel-card__creator">
+              <div class="rel-card__creator-av av-fz">FZ</div>
+              <span class="rel-card__creator-name">by <strong>frenzzzy</strong><span class="rel-card__verified"></span></span>
+            </div>
+            <h3 class="rel-card__title">ClawPay</h3>
+            <p class="rel-card__desc">Crustacean-themed payments prompt pack. Generates checkout copy, refund flows, and dispute templates with personality.</p>
+            <div class="rel-card__profit">
+              <span class="rel-card__profit-label">30D Earnings</span>
+              <span class="rel-card__profit-value">$9,840 <span class="delta">↑ 18%</span></span>
+            </div>
+            <div class="rel-card__meta">
+              <div class="rel-card__rating">
+                <span class="rel-card__rating-stars">★★★★☆</span>
+                <span class="rel-card__rating-value">4.6</span>
+                <span class="rel-card__rating-count">(198)</span>
+              </div>
+              <div class="rel-card__usage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <strong>22.7K</strong> runs
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3: CR-CA Agent -->
+        <article class="rel-card">
+          <div class="rel-card__img">
+            <div class="rel-card__img-bg rc-crca"></div>
+            <div class="rel-card__img-pattern"></div>
+            <div class="rel-card__img-fade"></div>
+            <div class="rel-card__tags">
+              <span class="rel-tag rel-tag--earner">⚡ #5 Earner</span>
+              <span class="rel-tag rel-tag--agent">Agent</span>
+            </div>
+            <div class="rel-card__price">
+              <span class="currency">$</span>0.03<span class="unit">/run</span>
+            </div>
+          </div>
+          <div class="rel-card__body">
+            <div class="rel-card__creator">
+              <div class="rel-card__creator-av av-il">IL</div>
+              <span class="rel-card__creator-name">by <strong>ilumdev</strong></span>
+            </div>
+            <h3 class="rel-card__title">CR-CA Agent</h3>
+            <p class="rel-card__desc">Customer-relations &amp; churn-analytics agent. Reads support tickets, scores risk, drafts personalized retention outreach.</p>
+            <div class="rel-card__profit">
+              <span class="rel-card__profit-label">30D Earnings</span>
+              <span class="rel-card__profit-value">$7,520 <span class="delta">↑ 9%</span></span>
+            </div>
+            <div class="rel-card__meta">
+              <div class="rel-card__rating">
+                <span class="rel-card__rating-stars">★★★★☆</span>
+                <span class="rel-card__rating-value">4.5</span>
+                <span class="rel-card__rating-count">(367)</span>
+              </div>
+              <div class="rel-card__usage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <strong>41.3K</strong> runs
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== RIGHT: STICKY TRADE CARD ===== -->
+  <aside class="trade-col" id="trade">
+    <div class="trade">
+
+      <!-- Live price + delta -->
+      <div class="trade__price">
+        <div class="trade__price-row">
+          <span class="trade__price-label">
+            <span class="live"></span>
+            Live price
+          </span>
+          <span class="trade__ticker">$QUANTAGENT</span>
+        </div>
+        <div class="trade__price-big">$0.0032</div>
+        <div>
+          <span class="trade__delta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+            +12.4%
+          </span>
+          <span class="trade__delta-sub">+ $0.000356 (24h)</span>
+        </div>
+      </div>
+
+      <!-- Mini stats -->
+      <div class="trade__minis">
+        <div class="trade-mini">
+          <span class="trade-mini__label">M.Cap</span>
+          <span class="trade-mini__value">$3.16K</span>
+        </div>
+        <div class="trade-mini">
+          <span class="trade-mini__label">Liquidity</span>
+          <span class="trade-mini__value">$1.83K</span>
+        </div>
+        <div class="trade-mini">
+          <span class="trade-mini__label">24h Vol</span>
+          <span class="trade-mini__value">$49</span>
+        </div>
+      </div>
+
+      <!-- Buy / Sell tabs -->
+      <div class="trade__tabs" id="sideTabs">
+        <button class="trade__tab is-active" data-side="buy">Buy</button>
+        <button class="trade__tab" data-side="sell">Sell</button>
+      </div>
+
+      <!-- Form -->
+      <div class="trade__form">
+        <div class="amount-field">
+          <div class="amount-field__label">
+            <span class="amount-field__label-text" id="amountLabel">SOL amount</span>
+            <span class="amount-field__balance">Balance: <b>2.84 SOL</b></span>
+          </div>
+          <div class="amount-input">
+            <input type="text" id="amountInput" placeholder="0.0" />
+            <span class="amount-input__token">
+              <span class="amount-input__token-icon">◎</span>
+              <span id="payToken">SOL</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="quick-buys" id="quickBuys">
+          <button class="quick-buy" data-qty="0.5">0.5</button>
+          <button class="quick-buy" data-qty="1">1</button>
+          <button class="quick-buy" data-qty="2">2</button>
+          <button class="quick-buy" data-qty="5">5</button>
+        </div>
+
+        <div class="trade__receive">
+          <span class="trade__receive-label">You receive</span>
+          <span class="trade__receive-value" id="receiveLine">≈ 0 QUANTAGENT</span>
+        </div>
+
+        <button class="trade__cta" id="ctaBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span id="ctaText">Buy QUANTAGENT</span>
+        </button>
+      </div>
+
+      <!-- External exchanges -->
+      <div class="trade__exch">
+        <span class="trade__exch-label">Or buy on</span>
+        <div class="trade__exch-icons">
+          <a href="#" class="exch-icon" data-tooltip="Axiom">AX</a>
+          <a href="#" class="exch-icon" data-tooltip="Dexscreener">DS</a>
+          <a href="#" class="exch-icon" data-tooltip="Jupiter">JU</a>
+          <a href="#" class="exch-icon" data-tooltip="Photon">PH</a>
+        </div>
+      </div>
+
+      <!-- Token contract details (collapsed) -->
+      <details class="trade__details">
+        <summary>
+          Contract details
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="trade__details-body">
+          <div class="trade__details-row">
+            <span class="lbl">Contract</span>
+            <span class="val">
+              <span>GovbzF…swrm</span>
+              <button title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            </span>
+          </div>
+          <div class="trade__details-row">
+            <span class="lbl">Pool</span>
+            <span class="val">
+              <span>3T8KV9…vWrG</span>
+              <button title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            </span>
+          </div>
+          <div class="trade__details-row">
+            <span class="lbl">Supply</span>
+            <span class="val">1,000,000,000</span>
+          </div>
+          <div class="trade__details-row">
+            <span class="lbl">Quote</span>
+            <span class="val">SOL · Solana</span>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </aside>
+
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+/* ===== Tabs ===== */
+$$("#tabs .tab").forEach(t => t.addEventListener("click", () => {
+  $$("#tabs .tab").forEach(x => x.classList.remove("is-active"));
+  t.classList.add("is-active");
+  const name = t.dataset.tab;
+  $$(".tab-panel").forEach(p => p.classList.toggle("is-active", p.dataset.panel === name));
+  // smooth scroll back to tab top
+  const tabsTop = $("#tabs").getBoundingClientRect().top + window.scrollY - 70;
+  if (window.scrollY > tabsTop) window.scrollTo({ top: tabsTop, behavior: "smooth" });
+}));
+
+/* ===== Prompt viewer mode switch ===== */
+$$("#viewerModes .viewer__mode").forEach(b => b.addEventListener("click", () => {
+  $$("#viewerModes .viewer__mode").forEach(x => x.classList.remove("is-active"));
+  b.classList.add("is-active");
+  const m = b.dataset.mode;
+  $$(".viewer__body").forEach(body => {
+    body.classList.toggle("panel-hidden", body.dataset.body !== m);
+  });
+}));
+
+/* ===== Copy button ===== */
+$("#copyBtn")?.addEventListener("click", () => {
+  $("#copyText").textContent = "Copied!";
+  setTimeout(() => $("#copyText").textContent = "Copy", 1400);
+});
+
+/* ===== Bookmark toggle ===== */
+$("#bookmarkBtn").addEventListener("click", e => {
+  const btn = e.currentTarget;
+  const on = btn.classList.toggle("is-active");
+  const svg = btn.querySelector("svg");
+  svg.setAttribute("fill", on ? "currentColor" : "none");
+});
+
+/* ===== Buy/Sell toggle ===== */
+const PRICE_PER_TOKEN = 0.0032;     // USD
+const SOL_USD = 168;                // mock SOL/USD rate
+
+const ctaBtn = $("#ctaBtn");
+const ctaText = $("#ctaText");
+const amountInput = $("#amountInput");
+const receiveLine = $("#receiveLine");
+const payToken = $("#payToken");
+const amountLabel = $("#amountLabel");
+let side = "buy";
+
+function updateReceive() {
+  const v = parseFloat(amountInput.value);
+  if (isNaN(v) || v <= 0) {
+    receiveLine.textContent = side === "buy" ? "≈ 0 QUANTAGENT" : "≈ $0.00";
+    return;
+  }
+  if (side === "buy") {
+    const usd = v * SOL_USD;
+    const tokens = usd / PRICE_PER_TOKEN;
+    receiveLine.textContent = "≈ " + tokens.toLocaleString("en-US", { maximumFractionDigits: 0 }) + " QUANTAGENT";
+  } else {
+    const usd = v * PRICE_PER_TOKEN;
+    receiveLine.textContent = "≈ $" + usd.toFixed(2);
+  }
+}
+
+$$("#sideTabs .trade__tab").forEach(tab => tab.addEventListener("click", () => {
+  $$("#sideTabs .trade__tab").forEach(x => x.classList.remove("is-active"));
+  tab.classList.add("is-active");
+  side = tab.dataset.side;
+  if (side === "buy") {
+    amountLabel.textContent = "SOL amount";
+    payToken.textContent = "SOL";
+    ctaText.textContent = "Buy QUANTAGENT";
+    ctaBtn.classList.remove("trade__cta--sell");
+  } else {
+    amountLabel.textContent = "Token amount";
+    payToken.textContent = "QUANT";
+    ctaText.textContent = "Sell QUANTAGENT";
+    ctaBtn.classList.add("trade__cta--sell");
+  }
+  amountInput.value = "";
+  $$("#quickBuys .quick-buy").forEach(b => b.classList.remove("is-active"));
+  updateReceive();
+}));
+
+/* Quick buy chips */
+$$("#quickBuys .quick-buy").forEach(b => b.addEventListener("click", () => {
+  $$("#quickBuys .quick-buy").forEach(x => x.classList.remove("is-active"));
+  b.classList.add("is-active");
+  amountInput.value = b.dataset.qty;
+  updateReceive();
+}));
+
+amountInput.addEventListener("input", () => {
+  $$("#quickBuys .quick-buy").forEach(x => x.classList.remove("is-active"));
+  updateReceive();
+});
+
+/* ===== Review list collapse / expand ===== */
+(function(){
+  const list   = $("#reviewList");
+  const btn    = $("#reviewToggle");
+  const text   = $("#reviewToggleText");
+  const count  = $("#reviewToggleCount");
+  if (!list || !btn) return;
+
+  const VISIBLE_BY_DEFAULT = 2;
+  const items = list.querySelectorAll(".review-item");
+  const total = items.length;
+  const hidden = total - VISIBLE_BY_DEFAULT;
+
+  // No need to show toggle if everything fits
+  if (hidden <= 0) {
+    btn.style.display = "none";
+    return;
+  }
+
+  count.textContent = `(${hidden} more)`;
+  let expanded = false;
+
+  btn.addEventListener("click", () => {
+    expanded = !expanded;
+    items.forEach((it, i) => it.classList.toggle("is-hidden", !expanded && i >= VISIBLE_BY_DEFAULT));
+    btn.classList.toggle("is-expanded", expanded);
+    if (expanded) {
+      text.textContent = "Show less";
+      count.textContent = "";
+    } else {
+      text.textContent = "Show all reviews";
+      count.textContent = `(${hidden} more)`;
+      // Scroll back so user doesn't land mid-page after collapse
+      const top = list.getBoundingClientRect().top + window.scrollY - 160;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  });
+})();
+
+/* ===== Review like button — toggle + bouncy animation + floating count ===== */
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".review-item__like");
+  if (!btn) return;
+  e.preventDefault();
+
+  const countEl = btn.querySelector(".like-count");
+  let count = parseInt(btn.dataset.likes, 10) || 0;
+  const wasLiked = btn.classList.contains("is-liked");
+
+  // toggle state
+  if (wasLiked) {
+    count--;
+    btn.classList.remove("is-liked");
+  } else {
+    count++;
+    btn.classList.add("is-liked");
+  }
+  btn.dataset.likes = count;
+  countEl.textContent = count;
+
+  // re-trigger bounce animation cleanly even on rapid clicks
+  btn.classList.remove("is-animating");
+  // force reflow so the animation can replay
+  void btn.offsetWidth;
+  btn.classList.add("is-animating");
+  setTimeout(() => btn.classList.remove("is-animating"), 600);
+
+  // Floating +1 / -1 indicator
+  const float = document.createElement("span");
+  float.className = "like-float" + (wasLiked ? " like-float--down" : "");
+  float.textContent = wasLiked ? "−1" : "+1";
+  btn.appendChild(float);
+  setTimeout(() => float.remove(), 950);
+});
+
+/* ===== Review reply system ===== */
+(function(){
+  let openComposer = null;        // single open composer at a time
+  let openContextBtn = null;
+
+  function closeComposer(){
+    if (openComposer) {
+      openComposer.remove();
+      openComposer = null;
+      openContextBtn = null;
+    }
+  }
+
+  function openReplyComposer(triggerBtn){
+    // If clicking the same Reply twice -> toggle close
+    if (openContextBtn === triggerBtn) {
+      closeComposer();
+      return;
+    }
+    closeComposer();
+
+    // Find the parent review-item and the user being replied to
+    const reviewItem = triggerBtn.closest(".review-item");
+    if (!reviewItem) return;
+
+    const isReplyToReply = triggerBtn.closest(".review-reply");
+    const targetName = isReplyToReply
+      ? isReplyToReply.querySelector(".review-reply__name").firstChild.textContent.trim()
+      : reviewItem.querySelector(".review-item__name").textContent.trim();
+
+    // Find or create the replies container
+    let replies = reviewItem.querySelector(".review-replies");
+    if (!replies) {
+      replies = document.createElement("div");
+      replies.className = "review-replies";
+      reviewItem.appendChild(replies);
+    }
+
+    const composer = document.createElement("div");
+    composer.className = "reply-composer is-open";
+    composer.innerHTML = `
+      <div class="reply-composer__hint">Replying to <span class="at">@${escapeHTML(targetName)}</span></div>
+      <textarea placeholder="Write a thoughtful reply..."></textarea>
+      <div class="reply-composer__foot">
+        <button class="reply-composer__btn reply-composer__btn--cancel" data-action="cancel">Cancel</button>
+        <button class="reply-composer__btn reply-composer__btn--submit" data-action="submit" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Reply
+        </button>
+      </div>
+    `;
+    replies.appendChild(composer);
+
+    const ta = composer.querySelector("textarea");
+    const submitBtn = composer.querySelector('[data-action="submit"]');
+    const cancelBtn = composer.querySelector('[data-action="cancel"]');
+
+    ta.focus();
+    ta.addEventListener("input", () => submitBtn.disabled = !ta.value.trim());
+    ta.addEventListener("keydown", e => {
+      if (e.key === "Escape") { closeComposer(); }
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        submitReply();
+      }
+    });
+    cancelBtn.addEventListener("click", closeComposer);
+    submitBtn.addEventListener("click", submitReply);
+
+    function submitReply(){
+      const text = ta.value.trim();
+      if (!text) return;
+      const reply = buildReply(targetName, text);
+      // insert before the composer so the new one shows just above
+      replies.insertBefore(reply, composer);
+      closeComposer();
+    }
+
+    openComposer = composer;
+    openContextBtn = triggerBtn;
+  }
+
+  function buildReply(replyToName, body){
+    const wrap = document.createElement("div");
+    wrap.className = "review-reply";
+    wrap.innerHTML = `
+      <header class="review-reply__head">
+        <span class="review-reply__avatar av--a">YO</span>
+        <span class="review-reply__name">you<span class="self-tag">You</span></span>
+        <span class="review-reply__meta">just now</span>
+      </header>
+      <p class="review-reply__body"><span class="mention">@${escapeHTML(replyToName)}</span> ${escapeHTML(body)}</p>
+      <div class="review-reply__actions">
+        <button class="review-reply__action">♥ 0</button>
+        <button class="review-reply__action review-reply__reply-btn">Reply</button>
+      </div>
+    `;
+    return wrap;
+  }
+
+  function escapeHTML(s){
+    return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
+  // Click handler — Reply button on review or reply
+  document.addEventListener("click", e => {
+    const btn = e.target.closest(".review-item__reply-btn, .review-reply__reply-btn");
+    if (!btn) return;
+    e.preventDefault();
+    openReplyComposer(btn);
+  });
+
+  // Toggle existing replies thread (Show / Hide N replies)
+  document.addEventListener("click", e => {
+    const tog = e.target.closest("[data-toggle-replies]");
+    if (!tog) return;
+    e.preventDefault();
+    const wrap = tog.parentElement;
+    const replies = wrap.querySelectorAll(".review-reply");
+    const expanded = tog.classList.toggle("is-expanded");
+    const text = tog.querySelector("[data-toggle-text]");
+    replies.forEach(r => r.classList.toggle("is-collapsed", !expanded));
+    text.textContent = expanded ? `Hide ${replies.length} replies` : `Show ${replies.length} replies`;
+  });
+})();
+
+/* ===== Review form star rating ===== */
+$$("#rateStars .review-form__star").forEach(s => {
+  s.addEventListener("click", () => {
+    const r = +s.dataset.rate;
+    $$("#rateStars .review-form__star").forEach(x => {
+      x.classList.toggle("is-on", +x.dataset.rate <= r);
+    });
+  });
+});
+
+/* ===== Chat module ===== */
+(function(){
+  const stream = $("#chatStream");
+  const input  = $("#chatInput");
+  const send   = $("#chatSend");
+  const charCount = $("#charCount");
+  const clearBtn = $("#chatClear");
+  const searchBtn = $("#chatSearch");
+  if (!stream || !input || !send) return;
+
+  // canned AI responses for the demo
+  const responses = [
+    "I'd recommend looking at the <strong>14-day RSI</strong> alongside the volume profile. The setup suggests a probable retest of the 200-day moving average within the next 5-7 sessions. My near-term target is <strong>$178</strong>, medium-term <strong>$192</strong>, ambitious <strong>$210</strong>.",
+    "Looking at the current order book and on-chain flow, the asymmetry is to the upside. I'd size the position with a <strong>1.5x risk multiple</strong> using a stop just below the prior swing low.",
+    "Let me decompose this for you:<br><br>1. Technicals — bullish higher-low structure intact<br>2. Fundamentals — gross margin expansion of 230 bps q/q<br>3. Sentiment — institutional flows turned net buyer last week<br><br>Conclusion: <strong>asymmetric long setup</strong>.",
+  ];
+
+  // Auto-grow textarea
+  input.addEventListener("input", () => {
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 140) + "px";
+    charCount.textContent = input.value.length;
+    send.disabled = !input.value.trim();
+  });
+
+  // Enter to send
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+  send.addEventListener("click", sendMessage);
+
+  function sendMessage(){
+    const text = input.value.trim();
+    if (!text) return;
+    appendUserMsg(text);
+    input.value = "";
+    input.style.height = "";
+    charCount.textContent = "0";
+    send.disabled = true;
+    setTimeout(() => streamAiReply(), 380);
+  }
+
+  function appendUserMsg(text){
+    const m = document.createElement("div");
+    m.className = "msg msg--user";
+    m.innerHTML = `<div class="msg__bubble"></div>`;
+    m.querySelector(".msg__bubble").textContent = text;
+    stream.appendChild(m);
+    stream.scrollTop = stream.scrollHeight;
+  }
+
+  function streamAiReply(){
+    const reply = responses[Math.floor(Math.random() * responses.length)];
+    const wrap = document.createElement("div");
+    wrap.className = "msg msg--ai is-streaming";
+    wrap.style.cssText = "display:flex;flex-direction:row;gap:10px;align-items:flex-start;max-width:78%;";
+    wrap.innerHTML = `
+      <div class="msg__avatar msg__avatar--ai"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <div class="msg__bubble"></div>
+        <div class="msg__actions">
+          <button class="msg__action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button class="msg__action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Regenerate
+          </button>
+        </div>
+      </div>`;
+    stream.appendChild(wrap);
+    stream.scrollTop = stream.scrollHeight;
+    const bubble = wrap.querySelector(".msg__bubble");
+
+    // Type the response progressively (every 18ms reveal more chars)
+    let i = 0;
+    const tick = setInterval(() => {
+      i += Math.max(2, Math.floor(reply.length / 80));
+      if (i >= reply.length) {
+        bubble.innerHTML = reply;
+        wrap.classList.remove("is-streaming");
+        clearInterval(tick);
+        return;
+      }
+      bubble.innerHTML = reply.slice(0, i);
+      stream.scrollTop = stream.scrollHeight;
+    }, 18);
+  }
+
+  // Clear chat
+  clearBtn?.addEventListener("click", () => {
+    if (!confirm("Clear all messages?")) return;
+    stream.innerHTML = "";
+  });
+
+  // Search toggle
+  searchBtn?.addEventListener("click", () => {
+    searchBtn.classList.toggle("is-active");
+  });
+})();
+
+/* ===== Chart range buttons ===== */
+$$(".chart-range").forEach(r => r.addEventListener("click", () => {
+  $$(".chart-range").forEach(x => x.classList.remove("is-active"));
+  r.classList.add("is-active");
+}));
+</script>
+</body>
+</html>
