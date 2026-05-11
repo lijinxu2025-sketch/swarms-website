@@ -1,0 +1,2438 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Account Settings · Swarms Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+:root{
+  /* Brand */
+  --brand-50:#FFF1F1;--brand-100:#FFDFDF;--brand-200:#FFC5C5;--brand-300:#FF9D9D;
+  --brand-400:#FF6464;--brand-500:#FF3434;--brand-600:#ED1717;--brand-700:#C80D0D;
+  --brand-800:#A50F0F;--brand-900:#881414;--brand-950:#4A0505;
+  /* Neutral */
+  --neutral-0:#FFFFFF;--neutral-100:#F2F2F2;--neutral-200:#DDDDDD;--neutral-300:#BBBBBB;
+  --neutral-400:#999999;--neutral-500:#777777;--neutral-600:#555555;--neutral-700:#333333;
+  --neutral-800:#1F1F1F;--neutral-900:#111111;--neutral-950:#0A0A0A;
+  /* Status */
+  --success-400:#4ADE80;--success-500:#22C55E;--success-700:#15803D;--success-950:#052E16;
+  --warning-400:#FBBF24;--warning-500:#F59E0B;--warning-700:#B45309;--warning-950:#451A03;
+  --danger-400:#F87171;--danger-500:#EF4444;--danger-700:#B91C1C;--danger-950:#450A0A;
+  /* Semantic */
+  --bg-default:var(--neutral-950);--bg-subtle:var(--neutral-900);--bg-overlay:var(--neutral-800);
+  --bg-card:#131313;--bg-card-hover:#181818;--bg-input:#0F0F0F;
+  --text-primary:var(--neutral-0);--text-secondary:var(--neutral-400);
+  --text-tertiary:var(--neutral-500);--text-disabled:var(--neutral-600);
+  --border-default:var(--neutral-800);--border-strong:var(--neutral-700);
+
+  --font-display:"Montserrat",system-ui,-apple-system,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",monospace;
+
+  --r-xs:2px;--r-sm:4px;--r-md:6px;--r-lg:8px;--r-xl:12px;--r-2xl:16px;--r-full:9999px;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-display);background:var(--bg-default);color:var(--text-primary);
+  font-size:14px;line-height:1.5;font-weight:400;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:0;background:transparent;color:inherit;padding:0;}
+input,textarea,select{font-family:inherit;color:inherit;}
+a{color:inherit;text-decoration:none;}
+img,svg{display:block;max-width:100%;}
+::selection{background:var(--brand-600);color:white;}
+
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+
+/* ============================================================ */
+/*  TOPBAR                                                      */
+/* ============================================================ */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,10,10,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border-default);
+}
+.topbar__inner{
+  max-width:1440px;margin:0 auto;
+  padding:12px 28px;
+  display:flex;align-items:center;gap:18px;
+}
+.tb__logo{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--brand-600);
+  display:grid;place-items:center;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 6px 20px -6px rgba(237,23,23,0.5);
+  flex-shrink:0;
+}
+.tb__logo svg{width:20px;height:20px;}
+.tb__search{flex:1;max-width:520px;position:relative;}
+.tb__search input{
+  width:100%;padding:9px 14px 9px 38px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);color:var(--text-primary);font-size:12.5px;
+  transition:border-color 120ms,background 120ms;
+}
+.tb__search input::placeholder{color:var(--text-tertiary);}
+.tb__search input:focus{outline:none;border-color:var(--brand-600);background:var(--bg-subtle);}
+.tb__search svg{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  width:14px;height:14px;color:var(--text-tertiary);
+}
+.tb__search .kbd{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:var(--font-mono);font-size:9.5px;color:var(--text-tertiary);
+  padding:2px 6px;border:1px solid var(--border-default);
+  border-radius:var(--r-xs);background:var(--bg-subtle);
+}
+.tb__right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb__link{
+  padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-secondary);
+  border-radius:var(--r-md);transition:all 120ms;
+}
+.tb__link:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.tb__launch{
+  padding:7px 14px;background:var(--brand-600);color:white;
+  border-radius:var(--r-md);font-size:12px;font-weight:600;
+  transition:background 120ms;
+}
+.tb__launch:hover{background:var(--brand-500);}
+.tb__wallet{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 12px;font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--text-primary);border:1px solid var(--border-default);
+  border-radius:var(--r-md);background:var(--bg-card);
+  transition:border-color 120ms;
+}
+.tb__wallet:hover{border-color:var(--neutral-0);}
+.tb__wallet .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--success-500);
+  box-shadow:0 0 6px var(--success-500);
+}
+.tb__avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand-600),#8b5cf6);
+  border:1.5px solid var(--neutral-800);flex-shrink:0;
+}
+
+/* ============================================================ */
+/*  PAGE HEADER                                                 */
+/* ============================================================ */
+.page-head{
+  max-width:1440px;margin:0 auto;
+  padding:32px 28px 0;
+  position:relative;z-index:1;
+}
+.page-head__eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:1.4px;color:var(--text-tertiary);
+  margin-bottom:10px;
+}
+.page-head__eyebrow::before{content:"";width:24px;height:1px;background:var(--brand-600);}
+.page-head__title{
+  font-size:42px;font-weight:800;letter-spacing:-1.4px;line-height:1;
+  margin:0 0 10px;
+}
+.page-head__title em{font-style:italic;color:var(--brand-500);}
+.page-head__desc{
+  font-size:14px;color:var(--text-secondary);margin:0;max-width:560px;
+}
+
+/* ============================================================ */
+/*  3-COLUMN LAYOUT                                             */
+/* ============================================================ */
+.shell{
+  max-width:1440px;margin:0 auto;
+  padding:32px 28px 96px;
+  display:grid;
+  grid-template-columns:240px minmax(0,1fr) 320px;
+  gap:32px;
+  position:relative;z-index:1;
+  align-items:start;
+}
+
+/* ============================================================ */
+/*  SIDEBAR NAV                                                 */
+/* ============================================================ */
+.sidenav{
+  position:sticky;top:78px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:14px 10px;
+  display:flex;flex-direction:column;gap:18px;
+}
+.sidenav__group{display:flex;flex-direction:column;gap:2px;}
+.sidenav__group-title{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;
+  letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--text-tertiary);
+  padding:6px 12px 4px;
+}
+.sidenav__item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;
+  font-size:13px;font-weight:500;
+  color:var(--text-secondary);
+  border-radius:var(--r-md);
+  transition:all 120ms;
+  position:relative;
+  cursor:pointer;
+}
+.sidenav__item:hover{color:var(--text-primary);background:rgba(255,255,255,0.03);}
+.sidenav__item svg{width:15px;height:15px;flex-shrink:0;color:var(--text-tertiary);transition:color 120ms;}
+.sidenav__item:hover svg{color:var(--text-secondary);}
+.sidenav__item.is-active{
+  color:var(--text-primary);
+  background:var(--bg-overlay);
+  font-weight:600;
+}
+.sidenav__item.is-active svg{color:var(--brand-500);}
+.sidenav__item.is-active::before{
+  content:"";position:absolute;left:-11px;top:50%;
+  transform:translateY(-50%);
+  width:3px;height:18px;border-radius:0 2px 2px 0;
+  background:var(--brand-600);
+}
+.sidenav__item .badge{
+  margin-left:auto;
+  font-family:var(--font-mono);font-size:9.5px;font-weight:600;
+  padding:2px 6px;border-radius:var(--r-xs);
+  background:rgba(237,23,23,0.1);
+  color:var(--brand-300);
+  border:1px solid rgba(237,23,23,0.2);
+  letter-spacing:0.4px;
+}
+
+/* ============================================================ */
+/*  MAIN CONTENT                                                */
+/* ============================================================ */
+.main{min-width:0;}
+.tab-panel{display:none;animation:fadeIn 200ms ease;}
+.tab-panel.is-active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* Section card — used throughout */
+.section{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:24px 26px 26px;
+  margin-bottom:18px;
+}
+.section__head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:16px;
+  margin-bottom:20px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--border-default);
+}
+.section__title-block{flex:1;min-width:0;}
+.section__num{
+  font-family:var(--font-mono);font-size:10px;font-weight:600;
+  color:var(--brand-500);letter-spacing:1.2px;
+  margin-bottom:6px;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.section__num::before{content:"";width:14px;height:1px;background:var(--brand-500);}
+.section__title{font-size:18px;font-weight:700;letter-spacing:-0.3px;margin:0 0 4px;}
+.section__desc{font-size:12.5px;color:var(--text-secondary);margin:0;}
+.section__head-cta{flex-shrink:0;}
+
+/* ============================================================ */
+/*  FORM PRIMITIVES                                             */
+/* ============================================================ */
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+.field__label{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:8px;
+}
+.field__label-text{
+  font-size:12px;font-weight:600;color:var(--text-primary);
+  display:inline-flex;align-items:center;gap:6px;
+}
+.field__rule{
+  font-family:var(--font-mono);font-size:10.5px;
+  color:var(--text-tertiary);letter-spacing:0.2px;
+}
+.field__rule.is-warning{color:var(--warning-400);}
+.field__rule.is-success{color:var(--success-400);}
+
+.input,.textarea,.select{
+  width:100%;
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  color:var(--text-primary);
+  font-size:13.5px;
+  padding:11px 14px;
+  transition:border-color 120ms,background 120ms;
+}
+.input:focus,.textarea:focus,.select:focus{
+  outline:none;border-color:var(--neutral-0);background:var(--bg-subtle);
+}
+.input::placeholder,.textarea::placeholder{color:var(--text-tertiary);}
+.input--readonly{
+  color:var(--text-secondary);
+  cursor:not-allowed;
+}
+.input--readonly:focus{border-color:var(--border-default);background:var(--bg-input);}
+
+.field__help{
+  font-size:11.5px;color:var(--text-tertiary);
+  margin-top:6px;line-height:1.5;
+}
+.field__help.with-icon{
+  display:inline-flex;align-items:flex-start;gap:6px;
+}
+.field__help svg{width:11px;height:11px;flex-shrink:0;margin-top:2px;}
+
+.input--with-prefix{position:relative;}
+.input--with-prefix input{padding-left:38px;}
+.input--with-prefix__prefix{
+  position:absolute;left:14px;top:50%;
+  transform:translateY(-50%);
+  color:var(--text-tertiary);
+  font-size:13px;
+  pointer-events:none;
+}
+
+.select-wrap{position:relative;}
+.select-wrap::after{
+  content:"";position:absolute;right:14px;top:50%;
+  transform:translateY(-25%) rotate(45deg);
+  width:7px;height:7px;
+  border-right:1.5px solid var(--text-tertiary);
+  border-bottom:1.5px solid var(--text-tertiary);
+  pointer-events:none;
+}
+.select{appearance:none;-webkit-appearance:none;padding-right:38px;cursor:pointer;}
+
+/* ============================================================ */
+/*  BUTTONS                                                     */
+/* ============================================================ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 18px;
+  font-size:13px;font-weight:600;letter-spacing:0.1px;
+  border-radius:var(--r-md);
+  transition:all 150ms;white-space:nowrap;
+}
+.btn svg{width:13px;height:13px;}
+.btn--primary{
+  background:var(--brand-600);color:white;
+  box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 6px 20px -8px rgba(237,23,23,0.4);
+}
+.btn--primary:hover{background:var(--brand-500);transform:translateY(-1px);}
+.btn--primary:disabled{
+  background:var(--neutral-800);color:var(--text-disabled);
+  cursor:not-allowed;box-shadow:none;transform:none;
+}
+.btn--ghost{
+  border:1px solid var(--border-default);background:var(--bg-card);
+  color:var(--text-secondary);
+}
+.btn--ghost:hover{color:var(--text-primary);border-color:var(--neutral-0);background:var(--bg-card-hover);}
+.btn--danger{
+  border:1px solid var(--danger-700);background:rgba(239,68,68,0.05);
+  color:var(--danger-400);
+}
+.btn--danger:hover{background:rgba(239,68,68,0.1);border-color:var(--danger-500);}
+.btn--full{width:100%;}
+.btn--sm{padding:7px 12px;font-size:11.5px;}
+.btn--sm svg{width:11px;height:11px;}
+
+/* ============================================================ */
+/*  PROFILE TAB                                                 */
+/* ============================================================ */
+/* Avatar editor */
+.avatar-editor{
+  display:flex;align-items:center;gap:18px;
+  padding:18px;
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+}
+.avatar-editor__pic{
+  position:relative;
+  width:72px;height:72px;border-radius:50%;
+  flex-shrink:0;
+  background:radial-gradient(circle at 30% 30%,#ed1717,#3a0606 70%);
+  overflow:hidden;
+  cursor:pointer;
+  border:2px solid var(--border-default);
+  transition:border-color 150ms;
+}
+.avatar-editor__pic:hover{border-color:var(--neutral-0);}
+.avatar-editor__pic-glyph{
+  position:absolute;inset:0;
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:24px;font-weight:700;
+  color:rgba(255,255,255,0.85);
+  letter-spacing:-1px;
+}
+.avatar-editor__pic-overlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,0.6);
+  display:grid;place-items:center;
+  opacity:0;transition:opacity 150ms;
+  color:white;
+}
+.avatar-editor__pic:hover .avatar-editor__pic-overlay{opacity:1;}
+.avatar-editor__pic-overlay svg{width:18px;height:18px;}
+.avatar-editor__body{flex:1;min-width:0;}
+.avatar-editor__title{
+  font-size:13.5px;font-weight:600;color:var(--text-primary);
+  margin:0 0 4px;
+}
+.avatar-editor__hint{
+  font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);
+  margin:0;letter-spacing:0.2px;
+}
+.avatar-editor__actions{display:flex;gap:8px;margin-top:10px;}
+
+/* Two-col layout for fields */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* Social links */
+.social-row{
+  display:grid;grid-template-columns:130px 1fr 32px;
+  gap:8px;align-items:center;
+  margin-bottom:8px;
+}
+.social-row__label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12.5px;font-weight:600;color:var(--text-secondary);
+  padding:0 4px;
+}
+.social-row__label svg{width:13px;height:13px;}
+.social-row__remove{
+  width:32px;height:32px;border-radius:var(--r-md);
+  border:1px solid var(--border-default);
+  display:grid;place-items:center;color:var(--text-tertiary);
+  transition:all 120ms;
+}
+.social-row__remove:hover{color:var(--danger-400);border-color:var(--danger-700);background:rgba(239,68,68,0.04);}
+.social-row__remove svg{width:11px;height:11px;}
+.btn-add{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 13px;
+  background:transparent;border:1px dashed var(--border-strong);
+  border-radius:var(--r-md);
+  font-size:12px;font-weight:600;color:var(--text-secondary);
+  margin-top:4px;
+  transition:all 120ms;
+}
+.btn-add:hover{border-color:var(--neutral-0);color:var(--text-primary);border-style:solid;}
+.btn-add svg{width:11px;height:11px;}
+
+/* Password strength meter */
+.pw-meter{display:flex;gap:3px;margin-top:8px;}
+.pw-meter__bar{
+  flex:1;height:3px;border-radius:1.5px;
+  background:rgba(255,255,255,0.06);
+  transition:background 200ms;
+}
+.pw-meter__bar.is-active{background:var(--success-500);}
+.pw-meter__bar.is-warning{background:var(--warning-500);}
+.pw-meter__bar.is-danger{background:var(--danger-500);}
+.pw-meter__label{
+  font-family:var(--font-mono);font-size:10.5px;
+  color:var(--text-tertiary);margin-top:6px;
+}
+
+/* Danger zone */
+.danger-zone{
+  background:rgba(239,68,68,0.03);
+  border:1px solid var(--danger-950);
+  border-radius:var(--r-xl);
+  padding:18px 22px;
+  margin-bottom:18px;
+}
+.danger-zone__head{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:14px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(239,68,68,0.18);
+}
+.danger-zone__icon{
+  width:28px;height:28px;border-radius:7px;
+  background:rgba(239,68,68,0.1);
+  color:var(--danger-400);
+  display:grid;place-items:center;flex-shrink:0;
+}
+.danger-zone__icon svg{width:14px;height:14px;}
+.danger-zone__title{
+  font-size:13px;font-weight:700;color:var(--danger-400);
+  margin:0;
+}
+.danger-zone__row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:8px 0;
+}
+.danger-zone__row + .danger-zone__row{border-top:1px solid rgba(239,68,68,0.08);}
+.danger-zone__row-text{flex:1;}
+.danger-zone__row-title{font-size:13px;font-weight:600;margin:0 0 2px;}
+.danger-zone__row-desc{font-size:11.5px;color:var(--text-tertiary);margin:0;line-height:1.4;}
+
+/* ============================================================ */
+/*  BILLING TAB                                                 */
+/* ============================================================ */
+.balance-card{
+  background:linear-gradient(135deg,rgba(237,23,23,0.05) 0%,transparent 60%),var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:24px 26px;
+  margin-bottom:18px;
+  position:relative;
+  overflow:hidden;
+}
+.balance-card::after{
+  content:"";position:absolute;
+  top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(237,23,23,0.12),transparent 70%);
+}
+.balance-card__label{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:8px;
+  margin-bottom:8px;
+}
+.balance-card__label .live{
+  width:6px;height:6px;border-radius:50%;background:var(--success-500);
+  box-shadow:0 0 6px var(--success-500);
+  animation:livePulse 2s ease infinite;
+}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.balance-card__amount{
+  font-family:var(--font-mono);font-size:48px;font-weight:600;
+  color:var(--text-primary);letter-spacing:-1.6px;line-height:1;
+  margin-bottom:6px;
+}
+.balance-card__amount .unit{font-size:18px;color:var(--text-tertiary);font-weight:500;margin-left:6px;letter-spacing:0;}
+.balance-card__sub{
+  font-size:12.5px;color:var(--text-secondary);margin:0 0 18px;
+}
+.balance-card__actions{display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:1;}
+
+/* Payment method tabs */
+.pay-tabs{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-bottom:16px;
+}
+.pay-tab{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 16px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  text-align:left;cursor:pointer;
+  transition:all 150ms;
+}
+.pay-tab:hover{border-color:var(--neutral-0);background:var(--bg-card-hover);}
+.pay-tab.is-active{border-color:var(--neutral-0);background:rgba(255,255,255,0.03);}
+.pay-tab__icon{
+  width:32px;height:32px;border-radius:7px;
+  background:rgba(255,255,255,0.04);
+  display:grid;place-items:center;
+  color:var(--text-secondary);flex-shrink:0;
+}
+.pay-tab.is-active .pay-tab__icon{background:rgba(255,255,255,0.08);color:var(--text-primary);}
+.pay-tab__icon svg{width:14px;height:14px;}
+.pay-tab__name{font-size:12.5px;font-weight:700;letter-spacing:-0.1px;line-height:1.2;}
+.pay-tab__sub{font-family:var(--font-mono);font-size:9.5px;color:var(--text-tertiary);margin-top:2px;letter-spacing:0.4px;}
+
+/* Amount picker */
+.amount-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:6px;
+  margin-bottom:12px;
+}
+.amount-chip{
+  padding:10px 0;
+  background:var(--bg-input);border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  font-family:var(--font-mono);font-size:13px;font-weight:600;
+  color:var(--text-secondary);
+  transition:all 120ms;
+}
+.amount-chip:hover{border-color:var(--neutral-0);color:var(--text-primary);}
+.amount-chip.is-selected{
+  border-color:var(--neutral-0);background:rgba(255,255,255,0.04);color:var(--text-primary);
+}
+
+/* Saved cards */
+.card-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px;
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+}
+.card-row + .card-row{margin-top:8px;}
+.card-row__brand{
+  width:42px;height:28px;border-radius:var(--r-sm);
+  background:linear-gradient(135deg,#1a1f3a,#0f1428);
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;
+  color:white;
+  display:grid;place-items:center;letter-spacing:0.6px;
+  flex-shrink:0;
+}
+.card-row__brand--mc{background:linear-gradient(135deg,#eb001b,#f79e1b);color:#fff;}
+.card-row__brand--vs{background:linear-gradient(135deg,#1a1f3a,#0f1428);color:#fff;}
+.card-row__num{
+  flex:1;font-family:var(--font-mono);font-size:13px;color:var(--text-primary);
+  letter-spacing:0.5px;
+}
+.card-row__expiry{
+  font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);
+}
+.card-row__default{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:600;
+  letter-spacing:0.6px;text-transform:uppercase;
+  padding:3px 7px;border-radius:var(--r-xs);
+  background:rgba(74,222,128,0.08);color:var(--success-400);
+  border:1px solid rgba(74,222,128,0.25);
+}
+.card-row__remove{
+  width:28px;height:28px;border-radius:var(--r-sm);
+  display:grid;place-items:center;color:var(--text-tertiary);
+  transition:all 120ms;
+}
+.card-row__remove:hover{color:var(--danger-400);background:rgba(239,68,68,0.06);}
+.card-row__remove svg{width:11px;height:11px;}
+
+/* Wallet status */
+.wallet-status{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  background:rgba(74,222,128,0.04);
+  border:1px solid rgba(74,222,128,0.22);
+  border-radius:var(--r-md);
+  margin-bottom:14px;
+}
+.wallet-status__icon{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(74,222,128,0.15);color:var(--success-400);
+  display:grid;place-items:center;flex-shrink:0;
+}
+.wallet-status__icon svg{width:14px;height:14px;}
+.wallet-status__body{flex:1;min-width:0;}
+.wallet-status__title{
+  font-size:12.5px;font-weight:700;color:var(--success-400);
+  margin:0 0 2px;
+}
+.wallet-status__addr{
+  font-family:var(--font-mono);font-size:11.5px;
+  color:var(--text-secondary);
+}
+.wallet-status__balance{
+  text-align:right;
+}
+.wallet-status__balance-amount{
+  font-family:var(--font-mono);font-size:13px;font-weight:600;
+  color:var(--text-primary);
+}
+.wallet-status__balance-label{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:600;
+  letter-spacing:0.6px;text-transform:uppercase;
+  color:var(--text-tertiary);
+}
+
+/* Marketplace features list */
+.feature-list{
+  display:flex;flex-direction:column;gap:10px;
+  margin-top:10px;
+}
+.feature-list__item{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:12.5px;color:var(--text-secondary);
+}
+.feature-list__item svg{
+  width:14px;height:14px;flex-shrink:0;color:var(--success-400);margin-top:1px;
+}
+
+/* ============================================================ */
+/*  PURCHASES TAB                                               */
+/* ============================================================ */
+.stat-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--border-default);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+  margin-bottom:18px;
+}
+.stat-cell{
+  background:var(--bg-card);
+  padding:18px 20px;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.stat-cell__icon{
+  width:36px;height:36px;border-radius:8px;
+  display:grid;place-items:center;flex-shrink:0;
+}
+.stat-cell--mp .stat-cell__icon{background:rgba(237,23,23,0.1);color:var(--brand-400);}
+.stat-cell--cr .stat-cell__icon{background:rgba(168,85,247,0.1);color:#c084fc;}
+.stat-cell--sub .stat-cell__icon{background:rgba(74,222,128,0.1);color:var(--success-400);}
+.stat-cell__icon svg{width:16px;height:16px;}
+.stat-cell__body{flex:1;}
+.stat-cell__label{
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-tertiary);margin-bottom:4px;
+}
+.stat-cell__value{
+  font-family:var(--font-mono);font-size:22px;font-weight:600;
+  color:var(--text-primary);letter-spacing:-0.4px;line-height:1;
+  margin-bottom:2px;
+}
+.stat-cell__sub{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);}
+
+/* Filter bar */
+.filter-bar{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.filter-chip{
+  padding:6px 12px;
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  font-size:11.5px;font-weight:600;color:var(--text-secondary);
+  display:inline-flex;align-items:center;gap:5px;
+  transition:all 120ms;
+}
+.filter-chip:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.filter-chip.is-active{
+  border-color:var(--neutral-0);background:rgba(255,255,255,0.04);color:var(--text-primary);
+}
+.filter-chip__count{
+  font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);
+  margin-left:2px;
+}
+
+/* Transactions table */
+.tx-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+}
+.tx-table{width:100%;border-collapse:collapse;}
+.tx-table thead th{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-tertiary);
+  text-align:left;
+  padding:12px 18px;
+  border-bottom:1px solid var(--border-default);
+  background:rgba(255,255,255,0.01);
+}
+.tx-table thead th.right{text-align:right;}
+.tx-table tbody td{
+  padding:14px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  font-size:12.5px;color:var(--text-secondary);
+}
+.tx-table tbody td.right{text-align:right;}
+.tx-table tbody tr:last-child td{border-bottom:0;}
+.tx-table tbody tr:hover td{background:rgba(255,255,255,0.02);}
+.tx-product{
+  display:flex;align-items:center;gap:10px;
+}
+.tx-product__img{
+  width:36px;height:36px;border-radius:var(--r-md);
+  flex-shrink:0;
+}
+.tx-product__img.bg-1{background:radial-gradient(circle at 30% 30%,#ed1717,#3a0606 70%);}
+.tx-product__img.bg-2{background:radial-gradient(circle at 50% 50%,#0ea5e9,#0c2540 70%);}
+.tx-product__img.bg-3{background:radial-gradient(circle at 60% 40%,#f59e0b,#3b2200 70%);}
+.tx-product__name{font-size:12.5px;font-weight:600;color:var(--text-primary);margin:0 0 2px;}
+.tx-product__sub{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);}
+.tx-side{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--font-mono);font-size:10.5px;font-weight:700;
+  padding:3px 8px;border-radius:var(--r-xs);
+  letter-spacing:0.4px;text-transform:uppercase;
+}
+.tx-side--buy{background:rgba(74,222,128,0.08);color:var(--success-400);border:1px solid rgba(74,222,128,0.2);}
+.tx-side--sub{background:rgba(168,85,247,0.08);color:#c084fc;border:1px solid rgba(168,85,247,0.2);}
+.tx-side--credit{background:rgba(237,23,23,0.08);color:var(--brand-300);border:1px solid rgba(237,23,23,0.2);}
+.tx-amount{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--text-primary);}
+.tx-time{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);}
+.tx-status{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:600;
+  letter-spacing:0.4px;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.tx-status--ok{color:var(--success-400);}
+.tx-status--ok::before{
+  content:"";width:5px;height:5px;border-radius:50%;background:var(--success-500);
+}
+.tx-receipt{
+  width:24px;height:24px;border-radius:var(--r-sm);
+  display:inline-grid;place-items:center;color:var(--text-tertiary);
+  transition:all 120ms;
+}
+.tx-receipt:hover{color:var(--text-primary);background:rgba(255,255,255,0.06);}
+.tx-receipt svg{width:11px;height:11px;}
+
+/* Empty state */
+.empty-state{
+  padding:60px 20px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.empty-state__icon{
+  width:56px;height:56px;border-radius:14px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border-default);
+  color:var(--text-tertiary);
+  display:grid;place-items:center;
+  margin-bottom:8px;
+}
+.empty-state__icon svg{width:24px;height:24px;}
+.empty-state__title{font-size:14px;font-weight:700;color:var(--text-primary);margin:0;}
+.empty-state__desc{
+  font-size:12.5px;color:var(--text-secondary);
+  margin:0 0 8px;max-width:340px;line-height:1.55;
+}
+
+/* ============================================================ */
+/*  STAKING TAB                                                 */
+/* ============================================================ */
+.stake-hero{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--border-default);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+  margin-bottom:18px;
+}
+.stake-hero__cell{
+  background:var(--bg-card);padding:20px 22px;
+}
+.stake-hero__label{
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-tertiary);margin-bottom:6px;
+  display:flex;align-items:center;gap:6px;
+}
+.stake-hero__value{
+  font-family:var(--font-mono);font-size:26px;font-weight:600;
+  color:var(--text-primary);letter-spacing:-0.6px;line-height:1;
+  margin-bottom:4px;
+}
+.stake-hero__sub{font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);}
+.stake-hero__cell--apy .stake-hero__value{color:var(--success-400);}
+
+/* Amount with quick chips */
+.qc-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+  margin-top:8px;
+}
+.qc{
+  padding:7px 0;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--text-secondary);
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-sm);
+  transition:all 120ms;
+}
+.qc:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.qc.is-active{color:var(--text-primary);border-color:var(--neutral-0);background:rgba(255,255,255,0.04);}
+
+/* Earnings calculator */
+.calc-card{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;
+  background:rgba(74,222,128,0.04);
+  border:1px solid rgba(74,222,128,0.22);
+  border-radius:var(--r-md);
+  margin-top:14px;
+}
+.calc-card__label{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:700;
+  letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--success-400);
+}
+.calc-card__value{
+  font-family:var(--font-mono);font-size:14px;font-weight:600;
+  color:var(--text-primary);
+}
+.calc-card__value .delta{color:var(--success-400);font-size:11px;margin-left:4px;}
+
+/* Position list */
+.pos-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  background:var(--bg-input);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+}
+.pos-row + .pos-row{margin-top:8px;}
+.pos-row__icon{
+  width:36px;height:36px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#ed1717,#3a0606 70%);
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:11px;font-weight:700;color:white;
+  flex-shrink:0;
+}
+.pos-row__body{flex:1;min-width:0;}
+.pos-row__name{font-size:12.5px;font-weight:600;margin:0 0 2px;}
+.pos-row__meta{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);}
+.pos-row__amount{
+  font-family:var(--font-mono);font-size:14px;font-weight:600;
+  color:var(--text-primary);
+  text-align:right;
+}
+.pos-row__amount-sub{font-family:var(--font-mono);font-size:10px;color:var(--success-400);}
+
+/* ============================================================ */
+/*  CREATOR EARNINGS TAB                                        */
+/* ============================================================ */
+.steps-flow{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  margin-bottom:18px;
+}
+.step-card{
+  position:relative;
+  padding:18px 18px 16px;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+}
+.step-card__num{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:700;
+  letter-spacing:1.4px;color:var(--brand-500);
+  margin-bottom:10px;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.step-card__num::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:var(--brand-600);
+  box-shadow:0 0 6px var(--brand-600);
+}
+.step-card__icon{
+  width:36px;height:36px;border-radius:9px;
+  background:rgba(237,23,23,0.08);
+  display:grid;place-items:center;color:var(--brand-300);
+  margin-bottom:14px;
+}
+.step-card__icon svg{width:18px;height:18px;}
+.step-card__title{font-size:14px;font-weight:700;margin:0 0 4px;letter-spacing:-0.2px;}
+.step-card__desc{font-size:12px;line-height:1.55;color:var(--text-secondary);margin:0 0 14px;}
+.step-card__connector{
+  display:none;
+  position:absolute;
+  right:-9px;top:50%;
+  transform:translateY(-50%);
+  width:18px;height:1px;
+  background:var(--border-strong);
+  z-index:2;
+}
+.step-card__connector::after{
+  content:"";position:absolute;right:0;top:-3px;
+  border-left:5px solid var(--border-strong);
+  border-top:3.5px solid transparent;
+  border-bottom:3.5px solid transparent;
+}
+@media (min-width:900px){
+  .steps-flow .step-card:not(:last-child) .step-card__connector{display:block;}
+}
+
+/* Earnings hero (when has earnings) */
+.earnings-hero{
+  background:linear-gradient(135deg,rgba(168,85,247,0.04) 0%,transparent 60%),var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:24px 26px;
+  margin-bottom:18px;
+}
+.earnings-hero__label{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:1.4px;text-transform:uppercase;
+  color:#c084fc;
+  margin-bottom:8px;
+}
+.earnings-hero__amount{
+  font-family:var(--font-mono);font-size:42px;font-weight:600;
+  color:var(--text-primary);letter-spacing:-1.2px;line-height:1;
+  margin-bottom:6px;
+}
+.earnings-hero__amount .unit{font-size:16px;color:var(--text-tertiary);font-weight:500;margin-left:6px;letter-spacing:0;}
+.earnings-hero__sub{
+  font-size:12.5px;color:var(--text-secondary);margin:0;
+}
+.earnings-hero__sub .delta{color:var(--success-400);font-family:var(--font-mono);font-weight:600;margin-left:6px;}
+
+/* ============================================================ */
+/*  THEME TAB                                                   */
+/* ============================================================ */
+.theme-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+}
+.theme-card{
+  position:relative;cursor:pointer;
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:14px;
+  transition:all 200ms;
+}
+.theme-card:hover{border-color:var(--neutral-0);transform:translateY(-2px);}
+.theme-card.is-selected{border-color:var(--neutral-0);background:rgba(255,255,255,0.03);}
+.theme-card.is-selected .theme-card__check{opacity:1;transform:scale(1);}
+.theme-card__check{
+  position:absolute;top:10px;right:10px;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--neutral-0);
+  display:grid;place-items:center;
+  opacity:0;transform:scale(0.6);
+  transition:all 200ms ease;
+  z-index:3;
+}
+.theme-card__check svg{width:11px;height:11px;color:var(--neutral-950);}
+.theme-card__preview{
+  height:140px;border-radius:var(--r-md);
+  overflow:hidden;position:relative;margin-bottom:12px;
+  border:1px solid var(--border-default);
+}
+.theme-card--dark .theme-card__preview{background:#0a0a0a;}
+.theme-card--light .theme-card__preview{background:#ffffff;}
+.theme-card--system .theme-card__preview{
+  background:linear-gradient(135deg,#0a0a0a 0%,#0a0a0a 50%,#ffffff 50%,#ffffff 100%);
+}
+.theme-preview__top{
+  display:flex;align-items:center;gap:4px;
+  padding:8px 10px;
+  border-bottom:1px solid;
+}
+.theme-card--dark .theme-preview__top{border-color:rgba(255,255,255,0.06);}
+.theme-card--light .theme-preview__top{border-color:rgba(0,0,0,0.06);}
+.theme-card--system .theme-preview__top{border-color:rgba(255,255,255,0.06);}
+.theme-preview__dot{
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(255,255,255,0.18);
+}
+.theme-card--light .theme-preview__dot{background:rgba(0,0,0,0.15);}
+.theme-preview__body{padding:10px;display:flex;flex-direction:column;gap:6px;}
+.theme-preview__line{
+  height:7px;border-radius:2px;
+  background:rgba(255,255,255,0.06);
+}
+.theme-preview__line.s{width:50%;}
+.theme-preview__line.m{width:75%;}
+.theme-preview__line.brand{background:var(--brand-600);width:35%;height:9px;border-radius:3px;}
+.theme-card--light .theme-preview__line{background:rgba(0,0,0,0.07);}
+.theme-card--light .theme-preview__line.brand{background:var(--brand-600);}
+.theme-card__name{font-size:13px;font-weight:700;margin:0 0 2px;}
+.theme-card__desc{font-size:11px;color:var(--text-tertiary);margin:0;}
+
+/* Accent picker */
+.accent-row{
+  display:flex;align-items:center;gap:8px;
+  margin-top:6px;
+}
+.accent-swatch{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid transparent;
+  cursor:pointer;
+  transition:all 150ms;
+  position:relative;
+}
+.accent-swatch:hover{transform:scale(1.1);}
+.accent-swatch.is-selected{border-color:white;}
+.accent-swatch::after{
+  content:"";position:absolute;inset:-3px;border-radius:50%;
+  border:1px solid transparent;
+  transition:border-color 150ms;
+}
+.accent-swatch.is-selected::after{border-color:rgba(255,255,255,0.2);}
+
+/* ============================================================ */
+/*  CONTEXT COLUMN (right side)                                 */
+/* ============================================================ */
+.context{
+  position:sticky;top:78px;
+  display:flex;flex-direction:column;gap:14px;
+}
+
+.ctx-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  padding:18px 20px;
+}
+.ctx-card__head{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:14px;padding-bottom:12px;
+  border-bottom:1px solid var(--border-default);
+}
+.ctx-card__title{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:700;
+  letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--text-tertiary);margin:0;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.ctx-card__title::before{content:"";width:14px;height:1px;background:var(--brand-500);}
+
+/* Profile preview card */
+.preview-profile{
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+  padding-bottom:4px;
+}
+.preview-profile__pic{
+  width:80px;height:80px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#ed1717,#3a0606 70%);
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:26px;font-weight:700;
+  color:white;letter-spacing:-1px;
+  border:2px solid var(--border-default);
+  margin-bottom:12px;
+}
+.preview-profile__name{font-size:16px;font-weight:700;margin:0 0 2px;letter-spacing:-0.3px;}
+.preview-profile__handle{
+  font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);
+  margin-bottom:14px;
+}
+.preview-profile__stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--border-default);
+  border:1px solid var(--border-default);border-radius:var(--r-md);
+  width:100%;overflow:hidden;
+  margin-top:6px;
+}
+.preview-profile__stat{
+  background:var(--bg-card);padding:10px;
+  text-align:center;
+}
+.preview-profile__stat-num{
+  font-family:var(--font-mono);font-size:14px;font-weight:700;
+  color:var(--text-primary);line-height:1;margin-bottom:2px;
+}
+.preview-profile__stat-label{
+  font-family:var(--font-mono);font-size:9px;font-weight:600;
+  letter-spacing:0.6px;text-transform:uppercase;
+  color:var(--text-tertiary);
+}
+
+/* Account info rows */
+.info-rows{display:flex;flex-direction:column;gap:11px;}
+.info-row{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.info-row__label{
+  font-size:11.5px;color:var(--text-tertiary);
+}
+.info-row__value{
+  font-family:var(--font-mono);font-size:11.5px;font-weight:500;
+  color:var(--text-primary);
+  display:inline-flex;align-items:center;gap:5px;
+}
+.info-row__pill{
+  padding:2px 8px;border-radius:var(--r-xs);
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;
+  letter-spacing:0.4px;text-transform:uppercase;
+}
+.info-row__pill--free{
+  background:rgba(255,255,255,0.04);color:var(--text-secondary);
+  border:1px solid var(--border-default);
+}
+.info-row__pill--pro{
+  background:rgba(237,23,23,0.1);color:var(--brand-300);
+  border:1px solid rgba(237,23,23,0.25);
+}
+.info-row__pill--verified{
+  background:rgba(74,222,128,0.08);color:var(--success-400);
+  border:1px solid rgba(74,222,128,0.22);
+}
+
+/* Tip card */
+.tip-list{display:flex;flex-direction:column;gap:10px;}
+.tip-list li{
+  font-size:11.5px;color:var(--text-secondary);line-height:1.55;
+  padding-left:16px;position:relative;list-style:none;
+}
+.tip-list li::before{
+  content:"";position:absolute;left:0;top:7px;
+  width:5px;height:5px;border-radius:50%;background:var(--brand-600);
+}
+.tip-list li strong{color:var(--text-primary);font-weight:600;}
+
+/* Spending chart mini */
+.spend-chart{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  height:68px;gap:5px;margin:0 -2px;padding:6px 4px 0;
+}
+.spend-chart__bar{
+  flex:1;border-radius:2px 2px 0 0;
+  background:linear-gradient(180deg,var(--brand-500),var(--brand-700));
+  min-height:8px;
+  transition:opacity 120ms;
+}
+.spend-chart__bar:hover{opacity:0.85;}
+.spend-chart__bar.dim{background:linear-gradient(180deg,#3a3a3a,#222);}
+.spend-axis{
+  display:flex;justify-content:space-between;
+  font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);
+  margin-top:6px;letter-spacing:0.3px;
+}
+
+/* ============================================================ */
+/*  TOAST                                                       */
+/* ============================================================ */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--bg-card);
+  border:1px solid var(--border-default);
+  border-radius:var(--r-md);
+  padding:10px 16px;
+  font-size:12.5px;font-weight:600;
+  color:var(--text-primary);
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 12px 40px -8px rgba(0,0,0,0.6);
+  opacity:0;pointer-events:none;
+  transition:opacity 240ms,transform 240ms;
+  z-index:200;
+}
+.toast.is-show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+.toast__dot{
+  width:8px;height:8px;border-radius:50%;background:var(--success-500);
+  box-shadow:0 0 8px var(--success-500);
+}
+
+/* ============================================================ */
+/*  RESPONSIVE                                                  */
+/* ============================================================ */
+@media (max-width:1280px){
+  .shell{grid-template-columns:220px minmax(0,1fr);}
+  .context{display:none;}
+}
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr;padding:24px 18px 64px;}
+  .sidenav{position:static;}
+  .row{grid-template-columns:1fr;}
+  .stat-row,.stake-hero,.steps-flow,.theme-grid,.amount-grid{grid-template-columns:1fr 1fr;}
+  .pay-tabs{grid-template-columns:1fr;}
+  .page-head{padding:24px 18px 0;}
+  .page-head__title{font-size:32px;}
+  .topbar__inner{padding:12px 16px;flex-wrap:wrap;}
+  .tb__search{order:3;flex-basis:100%;max-width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!--  TOPBAR                                                      -->
+<!-- ============================================================ -->
+<header class="topbar">
+  <div class="topbar__inner">
+    <a href="index.html" class="tb__logo" aria-label="Swarms">
+      <svg viewBox="0 0 50 50" fill="none">
+        <path d="M25 4l8 4.6v9.3L25 22.5l-8-4.6V8.6L25 4z" fill="white"/>
+        <path d="M14 18l8 4.6v9.3L14 36.5l-8-4.6V22.6L14 18z" fill="white" opacity="0.85"/>
+        <path d="M36 18l8 4.6v9.3L36 36.5l-8-4.6V22.6L36 18z" fill="white" opacity="0.85"/>
+        <path d="M25 32l8 4.6v9.3L25 50.5l-8-4.6V36.6L25 32z" fill="white" opacity="0.7"/>
+      </svg>
+    </a>
+    <div class="tb__search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search agents, prompts, tools, users…" />
+      <span class="kbd">⌘K</span>
+    </div>
+    <div class="tb__right">
+      <a href="#" class="tb__link">How it works</a>
+      <a href="launch.html" class="tb__launch">+ Launch</a>
+      <button class="tb__wallet"><span class="dot"></span>6DvG…ASJU</button>
+      <span class="tb__avatar"></span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!--  PAGE HEADER                                                 -->
+<!-- ============================================================ -->
+<header class="page-head">
+  <div class="page-head__eyebrow">SWARMS · ACCOUNT</div>
+  <h1 class="page-head__title">Settings &amp; <em>preferences.</em></h1>
+  <p class="page-head__desc">Manage your profile, payments, web3 activity, and how Swarms looks for you.</p>
+</header>
+
+<!-- ============================================================ -->
+<!--  SHELL                                                       -->
+<!-- ============================================================ -->
+<div class="shell">
+
+  <!-- ===== Sidebar nav ===== -->
+  <aside class="sidenav" id="sidenav">
+    <div class="sidenav__group">
+      <span class="sidenav__group-title">Account</span>
+      <button class="sidenav__item is-active" data-tab="profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </button>
+      <button class="sidenav__item" data-tab="theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20 5 5 0 0 0 5-5 2 2 0 0 1 2-2 3 3 0 0 0 3-3A10 10 0 0 0 12 2z"/></svg>
+        Theme
+      </button>
+    </div>
+    <div class="sidenav__group">
+      <span class="sidenav__group-title">Payments</span>
+      <button class="sidenav__item" data-tab="billing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Billing &amp; Credits
+      </button>
+      <button class="sidenav__item" data-tab="purchases">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        Purchase history
+      </button>
+      <button class="sidenav__item" data-tab="creator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Creator earnings
+        <span class="badge">NEW</span>
+      </button>
+    </div>
+    <div class="sidenav__group">
+      <span class="sidenav__group-title">Web3</span>
+      <button class="sidenav__item" data-tab="staking">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        Staking
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main">
+
+    <!-- ============= PROFILE ============= -->
+    <section class="tab-panel is-active" data-panel="profile">
+
+      <!-- Avatar & basic info -->
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">01 / IDENTITY</div>
+            <h2 class="section__title">Profile information</h2>
+            <p class="section__desc">How you appear across Marketplace and to other users.</p>
+          </div>
+        </header>
+
+        <div class="field">
+          <div class="avatar-editor">
+            <div class="avatar-editor__pic">
+              <span class="avatar-editor__pic-glyph">YK</span>
+              <div class="avatar-editor__pic-overlay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+            </div>
+            <div class="avatar-editor__body">
+              <h4 class="avatar-editor__title">Profile picture</h4>
+              <p class="avatar-editor__hint">JPG · PNG · GIF · max 5MB · square recommended</p>
+              <div class="avatar-editor__actions">
+                <button class="btn btn--ghost btn--sm">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Upload new
+                </button>
+                <button class="btn btn--ghost btn--sm">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <div class="field__label">
+              <span class="field__label-text">Full name</span>
+              <span class="field__rule is-warning">⏱ 14h until next change</span>
+            </div>
+            <input class="input" type="text" value="Li Zhou" />
+            <p class="field__help">Limited to once per day.</p>
+          </div>
+          <div class="field">
+            <div class="field__label">
+              <span class="field__label-text">Username</span>
+              <span class="field__rule">3–18 chars · A-Z 0-9 _</span>
+            </div>
+            <div class="input--with-prefix">
+              <span class="input--with-prefix__prefix">@</span>
+              <input class="input" type="text" value="yuki" />
+            </div>
+            <p class="field__help">Your unique handle. People can find you at <code style="font-family:var(--font-mono);font-size:11.5px;color:var(--brand-300);">swarms.world/@yuki</code></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field__label">
+            <span class="field__label-text">Email</span>
+            <span class="field__rule is-success">✓ Verified</span>
+          </div>
+          <input class="input" type="email" value="lizhou.0050@gmail.com" />
+        </div>
+      </div>
+
+      <!-- Social links -->
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">02 / SOCIAL</div>
+            <h2 class="section__title">Social links</h2>
+            <p class="section__desc">Connect your profiles so users can find you elsewhere.</p>
+          </div>
+        </header>
+
+        <div class="social-row">
+          <span class="social-row__label">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.46 6c-.85.38-1.78.64-2.75.76 1-.6 1.76-1.55 2.12-2.68-.93.55-1.96.95-3.06 1.17a4.83 4.83 0 0 0-8.23 4.4A13.7 13.7 0 0 1 1.64 4.16a4.83 4.83 0 0 0 1.5 6.45c-.79-.02-1.53-.24-2.18-.6v.06a4.83 4.83 0 0 0 3.87 4.74 4.84 4.84 0 0 1-2.18.08 4.83 4.83 0 0 0 4.5 3.35A9.69 9.69 0 0 1 0 19.54 13.66 13.66 0 0 0 7.39 21.8c8.86 0 13.7-7.34 13.7-13.7 0-.21 0-.42-.02-.63A9.78 9.78 0 0 0 22.46 6z"/></svg>
+            Twitter
+          </span>
+          <div class="input--with-prefix">
+            <span class="input--with-prefix__prefix">@</span>
+            <input class="input" type="text" placeholder="username" value="yuki_eth" />
+          </div>
+          <button class="social-row__remove" title="Remove">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="social-row">
+          <span class="social-row__label">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.31.47-2.38 1.24-3.22-.13-.31-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.87.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 0z"/></svg>
+            GitHub
+          </span>
+          <div class="input--with-prefix">
+            <span class="input--with-prefix__prefix">@</span>
+            <input class="input" type="text" placeholder="username" />
+          </div>
+          <button class="social-row__remove" title="Remove">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <button class="btn-add">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add another (Discord, Telegram, Website…)
+        </button>
+      </div>
+
+      <!-- Password -->
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">03 / SECURITY</div>
+            <h2 class="section__title">Password</h2>
+            <p class="section__desc">Use a strong password unique to Swarms.</p>
+          </div>
+        </header>
+        <div class="row">
+          <div class="field">
+            <div class="field__label"><span class="field__label-text">Current password</span></div>
+            <input class="input" type="password" placeholder="••••••••" />
+          </div>
+          <div class="field">
+            <div class="field__label"><span class="field__label-text">New password</span></div>
+            <input class="input" type="password" id="newPw" placeholder="••••••••" />
+            <div class="pw-meter" id="pwMeter">
+              <div class="pw-meter__bar"></div>
+              <div class="pw-meter__bar"></div>
+              <div class="pw-meter__bar"></div>
+              <div class="pw-meter__bar"></div>
+            </div>
+            <p class="pw-meter__label" id="pwLabel">Strength: —</p>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:6px;">
+          <button class="btn btn--primary">Update password</button>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="danger-zone">
+        <header class="danger-zone__head">
+          <div class="danger-zone__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3 class="danger-zone__title">Danger zone</h3>
+        </header>
+        <div class="danger-zone__row">
+          <div class="danger-zone__row-text">
+            <h4 class="danger-zone__row-title">Sign out everywhere</h4>
+            <p class="danger-zone__row-desc">Force log out from all devices. You'll need to sign in again.</p>
+          </div>
+          <button class="btn btn--danger btn--sm">Sign out</button>
+        </div>
+        <div class="danger-zone__row">
+          <div class="danger-zone__row-text">
+            <h4 class="danger-zone__row-title">Delete account</h4>
+            <p class="danger-zone__row-desc">Permanently remove your account, prompts and on-chain ties. Cannot be undone.</p>
+          </div>
+          <button class="btn btn--danger btn--sm">Delete</button>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;">
+        <button class="btn btn--ghost">Cancel</button>
+        <button class="btn btn--primary" id="saveProfile">Save changes</button>
+      </div>
+    </section>
+
+    <!-- ============= BILLING ============= -->
+    <section class="tab-panel" data-panel="billing">
+
+      <div class="balance-card">
+        <span class="balance-card__label"><span class="live"></span>Current balance</span>
+        <div class="balance-card__amount">$19.91<span class="unit">USD</span></div>
+        <p class="balance-card__sub">Available credits for API usage and one-off purchases.</p>
+        <div class="balance-card__actions">
+          <button class="btn btn--primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add credits
+          </button>
+          <button class="btn btn--ghost">View transactions</button>
+          <button class="btn btn--ghost">Export to CSV</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">01 / TOP-UP</div>
+            <h2 class="section__title">Add credits</h2>
+            <p class="section__desc">Choose your payment method and amount.</p>
+          </div>
+        </header>
+
+        <div class="field">
+          <div class="field__label"><span class="field__label-text">Payment method</span></div>
+          <div class="pay-tabs" id="payTabs">
+            <button class="pay-tab is-active" data-pay="card">
+              <span class="pay-tab__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              </span>
+              <div>
+                <div class="pay-tab__name">Card</div>
+                <div class="pay-tab__sub">Visa · MC · Amex</div>
+              </div>
+            </button>
+            <button class="pay-tab" data-pay="sol">
+              <span class="pay-tab__icon">◎</span>
+              <div>
+                <div class="pay-tab__name">SOL</div>
+                <div class="pay-tab__sub">Solana wallet</div>
+              </div>
+            </button>
+            <button class="pay-tab" data-pay="swarms">
+              <span class="pay-tab__icon">⚡</span>
+              <div>
+                <div class="pay-tab__name">$SWARMS</div>
+                <div class="pay-tab__sub">10% bonus</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field__label"><span class="field__label-text">Amount</span></div>
+          <div class="amount-grid" id="amountGrid">
+            <button class="amount-chip" data-amt="10">$10</button>
+            <button class="amount-chip" data-amt="25">$25</button>
+            <button class="amount-chip" data-amt="50">$50</button>
+            <button class="amount-chip is-selected" data-amt="100">$100</button>
+            <button class="amount-chip" data-amt="250">$250</button>
+            <button class="amount-chip" data-amt="500">$500</button>
+          </div>
+          <div class="input--with-prefix">
+            <span class="input--with-prefix__prefix">$</span>
+            <input class="input" id="customAmt" type="text" placeholder="Or enter custom amount" />
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;">
+          <button class="btn btn--primary btn--full">
+            Continue to payment
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">02 / CARDS</div>
+            <h2 class="section__title">Saved payment methods</h2>
+            <p class="section__desc">Manage your stored credit and debit cards.</p>
+          </div>
+          <button class="btn btn--ghost btn--sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add card
+          </button>
+        </header>
+
+        <div class="card-row">
+          <span class="card-row__brand card-row__brand--vs">VISA</span>
+          <span class="card-row__num">•••• •••• •••• 4242</span>
+          <span class="card-row__expiry">12 / 27</span>
+          <span class="card-row__default">Default</span>
+          <button class="card-row__remove" title="Remove">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="card-row">
+          <span class="card-row__brand card-row__brand--mc">MC</span>
+          <span class="card-row__num">•••• •••• •••• 8853</span>
+          <span class="card-row__expiry">04 / 26</span>
+          <button class="card-row__remove" title="Remove">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">03 / WALLET</div>
+            <h2 class="section__title">Marketplace wallet</h2>
+            <p class="section__desc">Receive payments from your tokenized products.</p>
+          </div>
+        </header>
+
+        <div class="wallet-status">
+          <div class="wallet-status__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="wallet-status__body">
+            <h4 class="wallet-status__title">Wallet connected</h4>
+            <span class="wallet-status__addr">6DvGwF…S3ASJU</span>
+          </div>
+          <div class="wallet-status__balance">
+            <div class="wallet-status__balance-amount">2.84 SOL</div>
+            <div class="wallet-status__balance-label">≈ $477</div>
+          </div>
+        </div>
+
+        <h4 style="font-size:12.5px;font-weight:700;margin:0 0 10px;color:var(--text-secondary);letter-spacing:0.2px;">What you can do with your wallet</h4>
+        <ul class="feature-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Buy premium prompts and agents directly with SOL
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Sell your own prompts and earn revenue
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Receive payments instantly to your wallet
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Stake $SWARMS to earn yield from DAO revenue
+          </li>
+        </ul>
+        <div style="margin-top:14px;">
+          <button class="btn btn--ghost btn--sm">Disconnect wallet</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============= PURCHASES ============= -->
+    <section class="tab-panel" data-panel="purchases">
+
+      <div class="stat-row">
+        <div class="stat-cell stat-cell--mp">
+          <div class="stat-cell__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <div class="stat-cell__body">
+            <div class="stat-cell__label">Marketplace</div>
+            <div class="stat-cell__value">12</div>
+            <div class="stat-cell__sub">Lifetime · $148.20</div>
+          </div>
+        </div>
+        <div class="stat-cell stat-cell--cr">
+          <div class="stat-cell__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M16 10l-8 4M16 14l-8-4"/></svg>
+          </div>
+          <div class="stat-cell__body">
+            <div class="stat-cell__label">Credits added</div>
+            <div class="stat-cell__value">8</div>
+            <div class="stat-cell__sub">Lifetime · $620.00</div>
+          </div>
+        </div>
+        <div class="stat-cell stat-cell--sub">
+          <div class="stat-cell__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div class="stat-cell__body">
+            <div class="stat-cell__label">Subscription</div>
+            <div class="stat-cell__value">Free</div>
+            <div class="stat-cell__sub">Upgrade to Pro →</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">01 / TRANSACTIONS</div>
+            <h2 class="section__title">Recent transactions</h2>
+            <p class="section__desc">All your purchases, sales, and credit top-ups.</p>
+          </div>
+          <button class="btn btn--ghost btn--sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+        </header>
+
+        <div class="filter-bar" id="filterBar">
+          <button class="filter-chip is-active" data-filter="all">All <span class="filter-chip__count">23</span></button>
+          <button class="filter-chip" data-filter="purchase">Purchases <span class="filter-chip__count">12</span></button>
+          <button class="filter-chip" data-filter="credit">Credits <span class="filter-chip__count">8</span></button>
+          <button class="filter-chip" data-filter="sub">Subscription <span class="filter-chip__count">3</span></button>
+          <span style="flex:1;"></span>
+          <button class="filter-chip">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Last 30 days
+          </button>
+        </div>
+
+        <div class="tx-card">
+          <table class="tx-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Type</th>
+                <th class="right">Amount</th>
+                <th class="right">Status</th>
+                <th class="right">Date</th>
+                <th class="right">Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="tx-product">
+                    <span class="tx-product__img bg-1"></span>
+                    <div>
+                      <div class="tx-product__name">Quant Trader Agent</div>
+                      <div class="tx-product__sub">by tunedforai</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="tx-side tx-side--buy">↗ Buy</span></td>
+                <td class="right tx-amount">$0.07</td>
+                <td class="right"><span class="tx-status tx-status--ok">Completed</span></td>
+                <td class="right tx-time">Today · 14:22</td>
+                <td class="right">
+                  <a class="tx-receipt" href="#" title="View receipt">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="tx-product">
+                    <span class="tx-product__img bg-3"></span>
+                    <div>
+                      <div class="tx-product__name">Credit top-up</div>
+                      <div class="tx-product__sub">VISA •••• 4242</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="tx-side tx-side--credit">$ Credit</span></td>
+                <td class="right tx-amount">$100.00</td>
+                <td class="right"><span class="tx-status tx-status--ok">Completed</span></td>
+                <td class="right tx-time">Yesterday</td>
+                <td class="right">
+                  <a class="tx-receipt" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="tx-product">
+                    <span class="tx-product__img bg-2"></span>
+                    <div>
+                      <div class="tx-product__name">Synapse Code Reviewer</div>
+                      <div class="tx-product__sub">by synapse.lab</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="tx-side tx-side--buy">↗ Buy</span></td>
+                <td class="right tx-amount">$0.09</td>
+                <td class="right"><span class="tx-status tx-status--ok">Completed</span></td>
+                <td class="right tx-time">3 days ago</td>
+                <td class="right">
+                  <a class="tx-receipt" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="tx-product">
+                    <span class="tx-product__img bg-1"></span>
+                    <div>
+                      <div class="tx-product__name">Pro subscription</div>
+                      <div class="tx-product__sub">Monthly billing</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="tx-side tx-side--sub">★ Sub</span></td>
+                <td class="right tx-amount">$19.99</td>
+                <td class="right"><span class="tx-status tx-status--ok">Completed</span></td>
+                <td class="right tx-time">5 days ago</td>
+                <td class="right">
+                  <a class="tx-receipt" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="tx-product">
+                    <span class="tx-product__img bg-3"></span>
+                    <div>
+                      <div class="tx-product__name">Aletheia Research</div>
+                      <div class="tx-product__sub">by aletheia.io</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="tx-side tx-side--buy">↗ Buy</span></td>
+                <td class="right tx-amount">$0.06</td>
+                <td class="right"><span class="tx-status tx-status--ok">Completed</span></td>
+                <td class="right tx-time">8 days ago</td>
+                <td class="right">
+                  <a class="tx-receipt" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= STAKING ============= -->
+    <section class="tab-panel" data-panel="staking">
+
+      <div class="stake-hero">
+        <div class="stake-hero__cell">
+          <div class="stake-hero__label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            Wallet balance
+          </div>
+          <div class="stake-hero__value">2,840 <span style="font-size:14px;color:var(--text-tertiary);">$SWARMS</span></div>
+          <div class="stake-hero__sub">≈ $284.00 USD</div>
+        </div>
+        <div class="stake-hero__cell">
+          <div class="stake-hero__label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Currently staked
+          </div>
+          <div class="stake-hero__value">0</div>
+          <div class="stake-hero__sub">Earning 0 / day</div>
+        </div>
+        <div class="stake-hero__cell stake-hero__cell--apy">
+          <div class="stake-hero__label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            Estimated APY
+          </div>
+          <div class="stake-hero__value">12.4<span style="font-size:14px;">%</span></div>
+          <div class="stake-hero__sub">7-day average</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">01 / STAKE</div>
+            <h2 class="section__title">Stake $SWARMS</h2>
+            <p class="section__desc">Stake your tokens to the Swarms DAO and earn yield from marketplace fees.</p>
+          </div>
+        </header>
+
+        <div class="field">
+          <div class="field__label">
+            <span class="field__label-text">Amount to stake</span>
+            <span class="field__rule">Available: <strong style="color:var(--text-primary);">2,840.00</strong></span>
+          </div>
+          <input class="input" type="text" id="stakeAmt" placeholder="0.00" style="font-family:var(--font-mono);font-size:18px;font-weight:600;letter-spacing:-0.4px;" />
+          <div class="qc-grid" id="qcGrid">
+            <button class="qc" data-pct="25">25%</button>
+            <button class="qc" data-pct="50">50%</button>
+            <button class="qc" data-pct="75">75%</button>
+            <button class="qc" data-pct="100">Max</button>
+          </div>
+
+          <div class="calc-card">
+            <span class="calc-card__label">Estimated annual rewards</span>
+            <span class="calc-card__value" id="calcReward">0 <span style="color:var(--text-tertiary);font-size:11px;">$SWARMS</span><span class="delta">+0%</span></span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
+          <button class="btn btn--primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            Stake tokens
+          </button>
+          <button class="btn btn--ghost">Disconnect wallet</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">02 / POSITIONS</div>
+            <h2 class="section__title">Active positions</h2>
+            <p class="section__desc">Your open stakes. Unstake anytime — 7-day cooldown applies.</p>
+          </div>
+        </header>
+
+        <div class="empty-state" style="padding:30px 20px;">
+          <div class="empty-state__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <h4 class="empty-state__title">No active positions</h4>
+          <p class="empty-state__desc">Once you stake, your positions will appear here with daily rewards tracking.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============= CREATOR EARNINGS ============= -->
+    <section class="tab-panel" data-panel="creator">
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">CREATOR · GETTING STARTED</div>
+            <h2 class="section__title">Start earning from your work</h2>
+            <p class="section__desc">Tokenize your prompts or agents and earn fees from every transaction. Token holders share revenue.</p>
+          </div>
+        </header>
+
+        <div class="steps-flow">
+          <article class="step-card">
+            <div class="step-card__num">STEP 01</div>
+            <div class="step-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <h3 class="step-card__title">Create &amp; publish</h3>
+            <p class="step-card__desc">Launch a prompt, agent, or tool to the marketplace. Quality is checked before going live.</p>
+            <span class="step-card__connector"></span>
+          </article>
+          <article class="step-card">
+            <div class="step-card__num">STEP 02</div>
+            <div class="step-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/></svg>
+            </div>
+            <h3 class="step-card__title">Tokenize</h3>
+            <p class="step-card__desc">Issue a token tied to your product. 0.04 SOL one-time fee. Token holders earn revenue share.</p>
+            <span class="step-card__connector"></span>
+          </article>
+          <article class="step-card">
+            <div class="step-card__num">STEP 03</div>
+            <div class="step-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h3 class="step-card__title">Earn fees</h3>
+            <p class="step-card__desc">Every run, every trade — you earn. Withdraw anytime to your connected wallet.</p>
+          </article>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+          <a href="#" class="btn btn--primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Launch your first product
+          </a>
+          <a href="#" class="btn btn--ghost">Read creator docs →</a>
+        </div>
+      </div>
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">FAQ</div>
+            <h2 class="section__title">Frequently asked</h2>
+          </div>
+        </header>
+        <details style="border-bottom:1px solid var(--border-default);padding:14px 0;">
+          <summary style="font-size:13px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            How much does tokenization cost?
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">+</span>
+          </summary>
+          <p style="font-size:12.5px;color:var(--text-secondary);margin:8px 0 0;line-height:1.55;">A one-time fee of 0.04 SOL covers the on-chain mint and bonding curve setup. After that, your token is live and tradeable.</p>
+        </details>
+        <details style="border-bottom:1px solid var(--border-default);padding:14px 0;">
+          <summary style="font-size:13px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            How are creator fees calculated?
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">+</span>
+          </summary>
+          <p style="font-size:12.5px;color:var(--text-secondary);margin:8px 0 0;line-height:1.55;">Creators earn 70% of every per-run fee, 1% of every secondary token trade, and a share of LP fees if liquidity is provided.</p>
+        </details>
+        <details style="padding:14px 0;">
+          <summary style="font-size:13px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            Can I un-tokenize a product?
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">+</span>
+          </summary>
+          <p style="font-size:12.5px;color:var(--text-secondary);margin:8px 0 0;line-height:1.55;">Tokenization is permanent on-chain — but you can pause new sales of the underlying product anytime.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============= THEME ============= -->
+    <section class="tab-panel" data-panel="theme">
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">01 / APPEARANCE</div>
+            <h2 class="section__title">Theme</h2>
+            <p class="section__desc">Choose how Swarms looks. System auto follows your OS setting.</p>
+          </div>
+        </header>
+
+        <div class="theme-grid" id="themeGrid">
+          <button class="theme-card theme-card--dark is-selected" data-theme="dark">
+            <span class="theme-card__check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <div class="theme-card__preview">
+              <div class="theme-preview__top">
+                <span class="theme-preview__dot"></span>
+                <span class="theme-preview__dot"></span>
+                <span class="theme-preview__dot"></span>
+              </div>
+              <div class="theme-preview__body">
+                <div class="theme-preview__line brand"></div>
+                <div class="theme-preview__line m"></div>
+                <div class="theme-preview__line s"></div>
+                <div class="theme-preview__line m"></div>
+              </div>
+            </div>
+            <h4 class="theme-card__name">Dark</h4>
+            <p class="theme-card__desc">Default · Editorial dark</p>
+          </button>
+
+          <button class="theme-card theme-card--light" data-theme="light">
+            <span class="theme-card__check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <div class="theme-card__preview">
+              <div class="theme-preview__top">
+                <span class="theme-preview__dot"></span>
+                <span class="theme-preview__dot"></span>
+                <span class="theme-preview__dot"></span>
+              </div>
+              <div class="theme-preview__body">
+                <div class="theme-preview__line brand"></div>
+                <div class="theme-preview__line m"></div>
+                <div class="theme-preview__line s"></div>
+                <div class="theme-preview__line m"></div>
+              </div>
+            </div>
+            <h4 class="theme-card__name">Light</h4>
+            <p class="theme-card__desc">Bright · High-contrast</p>
+          </button>
+
+          <button class="theme-card theme-card--system" data-theme="system">
+            <span class="theme-card__check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <div class="theme-card__preview">
+              <div class="theme-preview__top">
+                <span class="theme-preview__dot"></span>
+                <span class="theme-preview__dot"></span>
+                <span class="theme-preview__dot"></span>
+              </div>
+              <div class="theme-preview__body">
+                <div class="theme-preview__line brand"></div>
+                <div class="theme-preview__line m"></div>
+                <div class="theme-preview__line s"></div>
+                <div class="theme-preview__line m"></div>
+              </div>
+            </div>
+            <h4 class="theme-card__name">System</h4>
+            <p class="theme-card__desc">Follows OS setting</p>
+          </button>
+        </div>
+      </div>
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">02 / DENSITY</div>
+            <h2 class="section__title">Display density</h2>
+            <p class="section__desc">Comfortable for browsing, compact for power use.</p>
+          </div>
+        </header>
+        <div class="select-wrap">
+          <select class="select">
+            <option>Comfortable (default)</option>
+            <option>Compact</option>
+            <option>Spacious</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <header class="section__head">
+          <div class="section__title-block">
+            <div class="section__num">03 / MOTION</div>
+            <h2 class="section__title">Reduced motion</h2>
+            <p class="section__desc">Disable animations and transitions for accessibility.</p>
+          </div>
+        </header>
+        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div>
+            <h4 style="font-size:13px;font-weight:600;margin:0 0 2px;">Respect system reduced-motion</h4>
+            <p style="font-size:11.5px;color:var(--text-tertiary);margin:0;">Recommended. Auto-detect and disable non-essential animations.</p>
+          </div>
+          <input type="checkbox" checked style="width:38px;height:22px;cursor:pointer;" />
+        </label>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== CONTEXT (right side) ===== -->
+  <aside class="context" id="context">
+
+    <!-- Profile preview (when on Profile tab) -->
+    <div class="ctx-card" data-ctx="profile">
+      <header class="ctx-card__head">
+        <h3 class="ctx-card__title">Public preview</h3>
+      </header>
+      <div class="preview-profile">
+        <div class="preview-profile__pic">YK</div>
+        <h4 class="preview-profile__name" id="ctxName">Yuki</h4>
+        <span class="preview-profile__handle" id="ctxHandle">@yuki · swarms.world/@yuki</span>
+        <div class="preview-profile__stats">
+          <div class="preview-profile__stat">
+            <div class="preview-profile__stat-num">3</div>
+            <div class="preview-profile__stat-label">Products</div>
+          </div>
+          <div class="preview-profile__stat">
+            <div class="preview-profile__stat-num">128</div>
+            <div class="preview-profile__stat-label">Followers</div>
+          </div>
+          <div class="preview-profile__stat">
+            <div class="preview-profile__stat-num">4.7</div>
+            <div class="preview-profile__stat-label">Avg ★</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ctx-card" data-ctx="profile">
+      <header class="ctx-card__head">
+        <h3 class="ctx-card__title">Account info</h3>
+      </header>
+      <div class="info-rows">
+        <div class="info-row">
+          <span class="info-row__label">Member since</span>
+          <span class="info-row__value">Jan 14, 2025</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">Subscription</span>
+          <span class="info-row__pill info-row__pill--free">Free</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">Email status</span>
+          <span class="info-row__pill info-row__pill--verified">✓ Verified</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">Wallet</span>
+          <span class="info-row__value">6DvG…ASJU</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">2FA</span>
+          <span class="info-row__value" style="color:var(--warning-400);">Not enabled</span>
+        </div>
+      </div>
+      <button class="btn btn--ghost btn--sm" style="margin-top:14px;width:100%;">Upgrade to Pro →</button>
+    </div>
+
+    <!-- Billing context -->
+    <div class="ctx-card" data-ctx="billing" style="display:none;">
+      <header class="ctx-card__head">
+        <h3 class="ctx-card__title">30-day spending</h3>
+      </header>
+      <div style="font-family:var(--font-mono);font-size:24px;font-weight:600;letter-spacing:-0.5px;line-height:1;margin-bottom:4px;">$148.20</div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--success-400);margin-bottom:14px;">↓ 22% vs last 30d</div>
+      <div class="spend-chart">
+        <div class="spend-chart__bar dim" style="height:24px;"></div>
+        <div class="spend-chart__bar dim" style="height:18px;"></div>
+        <div class="spend-chart__bar" style="height:32px;"></div>
+        <div class="spend-chart__bar" style="height:28px;"></div>
+        <div class="spend-chart__bar" style="height:48px;"></div>
+        <div class="spend-chart__bar" style="height:38px;"></div>
+        <div class="spend-chart__bar" style="height:22px;"></div>
+        <div class="spend-chart__bar" style="height:46px;"></div>
+        <div class="spend-chart__bar" style="height:60px;"></div>
+        <div class="spend-chart__bar" style="height:42px;"></div>
+        <div class="spend-chart__bar" style="height:36px;"></div>
+        <div class="spend-chart__bar" style="height:54px;"></div>
+      </div>
+      <div class="spend-axis">
+        <span>30d ago</span>
+        <span>15d</span>
+        <span>Today</span>
+      </div>
+    </div>
+
+    <div class="ctx-card" data-ctx="billing" style="display:none;">
+      <header class="ctx-card__head">
+        <h3 class="ctx-card__title">Tips</h3>
+      </header>
+      <ul class="tip-list">
+        <li><strong>Pay in $SWARMS</strong> for a 10% bonus on every top-up.</li>
+        <li><strong>Larger top-ups</strong> reduce per-transaction overhead — $250+ recommended for active users.</li>
+        <li><strong>Auto-reload</strong> coming soon — keep your balance topped up automatically.</li>
+      </ul>
+    </div>
+
+    <!-- Purchases context -->
+    <div class="ctx-card" data-ctx="purchases" style="display:none;">
+      <header class="ctx-card__head">
+        <h3 class="ctx-card__title">This month</h3>
+      </header>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px;">Top category</div>
+          <div style="font-size:13px;font-weight:700;">Trading agents</div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">5 purchases · $48.20</div>
+        </div>
+        <div style="border-top:1px solid var(--border-default);padding-top:14px;">
+          <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px;">Most-used</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+            <span class="tx-product__img bg-1" style="width:32px;height:32px;"></span>
+            <div>
+              <div style="font-size:12.5px;font-weight:600;">Quant Trader Agent</div>
+              <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);">214 runs this month</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Staking context -->
+    <div class="ctx-card" data-ctx="staking" style="display:none;">
+      <header class="ctx-card__head">
+        <h3 class="ctx-card__title">How staking works</h3>
+      </header>
+      <ul class="tip-list">
+        <li><strong>Earn yield</strong> from a share of marketplace fees, distributed daily.</li>
+        <li><strong>7-day cooldown</strong> when unstaking — protects against flash withdrawals.</li>
+        <li><strong>No minimum</strong> — stake any amount, anytime.</li>
+        <li><strong>APY varies</strong> with marketplace volume. Currently <strong style="color:var(--success-400);">12.4%</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="ctx-card" data-ctx="staking" style="display:none;">
+      <header class="ctx-card__head">
+        <h3 class="ctx-card__title">DAO stats</h3>
+      </header>
+      <div class="info-rows">
+        <div class="info-row">
+          <span class="info-row__label">Total staked</span>
+          <span class="info-row__value">12.4M SWARMS</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">Stakers</span>
+          <span class="info-row__value">3,127</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">7d distribution</span>
+          <span class="info-row__value" style="color:var(--success-400);">$48.2K</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">Your share</span>
+          <span class="info-row__value">0.00%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creator earnings context -->
+    <div class="ctx-card" data-ctx="creator" style="display:none;">
+      <header class="ctx-card__head">
+        <h3 class="ctx-card__title">Top earners this week</h3>
+      </header>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="tx-product__img bg-1" style="width:32px;height:32px;flex-shrink:0;"></span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12.5px;font-weight:600;">tunedforai</div>
+            <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--success-400);">+$24.5K · 30d</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="tx-product__img bg-2" style="width:32px;height:32px;flex-shrink:0;"></span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12.5px;font-weight:600;">synapse.lab</div>
+            <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--success-400);">+$18.2K · 30d</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="tx-product__img bg-3" style="width:32px;height:32px;flex-shrink:0;"></span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12.5px;font-weight:600;">nexus.studio</div>
+            <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--success-400);">+$12.9K · 30d</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn--ghost btn--sm" style="margin-top:14px;width:100%;">View leaderboard →</button>
+    </div>
+
+    <!-- Theme context -->
+    <div class="ctx-card" data-ctx="theme" style="display:none;">
+      <header class="ctx-card__head">
+        <h3 class="ctx-card__title">Live preview</h3>
+      </header>
+      <div style="background:var(--bg-default);border:1px solid var(--border-default);border-radius:var(--r-md);padding:14px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:6px;">Sample headline</div>
+        <div style="font-size:11.5px;color:var(--text-secondary);line-height:1.55;margin-bottom:12px;">Body text appears like this. Adjust theme to see changes reflect across the entire app.</div>
+        <button class="btn btn--primary btn--sm" style="font-size:10.5px;">Primary CTA</button>
+      </div>
+      <p style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);margin:10px 0 0;">Changes apply instantly. Reload not required.</p>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast__dot"></span>
+  <span id="toastText">Saved</span>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+/* ====== Tab switching ====== */
+$$("#sidenav .sidenav__item").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const tab = btn.dataset.tab;
+    $$("#sidenav .sidenav__item").forEach(x => x.classList.toggle("is-active", x === btn));
+    $$(".tab-panel").forEach(p => p.classList.toggle("is-active", p.dataset.panel === tab));
+    // toggle context cards
+    $$("#context .ctx-card").forEach(c => {
+      c.style.display = c.dataset.ctx === tab ? "" : "none";
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+
+/* ====== Toast helper ====== */
+const toast = $("#toast"), toastText = $("#toastText");
+let toastTimer;
+function showToast(msg = "Saved"){
+  toastText.textContent = msg;
+  toast.classList.add("is-show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("is-show"), 2200);
+}
+
+/* ====== Profile save ====== */
+$("#saveProfile")?.addEventListener("click", () => showToast("Profile saved"));
+
+/* ====== Password meter ====== */
+const newPw = $("#newPw");
+const pwMeter = $("#pwMeter");
+const pwLabel = $("#pwLabel");
+newPw?.addEventListener("input", () => {
+  const v = newPw.value;
+  let score = 0;
+  if (v.length >= 8) score++;
+  if (/[A-Z]/.test(v) && /[a-z]/.test(v)) score++;
+  if (/\d/.test(v)) score++;
+  if (/[^A-Za-z0-9]/.test(v)) score++;
+  const bars = pwMeter.querySelectorAll(".pw-meter__bar");
+  bars.forEach((b,i) => {
+    b.classList.remove("is-active","is-warning","is-danger");
+    if (i < score) {
+      b.classList.add(score <= 1 ? "is-danger" : score === 2 ? "is-warning" : "is-active");
+    }
+  });
+  const labels = ["—","Weak","Fair","Good","Strong"];
+  pwLabel.textContent = "Strength: " + labels[score];
+});
+
+/* ====== Billing payment tabs ====== */
+$$("#payTabs .pay-tab").forEach(t => t.addEventListener("click", () => {
+  $$("#payTabs .pay-tab").forEach(x => x.classList.remove("is-active"));
+  t.classList.add("is-active");
+}));
+
+/* ====== Amount chips ====== */
+$$("#amountGrid .amount-chip").forEach(c => c.addEventListener("click", () => {
+  $$("#amountGrid .amount-chip").forEach(x => x.classList.remove("is-selected"));
+  c.classList.add("is-selected");
+  $("#customAmt").value = "";
+}));
+$("#customAmt")?.addEventListener("input", () => {
+  $$("#amountGrid .amount-chip").forEach(x => x.classList.remove("is-selected"));
+});
+
+/* ====== Filter chips on purchases ====== */
+$$("#filterBar .filter-chip[data-filter]").forEach(c => c.addEventListener("click", () => {
+  $$("#filterBar .filter-chip[data-filter]").forEach(x => x.classList.remove("is-active"));
+  c.classList.add("is-active");
+}));
+
+/* ====== Staking quick chips + earnings calculator ====== */
+const APY = 0.124;
+const balance = 2840;
+const stakeAmt = $("#stakeAmt");
+const calcReward = $("#calcReward");
+function updateCalc(){
+  const v = parseFloat(stakeAmt?.value) || 0;
+  const yearly = Math.floor(v * APY);
+  if (calcReward) {
+    calcReward.innerHTML = yearly.toLocaleString() + ' <span style="color:var(--text-tertiary);font-size:11px;">$SWARMS</span><span class="delta">+' + (APY*100).toFixed(1) + '%</span>';
+  }
+}
+$$("#qcGrid .qc").forEach(b => b.addEventListener("click", () => {
+  $$("#qcGrid .qc").forEach(x => x.classList.remove("is-active"));
+  b.classList.add("is-active");
+  const pct = +b.dataset.pct;
+  stakeAmt.value = (balance * pct / 100).toFixed(2);
+  updateCalc();
+}));
+stakeAmt?.addEventListener("input", () => {
+  $$("#qcGrid .qc").forEach(x => x.classList.remove("is-active"));
+  updateCalc();
+});
+
+/* ====== Theme cards ====== */
+$$("#themeGrid .theme-card").forEach(c => c.addEventListener("click", () => {
+  $$("#themeGrid .theme-card").forEach(x => x.classList.remove("is-selected"));
+  c.classList.add("is-selected");
+  showToast("Theme: " + c.querySelector(".theme-card__name").textContent);
+}));
+
+/* ====== Live preview profile sync ====== */
+$$('input[type="text"]').forEach(i => {
+  i.addEventListener("input", e => {
+    if (e.target.value && e.target.value.length < 30) {
+      // (basic live sync — would need form binding in production)
+    }
+  });
+});
+</script>
+</body>
+</html>
