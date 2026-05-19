@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Registry · Swarms Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+:root{
+  --brand-50:#FFF1F1;--brand-100:#FFDFDF;--brand-200:#FFC5C5;--brand-300:#FF9D9D;
+  --brand-400:#FF6464;--brand-500:#FF3434;--brand-600:#ED1717;--brand-700:#C80D0D;
+  --brand-800:#A50F0F;--brand-900:#881414;--brand-950:#4A0505;
+  --neutral-0:#FFFFFF;--neutral-50:#FAFAFA;--neutral-100:#F2F2F2;--neutral-200:#DDDDDD;
+  --neutral-300:#BBBBBB;--neutral-400:#999999;--neutral-500:#777777;--neutral-600:#555555;
+  --neutral-700:#333333;--neutral-800:#1F1F1F;--neutral-900:#111111;--neutral-950:#0A0A0A;
+  --success-400:#4ADE80;--success-500:#22C55E;--success-700:#15803D;
+  --warning-400:#FBBF24;--warning-500:#F59E0B;
+  --danger-400:#F87171;--danger-500:#EF4444;--danger-700:#B91C1C;
+
+  --bg-default:var(--neutral-950);
+  --bg-subtle:var(--neutral-900);
+  --bg-overlay:var(--neutral-800);
+  --bg-card:#131313;--bg-card-hover:#181818;--bg-input:#0F0F0F;
+  --text-primary:var(--neutral-0);
+  --text-secondary:var(--neutral-400);
+  --text-tertiary:var(--neutral-500);
+  --text-disabled:var(--neutral-600);
+  --border-default:var(--neutral-800);
+  --border-strong:var(--neutral-700);
+
+  --font-display:"Montserrat",system-ui,-apple-system,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",monospace;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-display);background:var(--bg-default);color:var(--text-primary);
+  font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:0;background:transparent;color:inherit;padding:0;}
+input,select{font-family:inherit;color:inherit;}
+a{color:inherit;text-decoration:none;}
+img,svg{display:block;max-width:100%;}
+::selection{background:var(--brand-600);color:white;}
+
+/* ===== Subtle grid texture overlay on body (matches homepage) ===== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 56px 56px;
+  z-index: 0;
+}
+
+/* ===================== APP LAYOUT (homepage chrome) ===================== */
+.app {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Sidebar (homepage icon rail) ===== */
+.sidebar {
+  border-right: 1px solid var(--border-default);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 0 20px;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  background: var(--bg-default);
+}
+.sb__logo {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: grid; place-items: center;
+  margin-bottom: 28px;
+  background: var(--brand-600);
+  position: relative;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 24px -8px rgba(237,23,23,0.6);
+}
+.sb__logo svg { width: 26px; height: 26px; }
+.sb__nav {
+  display: flex; flex-direction: column;
+  gap: 2px; width: 100%; align-items: center;
+}
+.sb__item {
+  width: 60px; padding: 10px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  transition: color 120ms ease, background-color 120ms ease;
+  position: relative;
+}
+.sb__item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.sb__item.is-active { color: var(--text-primary); background: var(--bg-overlay); }
+.sb__item.is-active::before {
+  content: ""; position: absolute; left: -22px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 22px; border-radius: 0 2px 2px 0;
+  background: var(--brand-600);
+}
+.sb__item svg { width: 19px; height: 19px; stroke-width: 1.6; }
+.sb__item span { font-size: 9.5px; font-weight: 600; letter-spacing: 0.3px; }
+.sb__bottom { margin-top: auto; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.credits-coin {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #ffe690, #d99815 60%, #7a5400);
+  display: grid; place-items: center;
+  font-size: 8.5px; font-weight: 800; color: #4a3000;
+  text-align: center; line-height: 1;
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,0.25), 0 4px 14px -4px rgba(217,152,21,0.4);
+  position: relative;
+}
+.credits-coin span { display: block; }
+.credits-coin small { font-size: 7px; font-weight: 700; opacity: 0.8; letter-spacing: 0.4px; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #ed1717 0%, #8b5cf6 100%);
+  border: 1.5px solid var(--neutral-800);
+}
+
+/* ===== Topbar (homepage style — right aligned, no search/logo) ===== */
+.topbar {
+  grid-column: 1 / -1;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 32px 0 24px;
+  border-bottom: 1px solid var(--border-default);
+  background: rgba(10, 10, 10, 0.78);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+.topbar__nav { display: flex; align-items: center; gap: 8px; }
+.topbar__link {
+  display: inline-flex; align-items: center;
+  height: 36px; padding: 0 14px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  letter-spacing: -0.1px;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+.topbar__link:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+.topbar__btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 14px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; letter-spacing: -0.1px;
+  transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  white-space: nowrap; cursor: pointer;
+}
+.topbar__btn svg { width: 14px; height: 14px; }
+.topbar__btn--launch {
+  background: var(--brand-600); color: #fff;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 24px -10px rgba(237,23,23,0.55);
+}
+.topbar__btn--launch:hover { background: var(--brand-500); }
+.topbar__btn--launch:active { transform: translateY(1px); }
+.topbar__btn--wallet {
+  background: transparent; color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+.topbar__btn--wallet:hover { background: rgba(255,255,255,0.04); border-color: var(--neutral-500); }
+.topbar__avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ed1717 0%, #8b5cf6 100%);
+  border: 1.5px solid var(--neutral-800);
+  margin-left: 8px;
+  cursor: pointer;
+  transition: border-color 120ms ease;
+}
+.topbar__avatar:hover { border-color: var(--neutral-500); }
+
+/* ===================== MAIN ===================== */
+.main { padding: 28px 56px 96px; }
+.container { max-width: 1180px; margin: 0 auto; display:flex; flex-direction:column; gap:24px; }
+
+/* HERO */
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.hero__eyebrow{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:1.4px;text-transform:uppercase;color:var(--text-tertiary);
+  margin-bottom:12px;display:inline-flex;align-items:center;gap:10px;
+}
+.hero__eyebrow::after{content:"";width:24px;height:1px;background:var(--brand-500);}
+.hero__title{font-size:38px;font-weight:700;letter-spacing:-1.2px;line-height:1.05;margin:0 0 10px;}
+.hero__sub{font-size:13px;color:var(--text-secondary);margin:0;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.hero__sub .vendors-stat{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:12px;color:var(--text-tertiary);
+  padding-left:14px;border-left:1px solid var(--border-default);
+}
+.hero__sub .vendors-stat strong{color:var(--text-secondary);font-weight:700;}
+.hero__actions{display:flex;gap:8px;flex-shrink:0;}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:9px 15px;font-size:12px;font-weight:600;border-radius:6px;
+  transition:all 150ms;white-space:nowrap;
+}
+.btn svg{width:12px;height:12px;}
+.btn--white{background:var(--neutral-0);color:var(--neutral-950);}
+.btn--white:hover{background:var(--neutral-100);transform:translateY(-1px);}
+.btn--ghost{border:1px solid var(--border-default);color:var(--text-secondary);}
+.btn--ghost:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+
+/* ===================== FILTER SYSTEM ===================== */
+.filters{
+  display:flex;flex-direction:column;gap:16px;
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:12px;padding:18px 20px;
+}
+.search-input{position:relative;}
+.search-input input{
+  width:100%;padding:11px 14px 11px 40px;
+  background:var(--bg-input);border:1px solid var(--border-default);
+  border-radius:8px;color:var(--text-primary);font-size:13px;
+  transition:border-color 120ms;
+}
+.search-input input::placeholder{color:var(--text-tertiary);}
+.search-input input:focus{outline:none;border-color:var(--neutral-0);}
+.search-input svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;color:var(--text-tertiary);
+}
+
+.filter-block{display:flex;flex-direction:column;gap:9px;}
+.filter-block__label{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:600;
+  letter-spacing:1.4px;text-transform:uppercase;color:var(--text-tertiary);
+}
+.chip-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+/* Multi-select type chip — NO per-chip number anymore */
+.type-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--text-secondary);
+  background:var(--bg-input);border:1px solid var(--border-default);
+  border-radius:8px;transition:all 120ms;
+}
+.type-chip:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.type-chip__box{
+  width:14px;height:14px;border-radius:3px;
+  border:1.5px solid var(--border-strong);
+  display:grid;place-items:center;flex-shrink:0;transition:all 120ms;
+}
+.type-chip__box svg{width:9px;height:9px;color:var(--neutral-950);opacity:0;}
+.type-chip.is-on{color:var(--text-primary);border-color:var(--neutral-0);background:rgba(255,255,255,0.05);}
+.type-chip.is-on .type-chip__box{background:var(--neutral-0);border-color:var(--neutral-0);}
+.type-chip.is-on .type-chip__box svg{opacity:1;}
+
+/* Type row holds chips (left) + Frenzy campaign toggle (right) */
+.type-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.frenzy-wrap{display:flex;align-items:center;gap:14px;margin-left:auto;}
+.frenzy-divider{width:1px;height:24px;background:var(--border-default);}
+/* Frenzy = campaign accent. The ONLY filter control allowed to use brand red. */
+.frenzy-toggle{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 15px;font-size:12.5px;font-weight:700;letter-spacing:0.2px;
+  color:var(--brand-400);
+  background:rgba(237,23,23,0.08);
+  border:1px solid rgba(237,23,23,0.45);
+  border-radius:8px;transition:all 140ms;
+}
+.frenzy-toggle:hover{
+  color:var(--brand-300);
+  background:rgba(237,23,23,0.14);
+  border-color:rgba(237,23,23,0.7);
+}
+.frenzy-toggle__bolt{width:13px;height:13px;flex-shrink:0;}
+.frenzy-toggle.is-on{
+  color:#fff;
+  background:var(--brand-600);
+  border-color:var(--brand-600);
+  box-shadow:0 0 0 3px rgba(237,23,23,0.18);
+}
+.frenzy-toggle.is-on:hover{background:var(--brand-500);border-color:var(--brand-500);}
+
+/* Frenzy active-chip — keep the red identity in the Active bar */
+.active-chip.is-frenzy{
+  color:var(--brand-300);
+  background:rgba(237,23,23,0.12);
+  border-color:rgba(237,23,23,0.4);
+}
+.active-chip.is-frenzy .active-chip__x:hover{background:rgba(237,23,23,0.25);color:#fff;}
+
+@media (max-width:640px){
+  .frenzy-wrap{margin-left:0;}
+  .frenzy-divider{display:none;}
+}
+
+/* Facet dropdowns — NO per-option numbers */
+.facet-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.facet{position:relative;}
+.facet__trigger{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:9px 13px;font-size:12.5px;font-weight:600;color:var(--text-secondary);
+  background:var(--bg-input);border:1px solid var(--border-default);
+  border-radius:8px;transition:all 120ms;
+}
+.facet__trigger:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.facet__trigger.has-value{color:var(--text-primary);border-color:var(--neutral-0);background:rgba(255,255,255,0.04);}
+.facet__trigger .caret{
+  width:7px;height:7px;border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px);
+  opacity:0.5;transition:transform 150ms;
+}
+.facet.is-open .facet__trigger .caret{transform:rotate(225deg) translateY(-1px);}
+.facet__badge{
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  background:var(--neutral-0);color:var(--neutral-950);
+  border-radius:9px;padding:1px 6px;min-width:16px;text-align:center;
+}
+.facet__panel{
+  position:absolute;top:calc(100% + 6px);left:0;z-index:30;
+  min-width:200px;max-height:320px;overflow-y:auto;
+  background:var(--bg-overlay);border:1px solid var(--border-strong);
+  border-radius:8px;padding:6px;
+  box-shadow:0 16px 40px -12px rgba(0,0,0,0.7);
+  display:none;flex-direction:column;gap:1px;
+}
+.facet.is-open .facet__panel{display:flex;}
+.facet__opt{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:5px;
+  font-size:12.5px;color:var(--text-secondary);
+  transition:background 120ms,color 120ms;width:100%;text-align:left;
+}
+.facet__opt:hover{background:rgba(255,255,255,0.04);color:var(--text-primary);}
+.facet__opt-box{
+  width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border-strong);
+  display:grid;place-items:center;flex-shrink:0;transition:all 120ms;
+}
+.facet__opt-box svg{width:9px;height:9px;color:var(--neutral-950);opacity:0;}
+.facet__opt.is-on{color:var(--text-primary);}
+.facet__opt.is-on .facet__opt-box{background:var(--neutral-0);border-color:var(--neutral-0);}
+.facet__opt.is-on .facet__opt-box svg{opacity:1;}
+/* Time facet uses radio (single select) */
+.facet__opt--radio .facet__opt-box{border-radius:50%;}
+.facet__opt--radio.is-on .facet__opt-box{background:var(--neutral-0);}
+.facet__opt--radio .facet__opt-box svg{display:none;}
+.facet__opt--radio.is-on .facet__opt-box::after{
+  content:"";width:6px;height:6px;border-radius:50%;background:var(--neutral-950);
+}
+
+/* Active filters bar */
+.active-bar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding-top:14px;border-top:1px solid var(--border-default);
+}
+.active-bar.is-empty{display:none;}
+.active-bar__label{
+  font-family:var(--font-mono);font-size:10px;font-weight:600;
+  letter-spacing:1.2px;text-transform:uppercase;color:var(--text-tertiary);
+}
+.active-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 8px 5px 11px;
+  font-size:11.5px;font-weight:600;color:var(--text-primary);
+  background:rgba(255,255,255,0.06);border:1px solid var(--border-strong);
+  border-radius:6px;
+}
+.active-chip__x{
+  width:15px;height:15px;border-radius:3px;
+  display:grid;place-items:center;color:var(--text-tertiary);
+  transition:all 120ms;
+}
+.active-chip__x:hover{color:var(--text-primary);background:rgba(255,255,255,0.1);}
+.active-chip__x svg{width:9px;height:9px;}
+.active-bar__clear{
+  margin-left:auto;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 10px;border-radius:6px;transition:all 120ms;
+}
+.active-bar__clear:hover{color:var(--danger-400);background:rgba(239,68,68,0.06);}
+.active-bar__clear svg{width:11px;height:11px;}
+
+/* Result row: ONE total + sort on the right */
+.result-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+}
+.result-summary{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--text-secondary);}
+.result-summary strong{
+  font-family:var(--font-mono);color:var(--text-primary);font-weight:700;font-size:18px;
+}
+.result-summary .ctx{font-size:12px;color:var(--text-tertiary);}
+.result-tools{display:flex;align-items:center;gap:8px;}
+.result-tools__label{
+  font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:1px;
+  text-transform:uppercase;color:var(--text-tertiary);
+}
+.sort-pill{position:relative;}
+.sort-pill select{
+  appearance:none;-webkit-appearance:none;
+  padding:8px 30px 8px 12px;
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:6px;color:var(--text-primary);
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:border-color 120ms;
+}
+.sort-pill select:hover{border-color:var(--neutral-0);}
+.sort-pill::after{
+  content:"";position:absolute;right:12px;top:50%;
+  transform:translateY(-30%) rotate(45deg);
+  width:5px;height:5px;border-right:1.5px solid var(--text-tertiary);
+  border-bottom:1.5px solid var(--text-tertiary);pointer-events:none;
+}
+.view-toggle{display:flex;background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:6px;overflow:hidden;}
+.view-toggle button{width:32px;height:32px;display:grid;place-items:center;
+  color:var(--text-tertiary);transition:all 120ms;}
+.view-toggle button:hover{color:var(--text-primary);}
+.view-toggle button.is-active{color:var(--text-primary);background:var(--bg-overlay);}
+.view-toggle button + button{border-left:1px solid var(--border-default);}
+.view-toggle svg{width:13px;height:13px;}
+
+/* ===================== PRODUCT GRID ===================== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;}
+.product{
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:12px;overflow:hidden;display:flex;flex-direction:column;
+  transition:border-color 200ms,background 200ms,transform 200ms;
+  cursor:pointer;position:relative;
+}
+.product:hover{border-color:var(--neutral-0);background:var(--bg-card-hover);transform:translateY(-2px);}
+.product__cover{aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--bg-overlay);}
+.product__cover-img{position:absolute;inset:0;background-size:cover;background-position:center;}
+.cv-1{background:radial-gradient(circle at 30% 35%,#ed1717,#3a0606 70%);}
+.cv-2{background:radial-gradient(circle at 60% 50%,#8b5cf6,#1e1b4b 70%);}
+.cv-3{background:radial-gradient(circle at 50% 40%,#0ea5e9,#0c2540 70%);}
+.cv-4{background:radial-gradient(circle at 40% 50%,#22c55e,#062315 70%);}
+.cv-5{background:radial-gradient(circle at 55% 45%,#f59e0b,#3b2200 70%);}
+.cv-6{background:radial-gradient(circle at 35% 55%,#ec4899,#3b0a26 70%);}
+.cv-7{background:radial-gradient(circle at 50% 50%,#1a4d3e,#062315 70%);}
+.cv-8{background:radial-gradient(circle at 45% 40%,#6366f1,#1e1b4b 70%);}
+.product__cover::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,0.45) 0%,transparent 45%);}
+.product__type{
+  position:absolute;top:12px;left:12px;z-index:2;
+  font-family:var(--font-mono);font-size:9px;font-weight:700;
+  letter-spacing:0.5px;text-transform:uppercase;
+  padding:4px 8px;border-radius:3px;color:white;
+  background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.16);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.product__frenzy{
+  position:absolute;top:12px;left:74px;z-index:2;
+  font-family:var(--font-mono);font-size:9px;font-weight:700;
+  letter-spacing:0.5px;text-transform:uppercase;
+  padding:4px 8px;border-radius:3px;
+  color:var(--brand-300);background:rgba(237,23,23,0.12);
+  border:1px solid rgba(237,23,23,0.35);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  display:inline-flex;align-items:center;gap:4px;
+}
+.product__frenzy svg{width:8px;height:8px;}
+.product__fav{
+  position:absolute;top:10px;right:10px;z-index:2;
+  width:28px;height:28px;border-radius:6px;
+  display:grid;place-items:center;
+  background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.14);
+  color:white;opacity:0;transition:all 150ms;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.product:hover .product__fav{opacity:1;}
+.product__fav:hover{background:rgba(0,0,0,0.8);border-color:rgba(255,255,255,0.35);}
+.product__fav.is-saved{opacity:1;color:var(--brand-500);}
+.product__fav svg{width:13px;height:13px;}
+.product__body{padding:15px 17px 17px;display:flex;flex-direction:column;flex:1;}
+.product__creator{
+  display:flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);margin-bottom:7px;
+}
+.product__creator-av{width:16px;height:16px;border-radius:50%;
+  background:var(--bg-overlay);border:1px solid var(--border-default);flex-shrink:0;}
+.product__name{font-size:14.5px;font-weight:700;letter-spacing:-0.2px;margin:0 0 6px;line-height:1.25;}
+.product__desc{
+  font-size:12px;line-height:1.55;color:var(--text-secondary);margin:0 0 14px;
+  display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;flex:1;
+}
+.product__meta{
+  display:flex;align-items:center;gap:14px;padding-top:12px;
+  border-top:1px solid var(--border-default);margin-bottom:14px;
+  font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);
+}
+.product__meta-item{display:inline-flex;align-items:center;gap:5px;}
+.product__meta-item svg{width:11px;height:11px;}
+.product__meta-item strong{color:var(--text-secondary);font-weight:600;}
+.rating{display:inline-flex;align-items:center;gap:5px;}
+.rating__star{color:var(--warning-400);width:11px;height:11px;}
+.rating__val{color:var(--text-secondary);font-weight:600;}
+.rating__count{color:var(--text-tertiary);}
+.rating--none .rating__star{color:var(--text-disabled);}
+.rating--none .rating__new{color:var(--text-tertiary);font-weight:600;letter-spacing:0.4px;}
+.product__meta-price{margin-left:auto;color:var(--text-primary);font-weight:600;}
+.product__actions{display:flex;gap:8px;align-items:center;}
+.product__primary{
+  flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 12px;background:var(--neutral-0);color:var(--neutral-950);
+  border-radius:6px;font-size:12.5px;font-weight:700;letter-spacing:0.1px;
+  transition:background 120ms,transform 120ms;
+}
+.product__primary:hover{background:var(--neutral-100);transform:translateY(-1px);}
+.product__primary svg{width:12px;height:12px;}
+.product__icon{
+  width:38px;height:38px;border:1px solid var(--border-default);
+  border-radius:6px;display:grid;place-items:center;color:var(--text-secondary);
+  transition:all 120ms;flex-shrink:0;
+}
+.product__icon:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.product__icon svg{width:13px;height:13px;}
+
+.empty{
+  grid-column:1/-1;padding:60px 20px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:var(--bg-card);border:1px dashed var(--border-default);border-radius:12px;
+}
+.empty__icon{
+  width:48px;height:48px;border-radius:12px;background:var(--bg-overlay);
+  color:var(--text-tertiary);display:grid;place-items:center;margin-bottom:6px;
+}
+.empty__icon svg{width:20px;height:20px;}
+.empty__title{font-size:14px;font-weight:700;margin:0;}
+.empty__desc{font-size:12.5px;color:var(--text-secondary);margin:0 0 8px;max-width:360px;line-height:1.55;}
+.empty__cta{
+  font-family:var(--font-mono);font-size:11.5px;font-weight:600;color:var(--brand-400);
+  display:inline-flex;align-items:center;gap:5px;
+  border-bottom:1px solid var(--brand-700);padding-bottom:1px;
+}
+.empty__cta:hover{color:var(--brand-300);}
+
+.pagination{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;margin-top:8px;padding-top:20px;
+  border-top:1px solid var(--border-default);
+  font-family:var(--font-mono);font-size:11.5px;color:var(--text-tertiary);
+}
+.pagination__pages{display:flex;align-items:center;gap:4px;}
+.pg{
+  min-width:30px;height:30px;padding:0 8px;border-radius:6px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:12px;font-weight:600;
+  color:var(--text-secondary);border:1px solid transparent;transition:all 120ms;
+}
+.pg:hover{color:var(--text-primary);background:var(--bg-card);}
+.pg.is-active{color:var(--text-primary);border-color:var(--neutral-0);background:rgba(255,255,255,0.04);}
+.pg:disabled{opacity:0.35;cursor:not-allowed;}
+
+@media (max-width:960px){
+  .main{padding:24px 24px 80px;}
+}
+@media (max-width:640px){
+  .main{padding:20px 14px 90px;}
+  .topbar{padding:0 14px;}
+  .hero__title{font-size:28px;}
+  .grid{grid-template-columns:1fr;}
+  .result-row{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== TOPBAR (same chrome as homepage) ===== -->
+  <header class="topbar">
+    <nav class="topbar__nav" aria-label="Top navigation">
+      <a class="topbar__link" href="#">How It Works</a>
+      <a class="topbar__btn topbar__btn--launch" href="launch.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+        Launch
+      </a>
+      <button class="topbar__btn topbar__btn--wallet" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 1 0-4h4v4z"/></svg>
+        Connect Wallet
+      </button>
+      <div class="topbar__avatar" role="button" tabindex="0" aria-label="Account"></div>
+    </nav>
+  </header>
+
+  <!-- ===== SIDEBAR (same chrome as homepage) ===== -->
+  <aside class="sidebar">
+    <a class="sb__logo" href="index.html" aria-label="Swarms">
+      <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M25 4l8 4.6v9.3L25 22.5l-8-4.6V8.6L25 4z" fill="white"/>
+        <path d="M14 18l8 4.6v9.3L14 36.5l-8-4.6V22.6L14 18z" fill="white" opacity="0.85"/>
+        <path d="M36 18l8 4.6v9.3L36 36.5l-8-4.6V22.6L36 18z" fill="white" opacity="0.85"/>
+        <path d="M25 32l8 4.6v9.3L25 50.5l-8-4.6V36.6L25 32z" fill="white" opacity="0.7"/>
+      </svg>
+    </a>
+    <nav class="sb__nav">
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="9"/>
+          <rect x="14" y="3" width="7" height="5"/>
+          <rect x="14" y="12" width="7" height="9"/>
+          <rect x="3" y="16" width="7" height="5"/>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="sb__item" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <path d="M3 6h18"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span>Market</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l1.9 4.9 4.9 1.9-4.9 1.9-1.9 4.9-1.9-4.9-4.9-1.9 4.9-1.9z"/>
+          <path d="M19 4v3"/>
+          <path d="M5 17v3"/>
+          <path d="M3.5 18.5h3"/>
+          <path d="M17.5 5.5h3"/>
+        </svg>
+        <span>For You</span>
+      </a>
+      <a class="sb__item is-active" href="registry.html" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="9" y1="6" x2="20" y2="6"/>
+          <line x1="9" y1="12" x2="20" y2="12"/>
+          <line x1="9" y1="18" x2="20" y2="18"/>
+          <circle cx="4.5" cy="6" r="1.2"/>
+          <circle cx="4.5" cy="12" r="1.2"/>
+          <circle cx="4.5" cy="18" r="1.2"/>
+        </svg>
+        <span>Registry</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>Bookmarks</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+          <path d="M4 22h16"/>
+          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+          <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>
+        </svg>
+        <span>Leaderboard</span>
+      </a>
+      <a class="sb__item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+    <div class="sb__bottom">
+      <div class="credits-coin" title="WAI Credits">
+        <span>2,840</span>
+        <small>WAI</small>
+      </div>
+      <div class="user-avatar"></div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+    <div class="container">
+
+    <section class="hero">
+      <div>
+        <div class="hero__eyebrow">COMMUNITY REGISTRY</div>
+        <h1 class="hero__title">Registry</h1>
+        <p class="hero__sub">
+          880 agents, prompts, and tools published by the Swarms community.
+          <span class="vendors-stat">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <strong>223</strong> vendors
+          </span>
+        </p>
+      </div>
+      <div class="hero__actions">
+        <button class="btn btn--ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Bulk import
+        </button>
+        <button class="btn btn--white">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Publish product
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== FILTER SYSTEM (no per-option numbers) ===================== -->
+    <section class="filters">
+      <div class="search-input">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchBox" type="text" placeholder="Search by name, description, or creator…" />
+      </div>
+
+      <div class="filter-block">
+        <span class="filter-block__label">Type</span>
+        <div class="type-row">
+          <div class="chip-row" id="typeChips">
+            <button class="type-chip" data-type="agent">
+              <span class="type-chip__box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              Agents
+            </button>
+            <button class="type-chip" data-type="prompt">
+              <span class="type-chip__box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              Prompts
+            </button>
+            <button class="type-chip" data-type="tool">
+              <span class="type-chip__box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              Tools
+            </button>
+          </div>
+          <!-- Frenzy = limited-time campaign, NOT a product attribute.
+               Independent red quick-toggle; hide this whole block when the campaign ends. -->
+          <div class="frenzy-wrap" id="frenzyWrap">
+            <span class="frenzy-divider"></span>
+            <button class="frenzy-toggle" id="frenzyToggle" aria-pressed="false" title="Show only products in the Frenzy campaign">
+              <svg class="frenzy-toggle__bolt" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>
+              Frenzy only
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-block">
+        <span class="filter-block__label">Refine</span>
+        <div class="facet-row">
+          <div class="facet" data-facet="pricing">
+            <button class="facet__trigger">
+              Pricing
+              <span class="facet__badge" style="display:none;">0</span>
+              <span class="caret"></span>
+            </button>
+            <div class="facet__panel">
+              <button class="facet__opt" data-val="free"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Free</button>
+              <button class="facet__opt" data-val="paid"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Paid</button>
+              <button class="facet__opt" data-val="tokenized"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Tokenized</button>
+            </div>
+          </div>
+
+          <div class="facet" data-facet="industry">
+            <button class="facet__trigger">
+              Industry
+              <span class="facet__badge" style="display:none;">0</span>
+              <span class="caret"></span>
+            </button>
+            <div class="facet__panel">
+              <button class="facet__opt" data-val="healthcare"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Healthcare</button>
+              <button class="facet__opt" data-val="finance"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Finance</button>
+              <button class="facet__opt" data-val="education"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Education</button>
+              <button class="facet__opt" data-val="technology"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Technology</button>
+              <button class="facet__opt" data-val="marketing"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Marketing</button>
+              <button class="facet__opt" data-val="sales"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Sales</button>
+              <button class="facet__opt" data-val="support"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Customer Support</button>
+              <button class="facet__opt" data-val="research"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Research</button>
+              <button class="facet__opt" data-val="publicsafety"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Public Safety</button>
+              <button class="facet__opt" data-val="other"><span class="facet__opt-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Other</button>
+            </div>
+          </div>
+
+          <div class="facet" data-facet="time">
+            <button class="facet__trigger">
+              <span class="facet__trigger-label">All time</span>
+              <span class="caret"></span>
+            </button>
+            <div class="facet__panel">
+              <button class="facet__opt facet__opt--radio is-on" data-val="all"><span class="facet__opt-box"></span>All time</button>
+              <button class="facet__opt facet__opt--radio" data-val="today"><span class="facet__opt-box"></span>Today</button>
+              <button class="facet__opt facet__opt--radio" data-val="week"><span class="facet__opt-box"></span>This week</button>
+              <button class="facet__opt facet__opt--radio" data-val="month"><span class="facet__opt-box"></span>This month</button>
+              <button class="facet__opt facet__opt--radio" data-val="year"><span class="facet__opt-box"></span>This year</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="active-bar is-empty" id="activeBar">
+        <span class="active-bar__label">Active</span>
+        <div id="activeChips" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+        <button class="active-bar__clear" id="clearAll">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Clear all
+        </button>
+      </div>
+    </section>
+
+    <!-- ONE total + sort lives here on the right -->
+    <div class="result-row">
+      <div class="result-summary">
+        <strong id="resultCount">880</strong>
+        <span class="ctx" id="resultCtx">products</span>
+      </div>
+      <div class="result-tools">
+        <span class="result-tools__label">Sort</span>
+        <span class="sort-pill">
+          <select>
+            <option>Newest first</option>
+            <option>Most popular</option>
+            <option>Highest rated</option>
+            <option>Price: low to high</option>
+          </select>
+        </span>
+        <div class="view-toggle">
+          <button class="is-active" title="Grid view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </button>
+          <button title="List view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section class="grid" id="grid">
+
+      <article class="product" data-type="agent" data-pricing="paid" data-industry="technology">
+        <div class="product__cover">
+          <div class="product__cover-img cv-1"></div>
+          <span class="product__type">Agent</span>
+          <span class="product__frenzy"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>Frenzy</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>clawpay</div>
+          <h3 class="product__name">ClawPilot</h3>
+          <p class="product__desc">Your OpenCase copilot. Security-first agent aid for AI coding assistants with cryptographic per-call settlement.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.8</span><span class="rating__count">(124)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>34.8K</strong></span>
+            <span class="product__meta-price">$0.04 / run</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Buy now</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="prompt" data-pricing="free" data-industry="research">
+        <div class="product__cover">
+          <div class="product__cover-img cv-2"></div>
+          <span class="product__type">Prompt</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>neuralabs</div>
+          <h3 class="product__name">Hypernet</h3>
+          <p class="product__desc">A hypernetwork is a neural network that generates weights for another neural network. Composable, fast, parameter-efficient.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating rating--none" title="No ratings yet"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__new">New</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>1.2K</strong></span>
+            <span class="product__meta-price">Free</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Use prompt</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="agent" data-pricing="paid" data-industry="finance">
+        <div class="product__cover">
+          <div class="product__cover-img cv-3"></div>
+          <span class="product__type">Agent</span>
+          <button class="product__fav is-saved" aria-label="Bookmarked"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>sagix</div>
+          <h3 class="product__name">Mira</h3>
+          <p class="product__desc">Mira is an autonomous, emotionally aware AI agent inspired by the Emergence AI simulation. A deeply reflective persona.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.9</span><span class="rating__count">(312)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>12.9K</strong></span>
+            <span class="product__meta-price">$0.02 / run</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Buy now</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="agent" data-pricing="paid" data-industry="finance">
+        <div class="product__cover">
+          <div class="product__cover-img cv-7"></div>
+          <span class="product__type">Agent</span>
+          <span class="product__frenzy"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>Frenzy</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>quanthub</div>
+          <h3 class="product__name">Quantum Terminal</h3>
+          <p class="product__desc">A professional cryptocurrency trading dashboard inspired by Bloomberg Terminal, built with Next.js and TypeScript.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.7</span><span class="rating__count">(89)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>18.2K</strong></span>
+            <span class="product__meta-price">$0.05 / run</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Buy now</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="prompt" data-pricing="free" data-industry="technology">
+        <div class="product__cover">
+          <div class="product__cover-img cv-1"></div>
+          <span class="product__type">Prompt</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>88core</div>
+          <h3 class="product__name">SWARMY</h3>
+          <p class="product__desc">A privacy-focused multi-agent orchestration prompt pack. Hardened defaults, zero-leak system instructions, audited templates.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.5</span><span class="rating__count">(47)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>9.1K</strong></span>
+            <span class="product__meta-price">Free</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Use prompt</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="prompt" data-pricing="paid" data-industry="research">
+        <div class="product__cover">
+          <div class="product__cover-img cv-6"></div>
+          <span class="product__type">Prompt</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>sagix</div>
+          <h3 class="product__name">SWARMZY</h3>
+          <p class="product__desc">Swarmzy is a high-energy, hype-driven prompt optimized for high-volume modes on the Swarms platform.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating rating--none" title="No ratings yet"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__new">New</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>340</strong></span>
+            <span class="product__meta-price">$0.01 / run</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Use prompt</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="agent" data-pricing="paid" data-industry="support">
+        <div class="product__cover">
+          <div class="product__cover-img cv-8"></div>
+          <span class="product__type">Agent</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>rezenswarms</div>
+          <h3 class="product__name">TaskFlow</h3>
+          <p class="product__desc">Simplifies and automates task management, helping you stay organized and maximize efficiency across teams.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.8</span><span class="rating__count">(203)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>41.3K</strong></span>
+            <span class="product__meta-price">$0.03 / run</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Buy now</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="prompt" data-pricing="paid" data-industry="finance">
+        <div class="product__cover">
+          <div class="product__cover-img cv-4"></div>
+          <span class="product__type">Prompt</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>samrat</div>
+          <h3 class="product__name">Equity Research Pro</h3>
+          <p class="product__desc">Calculates which companies are going up or down in stock fundamental investing — ingests 10-K, 10-Q, transcripts.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.6</span><span class="rating__count">(58)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>15.4K</strong></span>
+            <span class="product__meta-price">$0.02 / run</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Use prompt</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="tool" data-pricing="free" data-industry="technology">
+        <div class="product__cover">
+          <div class="product__cover-img cv-5"></div>
+          <span class="product__type">Tool</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>compute.dev</div>
+          <h3 class="product__name">Self Operating Computer</h3>
+          <p class="product__desc">A framework to enable multimodal models to operate a computer — vision, click, type, and verify in a closed loop.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.9</span><span class="rating__count">(401)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>52.1K</strong></span>
+            <span class="product__meta-price">Free</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Get tool</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="prompt" data-pricing="paid" data-industry="education">
+        <div class="product__cover">
+          <div class="product__cover-img cv-2"></div>
+          <span class="product__type">Prompt</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>nexus.ai</div>
+          <h3 class="product__name">Noah AI</h3>
+          <p class="product__desc">Noah AI is an AI-powered, no-code "vibe coding" platform for building full-stack on-chain applications from a prompt.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.7</span><span class="rating__count">(76)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>11.8K</strong></span>
+            <span class="product__meta-price">$0.06 / run</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Use prompt</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="agent" data-pricing="free" data-industry="technology">
+        <div class="product__cover">
+          <div class="product__cover-img cv-3"></div>
+          <span class="product__type">Agent</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>opendev</div>
+          <h3 class="product__name">OpenDev Terminal</h3>
+          <p class="product__desc">Open-source coding agent in the terminal. Plans, edits, runs, and tests across multi-file repos with autonomous loops.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.8</span><span class="rating__count">(167)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>29.5K</strong></span>
+            <span class="product__meta-price">Free</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Get agent</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="tool" data-pricing="free" data-industry="other">
+        <div class="product__cover">
+          <div class="product__cover-img cv-8"></div>
+          <span class="product__type">Tool</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>ec3m</div>
+          <h3 class="product__name">Equium</h3>
+          <p class="product__desc">A CPU-mineable token on Solana with a fixed 21M supply and a Bitcoin-style halving schedule. On-chain proof-of-work.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating rating--none" title="No ratings yet"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__new">New</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>6.7K</strong></span>
+            <span class="product__meta-price">Free</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Get tool</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product" data-type="agent" data-pricing="paid" data-industry="publicsafety">
+        <div class="product__cover">
+          <div class="product__cover-img cv-6"></div>
+          <span class="product__type">Agent</span>
+          <span class="product__frenzy"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>Frenzy</span>
+          <button class="product__fav" aria-label="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+        </div>
+        <div class="product__body">
+          <div class="product__creator"><span class="product__creator-av"></span>dwait1</div>
+          <h3 class="product__name">Sentinel</h3>
+          <p class="product__desc">This prompt turns a capable AI into an adversarial smart-contract auditor with structured findings and severity scoring.</p>
+          <div class="product__meta">
+            <span class="product__meta-item rating"><svg class="rating__star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="rating__val">4.7</span><span class="rating__count">(92)</span></span>
+            <span class="product__meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><strong>8.9K</strong></span>
+            <span class="product__meta-price">$0.04 / run</span>
+          </div>
+          <div class="product__actions">
+            <a href="detail.html" class="product__primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Buy now</a>
+            <button class="product__icon" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <div class="empty" id="emptyState" style="display:none;">
+        <div class="empty__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3 class="empty__title">No products match these filters</h3>
+        <p class="empty__desc">Try removing a filter or broadening your selection.</p>
+        <button class="empty__cta" id="emptyCta">Clear all filters</button>
+      </div>
+
+    </section>
+
+    <nav class="pagination">
+      <span>Showing <b style="color:var(--text-secondary);" id="pgShow">1–13</b> of <span id="pgTotal">880</span></span>
+      <div class="pagination__pages">
+        <button class="pg" disabled>‹ Prev</button>
+        <button class="pg is-active">1</button>
+        <button class="pg">2</button>
+        <button class="pg">3</button>
+        <button class="pg">4</button>
+        <span style="padding:0 6px;color:var(--text-disabled);">…</span>
+        <button class="pg">68</button>
+        <button class="pg">Next ›</button>
+      </div>
+    </nav>
+
+    </div><!-- /.container -->
+  </main>
+
+</div><!-- /.app -->
+
+<script>
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+const GRAND_TOTAL = 880;
+const state = { types:new Set(), pricing:new Set(), industry:new Set(), time:"all", frenzy:false, q:"" };
+const cards = $$("#grid .product");
+
+function cardMatches(card){
+  if(state.q && !card.textContent.toLowerCase().includes(state.q)) return false;
+  if(state.types.size && !state.types.has(card.dataset.type)) return false;
+  if(state.pricing.size && !state.pricing.has(card.dataset.pricing)) return false;
+  if(state.industry.size && !state.industry.has(card.dataset.industry)) return false;
+  if(state.frenzy && !card.querySelector(".product__frenzy")) return false;
+  return true;
+}
+
+/* Project a believable total from the visible-demo ratio applied to 880 */
+function projectedTotal(visible){
+  const anyFilter = state.types.size||state.pricing.size||state.industry.size||state.time!=="all"||state.frenzy||state.q;
+  if(!anyFilter) return GRAND_TOTAL;
+  const ratio = visible / cards.length;
+  let t = Math.round(GRAND_TOTAL * ratio);
+  if(state.time!=="all"){
+    const tf = {today:0.06, week:0.18, month:0.42, year:0.78}[state.time] || 1;
+    t = Math.round(t*tf);
+  }
+  return Math.max(visible, t);
+}
+
+const LABELS = {
+  agent:"Agents", prompt:"Prompts", tool:"Tools",
+  free:"Free", paid:"Paid", tokenized:"Tokenized",
+  healthcare:"Healthcare", finance:"Finance", education:"Education", technology:"Technology",
+  marketing:"Marketing", sales:"Sales", support:"Customer Support", research:"Research",
+  publicsafety:"Public Safety", other:"Other",
+  today:"Today", week:"This week", month:"This month", year:"This year"
+};
+
+function render(){
+  let visible=0;
+  cards.forEach(c=>{ const ok=cardMatches(c); c.style.display=ok?"":"none"; if(ok)visible++; });
+
+  // type chips state
+  $$("#typeChips .type-chip").forEach(chip=>chip.classList.toggle("is-on", state.types.has(chip.dataset.type)));
+  // facet options state
+  $$('[data-facet="pricing"] .facet__opt').forEach(o=>o.classList.toggle("is-on", state.pricing.has(o.dataset.val)));
+  $$('[data-facet="industry"] .facet__opt').forEach(o=>o.classList.toggle("is-on", state.industry.has(o.dataset.val)));
+  $$('[data-facet="time"] .facet__opt').forEach(o=>o.classList.toggle("is-on", state.time===o.dataset.val));
+  // time trigger label
+  $('[data-facet="time"] .facet__trigger-label').textContent =
+    state.time==="all" ? "All time" : LABELS[state.time];
+
+  syncBadge("pricing"); syncBadge("industry");
+  syncTimeTrigger();
+  const ft=$("#frenzyToggle");
+  ft.classList.toggle("is-on", state.frenzy);
+  ft.setAttribute("aria-pressed", state.frenzy ? "true" : "false");
+  renderActive();
+
+  const total = projectedTotal(visible);
+  const anyFilter = state.types.size||state.pricing.size||state.industry.size||state.time!=="all"||state.frenzy||state.q;
+  $("#resultCount").textContent = total.toLocaleString();
+  $("#resultCtx").textContent = anyFilter ? "results" : "products";
+  $("#pgTotal").textContent = total.toLocaleString();
+  $("#pgShow").textContent = visible? ("1–"+visible) : "0";
+  $("#emptyState").style.display = visible? "none":"";
+}
+
+function syncBadge(facet){
+  const w=$(`[data-facet="${facet}"]`), t=w.querySelector(".facet__trigger"), b=w.querySelector(".facet__badge");
+  const n=state[facet].size;
+  if(n>0){ t.classList.add("has-value"); b.style.display=""; b.textContent=n; }
+  else   { t.classList.remove("has-value"); b.style.display="none"; }
+}
+function syncTimeTrigger(){
+  const t=$('[data-facet="time"] .facet__trigger');
+  t.classList.toggle("has-value", state.time!=="all");
+}
+
+function renderActive(){
+  const bar=$("#activeBar"), box=$("#activeChips");
+  box.innerHTML="";
+  const items=[];
+  state.types.forEach(v=>items.push(["types",v]));
+  state.pricing.forEach(v=>items.push(["pricing",v]));
+  state.industry.forEach(v=>items.push(["industry",v]));
+  if(state.time!=="all") items.push(["time",state.time]);
+  if(state.frenzy) items.push(["frenzy",true]);
+  if(state.q) items.push(["q",state.q]);
+  if(!items.length){ bar.classList.add("is-empty"); return; }
+  bar.classList.remove("is-empty");
+  items.forEach(([dim,val])=>{
+    const chip=document.createElement("span");
+    const isFrenzy = dim==="frenzy";
+    chip.className = "active-chip" + (isFrenzy ? " is-frenzy" : "");
+    const label = dim==="q" ? `“${val}”`
+                : isFrenzy ? `<svg viewBox="0 0 24 24" fill="currentColor" style="width:10px;height:10px;margin-right:2px;"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>Frenzy`
+                : (LABELS[val]||val);
+    chip.innerHTML = `${label}<button class="active-chip__x" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+    chip.querySelector(".active-chip__x").addEventListener("click",()=>{
+      if(dim==="q"){ state.q=""; $("#searchBox").value=""; }
+      else if(dim==="time"){ state.time="all"; }
+      else if(dim==="frenzy"){ state.frenzy=false; }
+      else state[dim].delete(val);
+      render();
+    });
+    box.appendChild(chip);
+  });
+}
+
+$$("#typeChips .type-chip").forEach(chip=>chip.addEventListener("click",()=>{
+  const t=chip.dataset.type;
+  state.types.has(t)?state.types.delete(t):state.types.add(t);
+  render();
+}));
+
+$("#frenzyToggle").addEventListener("click",()=>{
+  state.frenzy = !state.frenzy;
+  render();
+});
+
+$$(".facet").forEach(facet=>{
+  const dim=facet.dataset.facet;
+  facet.querySelector(".facet__trigger").addEventListener("click",e=>{
+    e.stopPropagation();
+    $$(".facet").forEach(f=>{ if(f!==facet) f.classList.remove("is-open"); });
+    facet.classList.toggle("is-open");
+  });
+  facet.querySelectorAll(".facet__opt").forEach(opt=>{
+    opt.addEventListener("click",()=>{
+      const v=opt.dataset.val;
+      if(dim==="time"){ state.time=v; facet.classList.remove("is-open"); }
+      else { state[dim].has(v)?state[dim].delete(v):state[dim].add(v); }
+      render();
+    });
+  });
+});
+document.addEventListener("click",()=> $$(".facet").forEach(f=>f.classList.remove("is-open")));
+
+$("#searchBox").addEventListener("input",e=>{ state.q=e.target.value.trim().toLowerCase(); render(); });
+
+function clearAll(){
+  state.types.clear(); state.pricing.clear(); state.industry.clear();
+  state.time="all"; state.frenzy=false; state.q=""; $("#searchBox").value=""; render();
+}
+$("#clearAll").addEventListener("click",clearAll);
+$("#emptyCta").addEventListener("click",clearAll);
+
+$$(".view-toggle button").forEach(b=>b.addEventListener("click",()=>{
+  $$(".view-toggle button").forEach(x=>x.classList.remove("is-active"));
+  b.classList.add("is-active");
+}));
+$$(".pagination__pages .pg").forEach(b=>{
+  if(b.disabled) return;
+  b.addEventListener("click",()=>{
+    if(!/\d/.test(b.textContent)) return;
+    $$(".pagination__pages .pg").forEach(x=>x.classList.remove("is-active"));
+    b.classList.add("is-active");
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+});
+
+render();
+</script>
+</body>
+</html>
