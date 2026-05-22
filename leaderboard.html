@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leaderboard · Swarms Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --brand-300:#FF9D9D;--brand-400:#FF6464;--brand-500:#FF3434;--brand-600:#ED1717;--brand-700:#C80D0D;
+  --neutral-0:#FFFFFF;--neutral-100:#F2F2F2;--neutral-200:#DDDDDD;--neutral-300:#BBBBBB;--neutral-400:#999999;
+  --neutral-500:#777777;--neutral-600:#555555;--neutral-700:#333333;--neutral-800:#1F1F1F;--neutral-900:#111111;--neutral-950:#0A0A0A;
+  --success-400:#4ADE80;--warning-400:#FBBF24;
+
+  --gold:#FFD56B; --silver:#D4D4D8; --bronze:#D88B4F;
+
+  --bg-default:var(--neutral-950);
+  --bg-card:#131313;--bg-card-hover:#181818;--bg-input:#0F0F0F;
+  --bg-overlay:var(--neutral-800);
+  --text-primary:var(--neutral-0);
+  --text-secondary:var(--neutral-400);
+  --text-tertiary:var(--neutral-500);
+  --text-disabled:var(--neutral-600);
+  --border-default:var(--neutral-800);
+  --border-strong:var(--neutral-700);
+
+  --font-display:"Montserrat",system-ui,-apple-system,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",monospace;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-display);background:var(--bg-default);color:var(--text-primary);
+  font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:0;background:transparent;color:inherit;padding:0;}
+input{font-family:inherit;color:inherit;}
+a{color:inherit;text-decoration:none;}
+img,svg{display:block;max-width:100%;}
+::selection{background:var(--brand-600);color:white;}
+
+/* ============================================
+   APP GRID + SIDEBAR (1:1 with Marketplace homepage)
+============================================ */
+.app {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+.sidebar {
+  border-right: 1px solid var(--border-default);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 0 20px;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  background: var(--bg-default);
+}
+.sb__logo {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: grid; place-items: center;
+  margin-bottom: 28px;
+  background: var(--brand-600);
+  position: relative;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 24px -8px rgba(237,23,23,0.6);
+}
+.sb__logo svg { width: 26px; height: 26px; }
+.sb__nav {
+  display: flex; flex-direction: column;
+  gap: 2px; width: 100%; align-items: center;
+}
+.sb__item {
+  width: 60px; padding: 10px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  transition: color 120ms ease, background-color 120ms ease;
+  position: relative;
+}
+.sb__item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.sb__item.is-active { color: var(--text-primary); background: var(--bg-overlay); }
+.sb__item.is-active::before {
+  content: ""; position: absolute; left: -22px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 22px; border-radius: 0 2px 2px 0;
+  background: var(--brand-600);
+}
+.sb__item svg { width: 19px; height: 19px; stroke-width: 1.6; }
+.sb__item span { font-size: 9.5px; font-weight: 600; letter-spacing: 0.3px; }
+.sb__bottom { margin-top: auto; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.credits-coin {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #ffe690, #d99815 60%, #7a5400);
+  display: grid; place-items: center;
+  font-size: 8.5px; font-weight: 800; color: #4a3000;
+  text-align: center; line-height: 1;
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,0.25), 0 4px 14px -4px rgba(217,152,21,0.4);
+  position: relative;
+}
+.credits-coin span { display: block; }
+.credits-coin small { font-size: 7px; font-weight: 700; opacity: 0.8; letter-spacing: 0.4px; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #ed1717 0%, #8b5cf6 100%);
+  border: 1.5px solid var(--neutral-800);
+}
+
+/* ============================================
+   TOPBAR (1:1 with Marketplace homepage)
+============================================ */
+.topbar {
+  grid-column: 1 / -1;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 32px 0 24px;
+  border-bottom: 1px solid var(--border-default);
+  background: rgba(10, 10, 10, 0.78);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+.topbar__nav { display: flex; align-items: center; gap: 8px; }
+.topbar__link {
+  display: inline-flex; align-items: center;
+  height: 36px; padding: 0 14px;
+  border-radius: 6px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.1px;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+.topbar__link:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+.topbar__btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 14px;
+  border-radius: 6px;
+  font-size: 13px; font-weight: 600;
+  letter-spacing: -0.1px;
+  transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  white-space: nowrap; cursor: pointer;
+}
+.topbar__btn svg { width: 14px; height: 14px; }
+.topbar__btn--launch {
+  background: var(--brand-600);
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 24px -10px rgba(237,23,23,0.55);
+}
+.topbar__btn--launch:hover { background: var(--brand-500); }
+.topbar__btn--launch:active { transform: translateY(1px); }
+.topbar__btn--wallet {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+.topbar__btn--wallet:hover { background: rgba(255,255,255,0.04); border-color: var(--neutral-500); }
+.topbar__avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ed1717 0%, #8b5cf6 100%);
+  border: 1.5px solid var(--neutral-800);
+  margin-left: 8px; cursor: pointer;
+  transition: border-color 120ms ease;
+}
+.topbar__avatar:hover { border-color: var(--neutral-500); }
+
+/* ============================================
+   MAIN — content centered in the viewport
+============================================ */
+.main { padding: 40px 56px 96px; }
+.container { max-width: 1180px; margin: 0 auto; }
+
+/* ============ HERO ============ */
+.hero{margin-bottom:28px;}
+.hero__eyebrow{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:1.4px;text-transform:uppercase;color:var(--text-tertiary);
+  margin-bottom:12px;display:inline-flex;align-items:center;gap:10px;
+}
+.hero__eyebrow::after{content:"";width:24px;height:1px;background:var(--brand-500);}
+.hero__title{
+  font-size:42px;font-weight:800;letter-spacing:-1.4px;line-height:1;margin:0 0 10px;
+}
+.hero__sub{
+  font-size:14px;color:var(--text-secondary);margin:0;max-width:560px;line-height:1.5;
+}
+
+/* ============================================
+   PRIMARY BAR — One row. Everything fits here.
+   Metric tabs (left) + Search (right) + Filters button (far right)
+============================================ */
+.primary-bar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:28px;
+}
+.metric-tabs{
+  display:inline-flex;background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:10px;padding:4px;gap:2px;
+}
+.metric-tab{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 16px;border-radius:7px;
+  font-size:13px;font-weight:600;color:var(--text-secondary);
+  transition:all 140ms;
+}
+.metric-tab:hover{color:var(--text-primary);}
+.metric-tab.is-on{
+  color:var(--text-primary);background:var(--bg-overlay);
+  font-weight:700;
+}
+.metric-tab svg{width:14px;height:14px;}
+
+.primary-bar__right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+
+.search-inline{position:relative;width:240px;}
+.search-inline input{
+  width:100%;padding:8px 14px 8px 34px;
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:8px;color:var(--text-primary);font-size:12.5px;
+}
+.search-inline input::placeholder{color:var(--text-tertiary);}
+.search-inline input:focus{outline:none;border-color:var(--neutral-0);}
+.search-inline svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:var(--text-tertiary);}
+
+/* Filters button — quiet by default, badge if filters applied */
+.filters-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:8px;
+  font-size:12.5px;font-weight:600;color:var(--text-secondary);
+  background:var(--bg-card);border:1px solid var(--border-default);
+  transition:all 120ms;position:relative;
+}
+.filters-btn:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.filters-btn svg{width:13px;height:13px;}
+.filters-btn__count{
+  display:none;
+  position:absolute;top:-4px;right:-4px;
+  min-width:16px;height:16px;padding:0 4px;
+  background:var(--brand-600);color:white;
+  border-radius:8px;border:2px solid var(--bg-default);
+  font-family:var(--font-mono);font-size:9px;font-weight:800;
+  display:none;align-items:center;justify-content:center;line-height:1;
+}
+.filters-btn.has-active .filters-btn__count{display:inline-flex;}
+.filters-btn.has-active{color:var(--text-primary);border-color:var(--brand-600);}
+
+/* ============================================
+   FILTERS DRAWER — slides in from right
+============================================ */
+.drawer-mask{
+  position:fixed;inset:0;z-index:90;
+  background:rgba(0,0,0,0.6);
+  opacity:0;pointer-events:none;
+  transition:opacity 200ms ease;
+}
+.drawer-mask.is-on{opacity:1;pointer-events:auto;}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;z-index:91;
+  width:380px;max-width:90vw;
+  background:var(--bg-card);
+  border-left:1px solid var(--border-default);
+  transform:translateX(100%);
+  transition:transform 240ms cubic-bezier(0.22,0.61,0.36,1);
+  display:flex;flex-direction:column;
+}
+.drawer.is-on{transform:translateX(0);}
+.drawer__head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 22px;
+  border-bottom:1px solid var(--border-default);
+}
+.drawer__title{font-size:16px;font-weight:700;margin:0;}
+.drawer__close{
+  width:30px;height:30px;border-radius:6px;
+  display:grid;place-items:center;color:var(--text-secondary);
+  transition:all 120ms;
+}
+.drawer__close:hover{background:var(--bg-overlay);color:var(--text-primary);}
+.drawer__close svg{width:14px;height:14px;}
+
+.drawer__body{flex:1;overflow-y:auto;padding:6px 22px 22px;}
+.drawer__group{padding:18px 0;border-bottom:1px solid var(--border-default);}
+.drawer__group:last-child{border-bottom:0;}
+.drawer__label{
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  letter-spacing:1.4px;text-transform:uppercase;color:var(--text-tertiary);
+  margin-bottom:10px;display:block;
+}
+.drawer__chips{display:flex;flex-wrap:wrap;gap:6px;}
+.d-chip{
+  padding:6px 12px;border-radius:999px;
+  font-size:12px;font-weight:600;color:var(--text-secondary);
+  background:transparent;border:1px solid var(--border-default);
+  transition:all 120ms;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.d-chip:hover{color:var(--text-primary);border-color:var(--border-strong);}
+.d-chip.is-on{color:var(--neutral-950);background:var(--neutral-0);border-color:var(--neutral-0);}
+.d-chip svg{width:11px;height:11px;}
+
+.drawer__foot{
+  padding:14px 22px;
+  border-top:1px solid var(--border-default);
+  display:flex;align-items:center;gap:10px;
+}
+.drawer__reset{
+  font-size:12.5px;font-weight:700;color:var(--text-secondary);
+  padding:9px 14px;border-radius:7px;
+  background:transparent;border:1px solid var(--border-default);
+  transition:all 120ms;
+}
+.drawer__reset:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.drawer__apply{
+  flex:1;
+  font-size:13px;font-weight:700;
+  padding:10px 16px;border-radius:7px;
+  background:var(--neutral-0);color:var(--neutral-950);
+  transition:all 120ms;
+}
+.drawer__apply:hover{background:var(--neutral-100);transform:translateY(-1px);}
+
+/* ============================================
+   PODIUM
+============================================ */
+.podium{
+  display:grid;
+  grid-template-columns:1fr 1.1fr 1fr;
+  gap:12px;
+  align-items:end;
+  margin-bottom:28px;
+}
+.pod{
+  display:flex;flex-direction:column;align-items:center;
+  padding:24px 18px;
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:14px;
+  position:relative;
+  transition:transform 200ms;cursor:pointer;
+}
+.pod:hover{transform:translateY(-3px);}
+.pod--1{
+  border-color:rgba(255,213,107,0.4);
+  background:linear-gradient(180deg,rgba(255,213,107,0.05) 0%,var(--bg-card) 70%);
+  box-shadow:0 0 0 1px rgba(255,213,107,0.18), 0 24px 48px -20px rgba(255,213,107,0.18);
+}
+.pod--2{border-color:rgba(212,212,216,0.30);background:linear-gradient(180deg,rgba(212,212,216,0.03) 0%,var(--bg-card) 70%);}
+.pod--3{border-color:rgba(216,139,79,0.30);background:linear-gradient(180deg,rgba(216,139,79,0.04) 0%,var(--bg-card) 70%);}
+
+.pod__rank{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:50%;
+  font-family:var(--font-mono);font-size:13px;font-weight:800;
+  background:var(--bg-overlay);color:var(--text-primary);margin-bottom:14px;
+}
+.pod--1 .pod__rank{background:var(--gold);color:#3b2200;}
+.pod--2 .pod__rank{background:var(--silver);color:var(--neutral-950);}
+.pod--3 .pod__rank{background:var(--bronze);color:#2d1100;}
+
+.pod__avatar{
+  width:72px;height:72px;border-radius:50%;
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:24px;font-weight:800;color:white;
+  margin-bottom:12px;position:relative;
+}
+.pod--1 .pod__avatar{box-shadow:0 0 0 3px rgba(255,213,107,0.32);}
+.pod--2 .pod__avatar{box-shadow:0 0 0 3px rgba(212,212,216,0.22);}
+.pod--3 .pod__avatar{box-shadow:0 0 0 3px rgba(216,139,79,0.22);}
+
+.pod__token,.user__token{
+  position:absolute;
+  width:18px;height:18px;border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,#ffe690,#d99815 60%,#7a5400);
+  border:2px solid var(--bg-card);
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:8.5px;font-weight:800;color:#3b2200;
+}
+.pod__token{bottom:0;right:0;}
+.user__token{
+  position:absolute;bottom:-2px;right:-2px;
+  width:14px;height:14px;border:1.5px solid var(--bg-card);
+  font-size:7px;
+}
+
+.av-1{background:linear-gradient(135deg,#ec4899,#6366f1);}
+.av-2{background:linear-gradient(135deg,#22c55e,#0ea5e9);}
+.av-3{background:linear-gradient(135deg,#f59e0b,#ef4444);}
+.av-4{background:linear-gradient(135deg,#8b5cf6,#3b82f6);}
+.av-5{background:linear-gradient(135deg,#10b981,#06b6d4);}
+.av-6{background:linear-gradient(135deg,#ed1717,#7c2d12);}
+
+.pod__name{
+  font-size:16px;font-weight:700;color:var(--text-primary);
+  margin-bottom:14px;text-align:center;
+}
+.pod__value{
+  font-family:var(--font-mono);font-size:32px;font-weight:800;line-height:1;
+  letter-spacing:-0.5px;color:var(--text-primary);
+}
+.pod--1 .pod__value{font-size:40px;color:var(--gold);}
+.pod__metric-label{
+  font-family:var(--font-mono);font-size:10px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;color:var(--text-tertiary);
+  margin-top:6px;
+}
+
+/* ============================================
+   TABLE
+============================================ */
+.table{
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:12px;overflow:hidden;
+}
+.row{
+  display:grid;
+  grid-template-columns: 56px 1fr 100px 90px 80px 80px 80px;
+  align-items:center;
+  gap:14px;
+  padding:14px 20px;
+  border-bottom:1px solid var(--border-default);
+}
+.row:last-child{border-bottom:0;}
+.row--head{
+  padding:11px 20px;
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;
+  letter-spacing:1.4px;text-transform:uppercase;color:var(--text-tertiary);
+}
+.row--head .num{text-align:right;}
+.row--head .col-current{color:var(--text-primary);}
+.row--data{cursor:pointer;transition:background 140ms;}
+.row--data:hover{background:var(--bg-card-hover);}
+
+.rank{
+  font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--text-tertiary);
+  letter-spacing:-0.3px;
+}
+
+.user{display:flex;align-items:center;gap:10px;min-width:0;}
+.user__av{
+  width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:white;
+  flex-shrink:0;position:relative;
+}
+.user__name{
+  font-size:13px;font-weight:600;color:var(--text-primary);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+.tier-badge{
+  display:inline-block;
+  padding:3px 9px;border-radius:4px;
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  letter-spacing:0.4px;text-transform:uppercase;
+  width:fit-content;
+}
+.tier-badge--novice{background:rgba(153,153,153,0.08);color:var(--neutral-400);}
+.tier-badge--contributor{background:rgba(251,191,36,0.10);color:var(--warning-400);}
+.tier-badge--expert{background:rgba(255,100,100,0.10);color:var(--brand-400);}
+.tier-badge--master{background:rgba(255,255,255,0.10);color:var(--neutral-0);}
+
+.num{
+  font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--text-secondary);
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.num.num--current{font-size:15px;font-weight:800;color:var(--text-primary);}
+.num.num--zero{color:var(--text-disabled);}
+
+/* Show more — pagination replacement */
+.show-more-wrap{
+  display:flex;justify-content:center;
+  padding:18px;border-top:1px solid var(--border-default);
+}
+.show-more{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:7px;
+  font-size:12.5px;font-weight:600;color:var(--text-secondary);
+  background:transparent;border:1px solid var(--border-default);
+  transition:all 120ms;
+}
+.show-more:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.show-more svg{width:11px;height:11px;}
+.show-more__count{
+  font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);
+}
+
+.empty{
+  padding:60px 20px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.empty__icon{
+  width:48px;height:48px;border-radius:12px;background:var(--bg-overlay);
+  color:var(--text-tertiary);display:grid;place-items:center;margin-bottom:6px;
+}
+.empty__icon svg{width:20px;height:20px;}
+.empty__title{font-size:14px;font-weight:700;margin:0;}
+.empty__desc{font-size:12.5px;color:var(--text-secondary);margin:0;max-width:360px;line-height:1.55;}
+
+/* Responsive */
+@media (max-width:1100px){
+  .row{grid-template-columns: 50px 1.4fr 90px 80px 70px 70px 70px;gap:10px;}
+}
+@media (max-width:900px){
+  .podium{grid-template-columns:1fr;}
+  .pod--1{order:-1;}
+  .primary-bar__right{margin-left:0;width:100%;}
+  .search-inline{flex:1;}
+}
+@media (max-width:768px){
+  .shell{padding:32px 18px 64px;}
+  .hero__title{font-size:32px;}
+  .row{grid-template-columns: 44px 1.3fr 80px 80px;gap:10px;}
+  .col-2,.col-3,.col-4,.col-head-2,.col-head-3,.col-head-4{display:none;}
+  .metric-tabs{width:100%;justify-content:space-between;}
+  .metric-tab{flex:1;justify-content:center;padding:9px 10px;}
+  .metric-tab__text{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ TOPBAR ============ -->
+  <header class="topbar">
+    <nav class="topbar__nav" aria-label="Top navigation">
+      <a class="topbar__link" href="#">How It Works</a>
+      <a class="topbar__btn topbar__btn--launch" href="launch.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+        Launch
+      </a>
+      <button class="topbar__btn topbar__btn--wallet" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 1 0-4h4v4z"/></svg>
+        Connect Wallet
+      </button>
+      <div class="topbar__avatar" role="button" tabindex="0" aria-label="Account"></div>
+    </nav>
+  </header>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <a class="sb__logo" href="index.html" aria-label="Swarms">
+      <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M25 4l8 4.6v9.3L25 22.5l-8-4.6V8.6L25 4z" fill="white"/>
+        <path d="M14 18l8 4.6v9.3L14 36.5l-8-4.6V22.6L14 18z" fill="white" opacity="0.85"/>
+        <path d="M36 18l8 4.6v9.3L36 36.5l-8-4.6V22.6L36 18z" fill="white" opacity="0.85"/>
+        <path d="M25 32l8 4.6v9.3L25 50.5l-8-4.6V36.6L25 32z" fill="white" opacity="0.7"/>
+      </svg>
+    </a>
+    <nav class="sb__nav">
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="9"/>
+          <rect x="14" y="3" width="7" height="5"/>
+          <rect x="14" y="12" width="7" height="9"/>
+          <rect x="3" y="16" width="7" height="5"/>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="sb__item" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <path d="M3 6h18"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span>Market</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l1.9 4.9 4.9 1.9-4.9 1.9-1.9 4.9-1.9-4.9-4.9-1.9 4.9-1.9z"/>
+          <path d="M19 4v3"/>
+          <path d="M5 17v3"/>
+          <path d="M3.5 18.5h3"/>
+          <path d="M17.5 5.5h3"/>
+        </svg>
+        <span>For You</span>
+      </a>
+      <a class="sb__item" href="chat.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span>Chat</span>
+      </a>
+      <a class="sb__item" href="registry.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="9" y1="6" x2="20" y2="6"/>
+          <line x1="9" y1="12" x2="20" y2="12"/>
+          <line x1="9" y1="18" x2="20" y2="18"/>
+          <circle cx="4.5" cy="6" r="1.2"/>
+          <circle cx="4.5" cy="12" r="1.2"/>
+          <circle cx="4.5" cy="18" r="1.2"/>
+        </svg>
+        <span>Registry</span>
+      </a>
+      <a class="sb__item" href="bookmarks.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>Bookmarks</span>
+      </a>
+      <a class="sb__item is-active" href="leaderboard.html" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+          <path d="M4 22h16"/>
+          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+          <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>
+        </svg>
+        <span>Leaderboard</span>
+      </a>
+      <a class="sb__item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+    <div class="sb__bottom">
+      <div class="credits-coin" title="WAI Credits">
+        <span>2,840</span>
+        <small>WAI</small>
+      </div>
+      <div class="user-avatar"></div>
+    </div>
+  </aside>
+
+<!-- ============ MAIN ============ -->
+<main class="main">
+  <div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__eyebrow">COMMUNITY</div>
+      <h1 class="hero__title">Leaderboard</h1>
+      <p class="hero__sub">Top creators in the Swarms ecosystem.</p>
+    </section>
+
+    <!-- PRIMARY BAR — only 3 things visible: 4 metric tabs + search + Filters button -->
+    <div class="primary-bar">
+      <nav class="metric-tabs" id="metricTabs">
+        <button class="metric-tab is-on" data-metric="total">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0M9 22v-4h6v4M5 22h14"/></svg>
+          <span class="metric-tab__text">All works</span>
+        </button>
+        <button class="metric-tab" data-metric="agents">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="metric-tab__text">Agents</span>
+        </button>
+        <button class="metric-tab" data-metric="prompts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="metric-tab__text">Prompts</span>
+        </button>
+        <button class="metric-tab" data-metric="tools">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          <span class="metric-tab__text">Tools</span>
+        </button>
+      </nav>
+
+      <div class="primary-bar__right">
+        <div class="search-inline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="searchBox" type="text" placeholder="Search creators…" />
+        </div>
+        <button class="filters-btn" id="filtersBtn" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filters
+          <span class="filters-btn__count" id="filtersCount">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- PODIUM -->
+    <section class="podium" id="podium">
+      <article class="pod pod--2">
+        <span class="pod__rank">2</span>
+        <div class="pod__avatar av-2">XS</div>
+        <div class="pod__name">Xinnsky</div>
+        <span class="pod__value" data-total="67" data-agents="13" data-prompts="54" data-tools="0">67</span>
+        <span class="pod__metric-label" data-label>Total works</span>
+      </article>
+      <article class="pod pod--1">
+        <span class="pod__rank">1</span>
+        <div class="pod__avatar av-6">SC<span class="pod__token" title="Tokenized creator">$</span></div>
+        <div class="pod__name">swarms_corp</div>
+        <span class="pod__value" data-total="119" data-agents="54" data-prompts="49" data-tools="16">119</span>
+        <span class="pod__metric-label" data-label>Total works</span>
+      </article>
+      <article class="pod pod--3">
+        <span class="pod__rank">3</span>
+        <div class="pod__avatar av-4">IT</div>
+        <div class="pod__name">Intellitrade</div>
+        <span class="pod__value" data-total="23" data-agents="21" data-prompts="2" data-tools="0">23</span>
+        <span class="pod__metric-label" data-label>Total works</span>
+      </article>
+    </section>
+
+    <!-- TABLE -->
+    <section class="table" id="rankTable">
+      <div class="row row--head" id="tableHead">
+        <span>Rank</span>
+        <span>User</span>
+        <span>Tier</span>
+        <span class="num col-head-1 col-current" data-col-head>Total</span>
+        <span class="num col-head-2" data-col-head>Agents</span>
+        <span class="num col-head-3" data-col-head>Prompts</span>
+        <span class="num col-head-4" data-col-head>Tools</span>
+      </div>
+
+      <div class="row row--data" data-tier="expert" data-tokenized="true" data-total="22" data-agents="5" data-prompts="17" data-tools="0">
+        <span class="rank">4</span>
+        <div class="user">
+          <div class="user__av av-3">PL<span class="user__token" title="Tokenized">$</span></div>
+          <span class="user__name">Playeds</span>
+        </div>
+        <span class="tier-badge tier-badge--expert">Expert</span>
+        <span class="num col-1 col-current" data-col>22</span>
+        <span class="num col-2" data-col>5</span>
+        <span class="num col-3" data-col>17</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <div class="row row--data" data-tier="contributor" data-tokenized="false" data-total="19" data-agents="4" data-prompts="15" data-tools="0">
+        <span class="rank">5</span>
+        <div class="user">
+          <div class="user__av av-4">DC</div>
+          <span class="user__name">Devcoin</span>
+        </div>
+        <span class="tier-badge tier-badge--contributor">Contributor</span>
+        <span class="num col-1 col-current" data-col>19</span>
+        <span class="num col-2" data-col>4</span>
+        <span class="num col-3" data-col>15</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <div class="row row--data" data-tier="contributor" data-tokenized="true" data-total="18" data-agents="0" data-prompts="18" data-tools="0">
+        <span class="rank">6</span>
+        <div class="user">
+          <div class="user__av av-1">S_<span class="user__token" title="Tokenized">$</span></div>
+          <span class="user__name">Sagix_</span>
+        </div>
+        <span class="tier-badge tier-badge--contributor">Contributor</span>
+        <span class="num col-1 col-current" data-col>18</span>
+        <span class="num col-2 num--zero" data-col>0</span>
+        <span class="num col-3" data-col>18</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <div class="row row--data" data-tier="contributor" data-tokenized="false" data-total="16" data-agents="2" data-prompts="14" data-tools="0">
+        <span class="rank">7</span>
+        <div class="user">
+          <div class="user__av av-5">SG</div>
+          <span class="user__name">Sagix</span>
+        </div>
+        <span class="tier-badge tier-badge--contributor">Contributor</span>
+        <span class="num col-1 col-current" data-col>16</span>
+        <span class="num col-2" data-col>2</span>
+        <span class="num col-3" data-col>14</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <div class="row row--data" data-tier="contributor" data-tokenized="true" data-total="12" data-agents="12" data-prompts="0" data-tools="0">
+        <span class="rank">8</span>
+        <div class="user">
+          <div class="user__av av-2">ID<span class="user__token" title="Tokenized">$</span></div>
+          <span class="user__name">ilumdev</span>
+        </div>
+        <span class="tier-badge tier-badge--contributor">Contributor</span>
+        <span class="num col-1 col-current" data-col>12</span>
+        <span class="num col-2" data-col>12</span>
+        <span class="num col-3 num--zero" data-col>0</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <div class="row row--data" data-tier="contributor" data-tokenized="false" data-total="11" data-agents="4" data-prompts="7" data-tools="0">
+        <span class="rank">9</span>
+        <div class="user">
+          <div class="user__av av-4">JR</div>
+          <span class="user__name">JazibRQ</span>
+        </div>
+        <span class="tier-badge tier-badge--contributor">Contributor</span>
+        <span class="num col-1 col-current" data-col>11</span>
+        <span class="num col-2" data-col>4</span>
+        <span class="num col-3" data-col>7</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <div class="row row--data" data-tier="contributor" data-tokenized="false" data-total="10" data-agents="1" data-prompts="9" data-tools="0">
+        <span class="rank">10</span>
+        <div class="user">
+          <div class="user__av av-6">CD</div>
+          <span class="user__name">CryptonianDoc</span>
+        </div>
+        <span class="tier-badge tier-badge--contributor">Contributor</span>
+        <span class="num col-1 col-current" data-col>10</span>
+        <span class="num col-2" data-col>1</span>
+        <span class="num col-3" data-col>9</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <div class="row row--data" data-tier="contributor" data-tokenized="true" data-total="6" data-agents="6" data-prompts="0" data-tools="0">
+        <span class="rank">11</span>
+        <div class="user">
+          <div class="user__av av-1">AL<span class="user__token" title="Tokenized">$</span></div>
+          <span class="user__name">AgentLayer</span>
+        </div>
+        <span class="tier-badge tier-badge--contributor">Contributor</span>
+        <span class="num col-1 col-current" data-col>6</span>
+        <span class="num col-2" data-col>6</span>
+        <span class="num col-3 num--zero" data-col>0</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <div class="row row--data" data-tier="contributor" data-tokenized="false" data-total="6" data-agents="6" data-prompts="0" data-tools="0">
+        <span class="rank">12</span>
+        <div class="user">
+          <div class="user__av av-3">AT</div>
+          <span class="user__name">AiTrader</span>
+        </div>
+        <span class="tier-badge tier-badge--contributor">Contributor</span>
+        <span class="num col-1 col-current" data-col>6</span>
+        <span class="num col-2" data-col>6</span>
+        <span class="num col-3 num--zero" data-col>0</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <div class="row row--data" data-tier="novice" data-tokenized="false" data-total="5" data-agents="2" data-prompts="3" data-tools="0">
+        <span class="rank">13</span>
+        <div class="user">
+          <div class="user__av av-5">SH</div>
+          <span class="user__name">SentinalHexSwarm</span>
+        </div>
+        <span class="tier-badge tier-badge--novice">Novice</span>
+        <span class="num col-1 col-current" data-col>5</span>
+        <span class="num col-2" data-col>2</span>
+        <span class="num col-3" data-col>3</span>
+        <span class="num col-4 num--zero" data-col>0</span>
+      </div>
+
+      <!-- Show more — replaces Top 10/25/50 -->
+      <div class="show-more-wrap" id="showMoreWrap">
+        <button class="show-more" id="showMoreBtn">
+          Show 25 more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <span class="show-more__count">25 of 1,284</span>
+        </button>
+      </div>
+
+      <div class="empty" id="emptyState" style="display:none;">
+        <div class="empty__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3 class="empty__title">No creators match</h3>
+        <p class="empty__desc">Try clearing filters or your search.</p>
+      </div>
+
+    </section>
+
+  </div>
+</main>
+
+</div><!-- /.app -->
+
+<!-- ============ FILTERS DRAWER ============ -->
+<div class="drawer-mask" id="drawerMask"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-label="Filters">
+  <div class="drawer__head">
+    <h2 class="drawer__title">Filters</h2>
+    <button class="drawer__close" id="drawerClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer__body">
+    <div class="drawer__group">
+      <span class="drawer__label">Tier level</span>
+      <div class="drawer__chips" id="tierChips">
+        <button class="d-chip is-on" data-tier="all">All tiers</button>
+        <button class="d-chip" data-tier="novice">Novice</button>
+        <button class="d-chip" data-tier="contributor">Contributor</button>
+        <button class="d-chip" data-tier="expert">Expert</button>
+        <button class="d-chip" data-tier="master">Master</button>
+      </div>
+    </div>
+    <div class="drawer__group">
+      <span class="drawer__label">Tokenization</span>
+      <div class="drawer__chips" id="tokenChips">
+        <button class="d-chip is-on" data-token="all">Show all</button>
+        <button class="d-chip" data-token="tokenized">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9" fill="#FBBF24" opacity="0.85"/></svg>
+          Tokenized creators only
+        </button>
+      </div>
+    </div>
+    <div class="drawer__group">
+      <span class="drawer__label">Sort order</span>
+      <div class="drawer__chips" id="sortChips">
+        <button class="d-chip is-on" data-sort="desc">High to low</button>
+        <button class="d-chip" data-sort="asc">Low to high</button>
+      </div>
+    </div>
+  </div>
+  <div class="drawer__foot">
+    <button class="drawer__reset" id="drawerReset">Reset</button>
+    <button class="drawer__apply" id="drawerApply">Apply filters</button>
+  </div>
+</aside>
+
+<script>
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+/* State */
+const state = {
+  metric:"total",
+  tier:"all",
+  token:"all",
+  sort:"desc",
+  shown:10,    // currently showing top N rows in table (incl. podium 3)
+  q:""
+};
+
+const METRIC_LABEL = {
+  total:"Total works",
+  agents:"Agents",
+  prompts:"Prompts",
+  tools:"Tools"
+};
+
+/* ===== Metric tabs ===== */
+$$("#metricTabs .metric-tab").forEach(t => t.addEventListener("click", () => {
+  $$("#metricTabs .metric-tab").forEach(x => x.classList.remove("is-on"));
+  t.classList.add("is-on");
+  state.metric = t.dataset.metric;
+  applyAll();
+}));
+
+/* ===== Search ===== */
+$("#searchBox").addEventListener("input", e => {
+  state.q = e.target.value.trim().toLowerCase();
+  applyAll();
+});
+
+/* ===== Drawer open/close ===== */
+function openDrawer(){
+  $("#drawer").classList.add("is-on");
+  $("#drawerMask").classList.add("is-on");
+}
+function closeDrawer(){
+  $("#drawer").classList.remove("is-on");
+  $("#drawerMask").classList.remove("is-on");
+}
+$("#filtersBtn").addEventListener("click", openDrawer);
+$("#drawerClose").addEventListener("click", closeDrawer);
+$("#drawerMask").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeDrawer(); });
+
+/* ===== Drawer chip groups ===== */
+function bindGroup(selector, stateKey){
+  $$(selector + " .d-chip").forEach(c => c.addEventListener("click", () => {
+    $$(selector + " .d-chip").forEach(x => x.classList.remove("is-on"));
+    c.classList.add("is-on");
+    state[stateKey] = c.dataset[stateKey];
+  }));
+}
+bindGroup("#tierChips","tier");
+bindGroup("#tokenChips","token");
+bindGroup("#sortChips","sort");
+
+/* Apply button — confirms drawer changes */
+$("#drawerApply").addEventListener("click", () => {
+  applyAll();
+  closeDrawer();
+});
+
+/* Reset button */
+$("#drawerReset").addEventListener("click", () => {
+  state.tier = "all"; state.token = "all"; state.sort = "desc";
+  resetChips("tierChips","tier","all");
+  resetChips("tokenChips","token","all");
+  resetChips("sortChips","sort","desc");
+});
+function resetChips(id, key, def){
+  $$("#" + id + " .d-chip").forEach(c => c.classList.remove("is-on"));
+  $('#' + id + ' .d-chip[data-' + key + '="' + def + '"]').classList.add("is-on");
+}
+
+/* ===== Show more ===== */
+$("#showMoreBtn").addEventListener("click", () => {
+  state.shown += 25;
+  applyAll();
+});
+
+/* ===== Main apply ===== */
+function applyAll(){
+  /* 1) Reorder columns to put current metric first */
+  const order = [state.metric, ...["total","agents","prompts","tools"].filter(m => m !== state.metric)];
+  $$("#tableHead [data-col-head]").forEach((el, i) => {
+    el.textContent = METRIC_LABEL[order[i]];
+    el.classList.toggle("col-current", i === 0);
+  });
+  $$(".row--data").forEach(row => {
+    row.querySelectorAll("[data-col]").forEach((cell, i) => {
+      const v = row.dataset[order[i]];
+      cell.textContent = v;
+      cell.classList.toggle("col-current", i === 0);
+      cell.classList.toggle("num--zero", v === "0");
+    });
+  });
+
+  /* 2) Podium values */
+  $$(".pod").forEach(p => {
+    const v = p.querySelector(".pod__value");
+    v.textContent = v.dataset[state.metric];
+    p.querySelector("[data-label]").textContent = METRIC_LABEL[state.metric];
+  });
+
+  /* 3) Filter rows */
+  let visibleRows = $$(".row--data").filter(r => {
+    if(state.tier !== "all" && r.dataset.tier !== state.tier) return false;
+    if(state.token === "tokenized" && r.dataset.tokenized !== "true") return false;
+    if(state.q && !r.textContent.toLowerCase().includes(state.q)) return false;
+    return true;
+  });
+
+  /* 4) Sort visible rows */
+  visibleRows.sort((a,b) => {
+    const av = parseInt(a.dataset[state.metric], 10);
+    const bv = parseInt(b.dataset[state.metric], 10);
+    return state.sort === "desc" ? bv - av : av - bv;
+  });
+
+  /* 5) Re-rank and reorder in DOM */
+  const tbl = $("#rankTable");
+  const allRows = $$(".row--data");
+  allRows.forEach(r => r.style.display = "none");
+  const allowed = Math.max(0, state.shown - 3); // podium occupies 1-3
+  visibleRows.forEach((r, i) => {
+    if(i < allowed){
+      r.style.display = "";
+      r.querySelector(".rank").textContent = i + 4;
+      tbl.insertBefore(r, $("#showMoreWrap"));
+    }
+  });
+
+  /* 6) Show-more visibility + count */
+  const remaining = visibleRows.length - allowed;
+  if(remaining > 0){
+    $("#showMoreWrap").style.display = "";
+    const next = Math.min(25, remaining);
+    $("#showMoreBtn").firstChild.textContent = "Show " + next + " more ";
+    $("#showMoreBtn .show-more__count").textContent = (allowed + 3) + " of 1,284";
+  } else {
+    $("#showMoreWrap").style.display = "none";
+  }
+
+  /* 7) Empty state */
+  $("#emptyState").style.display = visibleRows.length === 0 ? "" : "none";
+
+  /* 8) Filter button badge — count active non-default filters */
+  let activeCount = 0;
+  if(state.tier !== "all") activeCount++;
+  if(state.token !== "all") activeCount++;
+  if(state.sort !== "desc") activeCount++;
+  const btn = $("#filtersBtn");
+  if(activeCount > 0){
+    btn.classList.add("has-active");
+    $("#filtersCount").textContent = activeCount;
+  } else {
+    btn.classList.remove("has-active");
+  }
+}
+
+/* Click feedback */
+$$(".row--data,.pod").forEach(el => el.addEventListener("click", e => {
+  if(e.target.closest("button")) return;
+  el.style.transition = "transform 120ms";
+  el.style.transform = el.classList.contains("pod") ? "translateY(-3px) scale(0.995)" : "scale(0.998)";
+  setTimeout(() => el.style.transform = "", 130);
+}));
+
+applyAll();
+</script>
+</body>
+</html>
