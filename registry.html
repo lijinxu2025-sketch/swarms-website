@@ -319,132 +319,101 @@ a{color:inherit;text-decoration:none;}
 img,svg{display:block;max-width:100%;}
 ::selection{background:var(--brand-600);color:white;}
 
+/* ===================== APP LAYOUT ===================== */
+.app{
+  display:grid;
+  grid-template-columns:84px 1fr;
+  min-height:100vh;
+  position:relative;
+  z-index:1;
+}
+
 /* ===================== TOPBAR ===================== */
 .topbar{
+  grid-column:1/-1;
   position:sticky;top:0;z-index:50;
-  background:rgba(10,10,10,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  height:64px;
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:0 32px 0 24px;
+  background:rgba(10,10,10,0.78);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
   border-bottom:1px solid var(--border-default);
-  margin-left:84px;
 }
-.topbar__inner{
-  max-width:1440px;margin:0 auto;padding:12px 28px;
-  display:flex;align-items:center;gap:18px;
+.topbar__nav{display:flex;align-items:center;gap:8px;}
+.topbar__link{
+  display:inline-flex;align-items:center;height:36px;padding:0 14px;
+  border-radius:6px;font-size:13px;font-weight:600;color:var(--text-secondary);
+  transition:color 120ms,background-color 120ms;
 }
-.tb__logo{
-  width:30px;height:30px;border-radius:7px;background:var(--brand-600);
-  display:grid;place-items:center;flex-shrink:0;
+.topbar__link:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.topbar__btn{
+  display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;
+  border-radius:6px;font-size:13px;font-weight:600;
+  transition:all 120ms;white-space:nowrap;cursor:pointer;
 }
-.tb__logo svg{width:18px;height:18px;}
-.tb__search{flex:1;max-width:440px;position:relative;}
-.tb__search input{
-  width:100%;padding:8px 14px 8px 36px;
-  background:var(--bg-card);border:1px solid var(--border-default);
-  border-radius:6px;color:var(--text-primary);font-size:12.5px;
+.topbar__btn svg{width:14px;height:14px;}
+.topbar__btn--launch{background:var(--brand-600);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 8px 24px -10px rgba(237,23,23,0.55);}
+.topbar__btn--launch:hover{background:var(--brand-500);}
+.topbar__btn--wallet{background:transparent;color:var(--text-primary);border:1px solid var(--border-strong);}
+.topbar__btn--wallet:hover{background:rgba(255,255,255,0.04);border-color:var(--neutral-500);}
+.topbar__avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#ed1717 0%,#8b5cf6 100%);
+  border:1.5px solid var(--neutral-800);margin-left:8px;cursor:pointer;
   transition:border-color 120ms;
 }
-.tb__search input::placeholder{color:var(--text-tertiary);}
-.tb__search input:focus{outline:none;border-color:var(--neutral-0);}
-.tb__search svg{
-  position:absolute;left:13px;top:50%;transform:translateY(-50%);
-  width:13px;height:13px;color:var(--text-tertiary);
-}
-.tb__search .kbd{
-  position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  font-family:var(--font-mono);font-size:9.5px;color:var(--text-tertiary);
-  padding:2px 6px;border:1px solid var(--border-default);border-radius:2px;
-}
-.tb__right{margin-left:auto;display:flex;align-items:center;gap:10px;}
-.tb__link{
-  padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-secondary);
-  border-radius:6px;transition:color 120ms;
-}
-.tb__link:hover{color:var(--text-primary);}
-.tb__launch{
-  padding:7px 14px;background:var(--brand-600);color:white;border-radius:6px;
-  font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;
-  transition:background 120ms;
-}
-.tb__launch:hover{background:var(--brand-500);}
-.tb__launch svg{width:11px;height:11px;}
-.tb__wallet{
-  display:inline-flex;align-items:center;gap:7px;padding:7px 12px;
-  font-family:var(--font-mono);font-size:11px;font-weight:600;
-  color:var(--text-primary);border:1px solid var(--border-default);
-  border-radius:6px;transition:border-color 120ms;
-}
-.tb__wallet:hover{border-color:var(--neutral-0);}
-.tb__wallet .dot{width:6px;height:6px;border-radius:50%;background:var(--success-500);}
-.tb__avatar{
-  width:30px;height:30px;border-radius:50%;background:var(--bg-overlay);
-  border:1px solid var(--border-default);font-family:var(--font-mono);
-  font-size:10.5px;font-weight:700;color:var(--text-primary);
-  display:grid;place-items:center;letter-spacing:-0.3px;cursor:pointer;
-}
+.topbar__avatar:hover{border-color:var(--neutral-500);}
 
-/* ===================== SHELL ===================== */
-.shell{
-  margin-left:84px;
-  padding:36px 28px 96px;
-  display:flex;justify-content:center;
-}
-.shell > .main{width:100%;max-width:1180px;}
-
-/* ===================== FIXED ICON RAIL (matches Marketplace) ===================== */
-.rail{
-  position:fixed;top:0;left:0;bottom:0;z-index:60;
-  width:84px;
-  background:var(--bg-default);
+/* ===================== SIDEBAR ===================== */
+.sidebar{
   border-right:1px solid var(--border-default);
   display:flex;flex-direction:column;align-items:center;
   padding:18px 0 20px;
+  position:sticky;top:64px;height:calc(100vh - 64px);
+  background:var(--bg-default);overflow-y:auto;
 }
-.rail__logo{
-  width:42px;height:42px;border-radius:11px;background:var(--brand-600);
-  display:grid;place-items:center;flex-shrink:0;margin-bottom:30px;
-}
-.rail__logo svg{width:24px;height:24px;}
-.rail__nav{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  width:100%;
-}
-.rail__item{
-  width:100%;
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  padding:11px 4px;
-  color:var(--text-tertiary);
-  position:relative;
-  transition:color 140ms;
-}
-.rail__item svg{width:20px;height:20px;stroke-width:1.8;}
-.rail__label{
-  font-size:10px;font-weight:600;letter-spacing:0.2px;
-  color:inherit;
-}
-.rail__item:hover{color:var(--text-secondary);}
-.rail__item.is-active{color:var(--text-primary);}
-.rail__item.is-active::before{
-  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
-  width:3px;height:30px;border-radius:0 3px 3px 0;
+.sb__logo{
+  width:44px;height:44px;border-radius:10px;
+  display:grid;place-items:center;margin-bottom:28px;
   background:var(--brand-600);
+  box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 8px 24px -8px rgba(237,23,23,0.6);
 }
-.rail__spacer{flex:1;}
-.rail__bottom{display:flex;flex-direction:column;align-items:center;gap:14px;}
-.rail__credits{
-  width:46px;height:46px;border-radius:50%;
-  background:radial-gradient(circle at 50% 35%,#FBBF24,#B45309);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-family:var(--font-mono);color:#3b2200;line-height:1;
-  border:2px solid rgba(255,255,255,0.12);
+.sb__logo svg{width:26px;height:26px;}
+.sb__nav{display:flex;flex-direction:column;gap:2px;width:100%;align-items:center;}
+.sb__item{
+  width:60px;padding:10px 0;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  color:var(--text-secondary);border-radius:6px;
+  transition:color 120ms,background-color 120ms;position:relative;
 }
-.rail__credits b{font-size:12px;font-weight:700;}
-.rail__credits span{font-size:7.5px;font-weight:700;letter-spacing:0.5px;margin-top:2px;}
-.rail__avatar{
+.sb__item:hover{color:var(--text-primary);background:rgba(255,255,255,0.03);}
+.sb__item.is-active{color:var(--text-primary);background:var(--bg-overlay);}
+.sb__item.is-active::before{
+  content:"";position:absolute;left:-22px;top:50%;transform:translateY(-50%);
+  width:3px;height:22px;border-radius:0 2px 2px 0;background:var(--brand-600);
+}
+.sb__item svg{width:19px;height:19px;stroke-width:1.6;}
+.sb__item span{font-size:9.5px;font-weight:600;letter-spacing:0.3px;}
+.sb__bottom{margin-top:auto;display:flex;flex-direction:column;gap:12px;align-items:center;}
+.credits-coin{
+  width:50px;height:50px;border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,#ffe690,#d99815 60%,#7a5400);
+  display:grid;place-items:center;font-size:8.5px;font-weight:800;color:#4a3000;
+  text-align:center;line-height:1;
+  box-shadow:inset 0 -3px 6px rgba(0,0,0,0.25),0 4px 14px -4px rgba(217,152,21,0.4);
+}
+.credits-coin span{display:block;}
+.credits-coin small{font-size:7px;font-weight:700;opacity:0.8;letter-spacing:0.4px;}
+.user-avatar{
   width:36px;height:36px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#ec4899,#6366f1);
-  border:1px solid var(--border-strong);cursor:pointer;
+  background:linear-gradient(135deg,#ed1717 0%,#8b5cf6 100%);
+  border:1.5px solid var(--neutral-800);
 }
 
 /* ===================== MAIN ===================== */
+.page-main{padding:36px 56px 96px;}
+.page-container{max-width:1180px;margin:0 auto;}
+
+/* ===================== CONTENT ===================== */
 .main{min-width:0;display:flex;flex-direction:column;gap:24px;}
 
 /* HERO */
@@ -823,32 +792,14 @@ img,svg{display:block;max-width:100%;}
 .pg:disabled{opacity:0.35;cursor:not-allowed;}
 
 @media (max-width:960px){
-  .rail{width:64px;}
-  .rail__label{display:none;}
-  .rail__logo{width:36px;height:36px;}
-  .topbar{margin-left:64px;}
-  .shell{margin-left:64px;}
+  .app{grid-template-columns:64px 1fr;}
+  .sb__item span{display:none;}
+  .page-main{padding:28px 24px 96px;}
 }
 @media (max-width:640px){
-  .rail{
-    width:100%;height:auto;top:auto;bottom:0;right:0;
-    flex-direction:row;padding:8px 12px;
-    border-right:0;border-top:1px solid var(--border-default);
-  }
-  .rail__logo{display:none;}
-  .rail__nav{flex-direction:row;gap:2px;flex:1;justify-content:space-around;}
-  .rail__item{padding:6px 4px;}
-  .rail__item.is-active::before{
-    left:50%;top:auto;bottom:0;transform:translateX(-50%);
-    width:24px;height:3px;border-radius:3px 3px 0 0;
-  }
-  .rail__spacer{display:none;}
-  .rail__bottom{flex-direction:row;gap:8px;}
-  .rail__credits{width:36px;height:36px;}
-  .rail__bottom .rail__item{display:none;}
-  .topbar{margin-left:0;}
-  .shell{margin-left:0;padding:24px 16px 90px;}
-  .topbar__inner{padding:12px 16px;flex-wrap:wrap;}
+  .app{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .page-main{padding:20px 16px 80px;}
   .hero__title{font-size:28px;}
   .grid{grid-template-columns:1fr;}
   .result-row{flex-direction:column;align-items:flex-start;}
@@ -856,87 +807,80 @@ img,svg{display:block;max-width:100%;}
 </style>
 </head>
 <body>
+<div class="app">
 
-<!-- ===================== FIXED ICON RAIL (same as Marketplace) ===================== -->
-<aside class="rail">
-  <a href="#" class="rail__logo" aria-label="Swarms">
-    <svg viewBox="0 0 50 50" fill="none">
-      <path d="M25 4l8 4.6v9.3L25 22.5l-8-4.6V8.6L25 4z" fill="white"/>
-      <path d="M14 18l8 4.6v9.3L14 36.5l-8-4.6V22.6L14 18z" fill="white" opacity="0.85"/>
-      <path d="M36 18l8 4.6v9.3L36 36.5l-8-4.6V22.6L36 18z" fill="white" opacity="0.85"/>
-      <path d="M25 32l8 4.6v9.3L25 50.5l-8-4.6V36.6L25 32z" fill="white" opacity="0.7"/>
-    </svg>
-  </a>
-
-  <nav class="rail__nav">
-    <a href="#" class="rail__item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      <span class="rail__label">Dashboard</span>
-    </a>
-    <a href="#" class="rail__item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9M9 13h6"/></svg>
-      <span class="rail__label">Market</span>
-    </a>
-    <a href="#" class="rail__item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6 4.5 2.3 7.1L12 16.6 5.7 21l2.3-7.1-6-4.5h7.6z"/></svg>
-      <span class="rail__label">For You</span>
-    </a>
-    <a href="#" class="rail__item is-active" aria-current="page">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      <span class="rail__label">Registry</span>
-    </a>
-    <a href="#" class="rail__item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-      <span class="rail__label">Bookmarks</span>
-    </a>
-    <a href="#" class="rail__item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0M9 22v-4h6v4M5 22h14"/></svg>
-      <span class="rail__label">Leaderboard</span>
-    </a>
-  </nav>
-
-  <div class="rail__spacer"></div>
-
-  <div class="rail__bottom">
-    <a href="#" class="rail__item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      <span class="rail__label">Settings</span>
-    </a>
-    <div class="rail__credits" title="WAI credits"><b>2,840</b><span>WAI</span></div>
-    <div class="rail__avatar" title="Account"></div>
-  </div>
-</aside>
-
-<header class="topbar">
-  <div class="topbar__inner">
-    <a href="#" class="tb__logo" aria-label="Swarms">
-      <svg viewBox="0 0 50 50" fill="none">
-        <path d="M25 4l8 4.6v9.3L25 22.5l-8-4.6V8.6L25 4z" fill="white"/>
-        <path d="M14 18l8 4.6v9.3L14 36.5l-8-4.6V22.6L14 18z" fill="white" opacity="0.85"/>
-        <path d="M36 18l8 4.6v9.3L36 36.5l-8-4.6V22.6L36 18z" fill="white" opacity="0.85"/>
-        <path d="M25 32l8 4.6v9.3L25 50.5l-8-4.6V36.6L25 32z" fill="white" opacity="0.7"/>
-      </svg>
-    </a>
-    <div class="tb__search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" placeholder="Search users, agents, and tools" />
-      <span class="kbd">⌘K</span>
-    </div>
-    <div class="tb__right">
-      <a href="#" class="tb__link">How it works</a>
-      <a href="#" class="tb__launch">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  <!-- ============ TOPBAR ============ -->
+  <header class="topbar">
+    <nav class="topbar__nav" aria-label="Top navigation">
+      <a class="topbar__link" href="#">How It Works</a>
+      <a class="topbar__btn topbar__btn--launch" href="launch.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
         Launch
       </a>
-      <button class="tb__wallet"><span class="dot"></span>6DvG…ASJU</button>
-      <span class="tb__avatar">YK</span>
+      <button class="topbar__btn topbar__btn--wallet" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 1 0-4h4v4z"/></svg>
+        Connect Wallet
+      </button>
+      <div class="topbar__avatar" role="button" tabindex="0" aria-label="Account"></div>
+    </nav>
+  </header>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <a class="sb__logo" href="index.html" aria-label="Swarms">
+      <svg viewBox="13.4102 8.88281 16.181 16.181" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M21.4893 24.7755C25.8024 24.7755 29.2989 21.279 29.2989 16.9659C29.2989 12.6527 25.8024 9.15625 21.4893 9.15625C17.1762 9.15625 13.6797 12.6527 13.6797 16.9659C13.6797 21.279 17.1762 24.7755 21.4893 24.7755Z" stroke="white" stroke-width="0.492953"/>
+        <path d="M20.4288 11.3203L20.4336 11.3288L21.5019 13.1892L22.5702 11.3288L22.5751 11.3203H24.7434L24.7483 11.3288L25.8227 13.1998L25.8275 13.2082L25.8227 13.2166L24.7483 15.0876L24.7458 15.0918H26.9091L26.9139 15.1003L27.9883 16.9713L27.9931 16.9797L27.9883 16.9881L26.9139 18.8591L26.9091 18.8676H24.7483L25.8227 20.7386L25.8275 20.747L25.8227 20.7553L24.7483 22.6264L24.7434 22.6348H22.5751L22.5702 22.6264L21.5019 20.7659L20.4336 22.6264L20.4288 22.6348H18.2605L18.2556 22.6264L17.1812 20.7553L17.1763 20.747L17.1812 20.7386L18.2556 18.8676H16.1115L16.1066 18.8591L15.0322 16.9881L15.0273 16.9797L15.0322 16.9713L16.1066 15.1003L16.1115 15.0918H18.258L18.2556 15.0876L17.1812 13.2166L17.1763 13.2082L17.1812 13.1998L18.2556 11.3288L18.2605 11.3203H20.4288ZM21.5019 20.7279L22.5702 18.8676H20.4337L21.5019 20.7279ZM22.5993 18.8591H24.7358L23.6676 16.9987L22.5993 18.8591ZM18.2846 18.8591H20.4212L19.3529 16.9987L18.2846 18.8591ZM18.2846 15.1003L19.3529 16.9607L20.4212 15.1003L20.4237 15.0961H18.2822L18.2846 15.1003ZM22.5992 15.1003L23.6676 16.9607L24.7359 15.1003L24.7383 15.0961H22.5968L22.5992 15.1003ZM20.4336 15.0876L20.4312 15.0918H22.5727L22.5702 15.0876L21.5019 13.2272L20.4336 15.0876Z" fill="white" stroke="white" stroke-width="0.0307859"/>
+      </svg>
+    </a>
+    <nav class="sb__nav">
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="sb__item" href="apps.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Apps</span>
+      </a>
+      <a class="sb__item" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Market</span>
+      </a>
+      <a class="sb__item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.9 4.9 1.9-4.9 1.9-1.9 4.9-1.9-4.9-4.9-1.9 4.9-1.9z"/><path d="M19 4v3"/><path d="M5 17v3"/><path d="M3.5 18.5h3"/><path d="M17.5 5.5h3"/></svg>
+        <span>For You</span>
+      </a>
+      <a class="sb__item" href="chat.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        <span>Chat</span>
+      </a>
+      <a class="sb__item is-active" href="registry.html" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/></svg>
+        <span>Registry</span>
+      </a>
+      <a class="sb__item" href="bookmarks.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Bookmarks</span>
+      </a>
+      <a class="sb__item" href="leaderboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+        <span>Leaderboard</span>
+      </a>
+      <a class="sb__item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+    <div class="sb__bottom">
+      <div class="credits-coin" title="WAI Credits"><span>2,840</span><small>WAI</small></div>
+      <div class="user-avatar"></div>
     </div>
-  </div>
-</header>
+  </aside>
 
-<div class="shell">
-
-  <main class="main">
+  <!-- ============ MAIN ============ -->
+  <main class="page-main">
+  <div class="page-container">
+  <div class="main">
 
     <section class="hero">
       <div>
@@ -1403,9 +1347,9 @@ img,svg{display:block;max-width:100%;}
       </div>
     </nav>
 
+  </div><!-- /.main -->
+  </div><!-- /.page-container -->
   </main>
-
-</div>
 
 <script>
 const $  = s => document.querySelector(s);
@@ -1896,5 +1840,6 @@ document.addEventListener("DOMContentLoaded", function(){
   </div><!-- /modal -->
 </div><!-- /modal-mask -->
 
+</div><!-- /.app -->
 </body>
 </html>
