@@ -60,82 +60,153 @@ body::before{
 }
 
 /* ============================================================ */
-/*  TOPBAR                                                      */
+/*  APP GRID + TOPBAR + SIDEBAR (mirrors index.html)            */
 /* ============================================================ */
+.app{
+  display:grid;
+  grid-template-columns:84px 1fr;
+  min-height:100vh;
+  position:relative;z-index:1;
+}
 .topbar{
+  grid-column:1 / -1;
   position:sticky;top:0;z-index:50;
-  background:rgba(10,10,10,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  height:64px;
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:0 32px 0 24px;
   border-bottom:1px solid var(--border-default);
+  background:rgba(10,10,10,0.78);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
 }
-.topbar__inner{
-  max-width:1440px;margin:0 auto;
-  padding:12px 28px;
-  display:flex;align-items:center;gap:18px;
+.topbar__nav{display:flex;align-items:center;gap:8px;}
+.topbar__link{
+  display:inline-flex;align-items:center;
+  height:36px;padding:0 14px;
+  border-radius:var(--r-md);font-size:13px;font-weight:600;
+  color:var(--text-secondary);letter-spacing:-0.1px;
+  transition:color 120ms,background-color 120ms;
 }
-.tb__logo{
-  width:32px;height:32px;border-radius:8px;
-  background:var(--brand-600);
-  display:grid;place-items:center;
-  box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 6px 20px -6px rgba(237,23,23,0.5);
-  flex-shrink:0;
+.topbar__link:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.topbar__btn{
+  display:inline-flex;align-items:center;gap:8px;
+  height:36px;padding:0 14px;
+  border-radius:var(--r-md);font-size:13px;font-weight:600;
+  letter-spacing:-0.1px;
+  transition:transform 120ms,background-color 120ms,border-color 120ms,color 120ms;
+  white-space:nowrap;cursor:pointer;
 }
-.tb__logo svg{width:20px;height:20px;}
-.tb__search{flex:1;max-width:520px;position:relative;}
-.tb__search input{
-  width:100%;padding:9px 14px 9px 38px;
-  background:var(--bg-card);
-  border:1px solid var(--border-default);
-  border-radius:var(--r-md);color:var(--text-primary);font-size:12.5px;
-  transition:border-color 120ms,background 120ms;
+.topbar__btn svg{width:14px;height:14px;}
+.topbar__btn--launch{
+  background:var(--brand-600);color:#fff;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 8px 24px -10px rgba(237,23,23,0.55);
 }
-.tb__search input::placeholder{color:var(--text-tertiary);}
-.tb__search input:focus{outline:none;border-color:var(--brand-600);background:var(--bg-subtle);}
-.tb__search svg{
-  position:absolute;left:13px;top:50%;transform:translateY(-50%);
-  width:14px;height:14px;color:var(--text-tertiary);
+.topbar__btn--launch:hover{background:var(--brand-500);}
+.topbar__btn--launch:active{transform:translateY(1px);}
+.topbar__btn--wallet{
+  background:transparent;color:var(--text-primary);
+  border:1px solid var(--border-strong);
 }
-.tb__search .kbd{
-  position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  font-family:var(--font-mono);font-size:9.5px;color:var(--text-tertiary);
-  padding:2px 6px;border:1px solid var(--border-default);
-  border-radius:var(--r-xs);background:var(--bg-subtle);
-}
-.tb__right{margin-left:auto;display:flex;align-items:center;gap:10px;}
-.tb__link{
-  padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-secondary);
-  border-radius:var(--r-md);transition:all 120ms;
-}
-.tb__link:hover{color:var(--text-primary);background:rgba(255,255,255,0.04);}
-.tb__launch{
-  padding:7px 14px;background:var(--brand-600);color:white;
-  border-radius:var(--r-md);font-size:12px;font-weight:600;
-  transition:background 120ms;
-}
-.tb__launch:hover{background:var(--brand-500);}
-.tb__wallet{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:7px 12px;font-family:var(--font-mono);font-size:11px;font-weight:600;
-  color:var(--text-primary);border:1px solid var(--border-default);
-  border-radius:var(--r-md);background:var(--bg-card);
-  transition:border-color 120ms;
-}
-.tb__wallet:hover{border-color:var(--neutral-0);}
-.tb__wallet .dot{
-  width:6px;height:6px;border-radius:50%;background:var(--success-500);
-  box-shadow:0 0 6px var(--success-500);
-}
-.tb__avatar{
+.topbar__btn--wallet:hover{background:rgba(255,255,255,0.04);border-color:var(--neutral-500);}
+.topbar__avatar-wrap{position:relative;margin-left:8px;}
+.topbar__avatar{
   width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--brand-600),#8b5cf6);
-  border:1.5px solid var(--neutral-800);flex-shrink:0;
+  background:linear-gradient(135deg,#ed1717 0%,#8b5cf6 100%);
+  border:1.5px solid var(--neutral-800);
+  cursor:pointer;transition:border-color 120ms;
 }
+.topbar__avatar:hover{border-color:var(--neutral-500);}
+
+/* Account dropdown (same as index) */
+.account-dropdown{
+  position:absolute;top:calc(100% + 10px);right:0;width:272px;
+  background:var(--neutral-900);border:1px solid var(--border-default);
+  border-radius:var(--r-xl);
+  box-shadow:0 16px 48px rgba(0,0,0,0.6),0 4px 12px rgba(0,0,0,0.3);
+  z-index:200;opacity:0;transform:translateY(-6px) scale(0.98);
+  pointer-events:none;transition:opacity 160ms ease,transform 160ms ease;overflow:hidden;
+}
+.account-dropdown.is-open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+.acct-header{display:flex;align-items:center;gap:12px;padding:16px 16px 14px;}
+.acct-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ed1717 0%,#8b5cf6 100%);flex-shrink:0;border:2px solid var(--border-default);}
+.acct-info{min-width:0;}
+.acct-name{font-size:13.5px;font-weight:700;color:var(--text-primary);letter-spacing:-0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.acct-email{font-size:11.5px;color:var(--text-tertiary);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.acct-credits{display:flex;align-items:center;justify-content:space-between;margin:0 10px 10px;padding:10px 12px;background:rgba(217,152,21,0.07);border:1px solid rgba(217,152,21,0.2);border-radius:var(--r-lg);}
+.acct-credits__left{display:flex;align-items:center;gap:7px;}
+.acct-credits__icon{width:15px;height:15px;color:#d99815;flex-shrink:0;}
+.acct-credits__label{font-size:12px;color:var(--text-secondary);font-weight:500;}
+.acct-credits__right{display:flex;align-items:center;gap:8px;}
+.acct-credits__value{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text-primary);}
+.acct-credits__add{font-size:11px;font-weight:600;color:var(--brand-400);padding:3px 8px;border:1px solid rgba(237,23,23,0.35);border-radius:var(--r-sm);background:rgba(237,23,23,0.08);cursor:pointer;transition:background-color 120ms,border-color 120ms;white-space:nowrap;}
+.acct-credits__add:hover{background:rgba(237,23,23,0.16);border-color:rgba(237,23,23,0.6);}
+.acct-menu{padding:4px 6px;border-top:1px solid var(--border-default);}
+.acct-menu__item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-md);font-size:13px;font-weight:500;color:var(--text-secondary);transition:background-color 120ms,color 120ms;}
+.acct-menu__item svg{width:15px;height:15px;flex-shrink:0;color:var(--text-tertiary);transition:color 120ms;}
+.acct-menu__item:hover{background:rgba(255,255,255,0.05);color:var(--text-primary);}
+.acct-menu__item:hover svg{color:var(--text-secondary);}
+.acct-signout-wrap{padding:6px 6px 8px;border-top:1px solid var(--border-default);}
+.acct-signout{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:var(--r-md);font-size:13px;font-weight:500;color:var(--brand-400);cursor:pointer;transition:background-color 120ms;}
+.acct-signout svg{width:15px;height:15px;flex-shrink:0;}
+.acct-signout:hover{background:rgba(237,23,23,0.08);}
+
+/* Sidebar */
+.sidebar{
+  border-right:1px solid var(--border-default);
+  display:flex;flex-direction:column;align-items:center;
+  padding:18px 0 20px;
+  position:sticky;top:64px;
+  height:calc(100vh - 64px);
+  background:var(--bg-default);
+}
+.sb__logo{
+  width:44px;height:44px;border-radius:10px;
+  display:grid;place-items:center;margin-bottom:28px;
+  background:var(--brand-600);position:relative;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 8px 24px -8px rgba(237,23,23,0.6);
+}
+.sb__logo svg{width:26px;height:26px;}
+.sb__nav{display:flex;flex-direction:column;gap:2px;width:100%;align-items:center;}
+.sb__item{
+  width:60px;padding:10px 0;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  color:var(--text-secondary);border-radius:var(--r-md);
+  transition:color 120ms,background-color 120ms;position:relative;
+}
+.sb__item:hover{color:var(--text-primary);background:rgba(255,255,255,0.03);}
+.sb__item.is-active{color:var(--text-primary);background:var(--bg-overlay);}
+.sb__item.is-active::before{
+  content:"";position:absolute;left:-22px;top:50%;transform:translateY(-50%);
+  width:3px;height:22px;border-radius:0 2px 2px 0;background:var(--brand-600);
+}
+.sb__item svg{width:19px;height:19px;stroke-width:1.6;}
+.sb__item span{font-size:9.5px;font-weight:600;letter-spacing:0.3px;}
+.sb__bottom{margin-top:auto;display:flex;flex-direction:column;gap:12px;align-items:center;}
+.credits-coin{
+  width:50px;height:50px;border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,#ffe690,#d99815 60%,#7a5400);
+  display:grid;place-items:center;
+  font-size:8.5px;font-weight:800;color:#4a3000;
+  text-align:center;line-height:1;
+  box-shadow:inset 0 -3px 6px rgba(0,0,0,0.25),0 4px 14px -4px rgba(217,152,21,0.4);
+}
+.credits-coin span{display:block;}
+.credits-coin small{font-size:7px;font-weight:700;opacity:0.8;letter-spacing:0.4px;}
+.user-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#ed1717 0%,#8b5cf6 100%);
+  border:1.5px solid var(--neutral-800);
+}
+
+/* Main content area */
+.page-main{padding:28px 56px 96px;}
+.page-container{max-width:1180px;margin:0 auto;}
 
 /* ============================================================ */
 /*  PAGE HEADER                                                 */
 /* ============================================================ */
 .page-head{
-  max-width:1440px;margin:0 auto;
-  padding:32px 28px 0;
+  padding:0 0 28px;
   position:relative;z-index:1;
 }
 .page-head__eyebrow{
@@ -158,25 +229,53 @@ body::before{
 /*  3-COLUMN LAYOUT                                             */
 /* ============================================================ */
 .shell{
-  max-width:1440px;margin:0 auto;
-  padding:32px 28px 96px;
+  padding:0;
   display:grid;
-  grid-template-columns:240px minmax(0,1fr) 320px;
-  gap:32px;
+  grid-template-columns:minmax(0,1fr) 280px;
+  gap:28px;
   position:relative;z-index:1;
   align-items:start;
 }
 
 /* ============================================================ */
-/*  SIDEBAR NAV                                                 */
+/*  SIDEBAR NAV — hidden, replaced by top tabs                  */
 /* ============================================================ */
-.sidenav{
-  position:sticky;top:78px;
-  background:var(--bg-card);
-  border:1px solid var(--border-default);
-  border-radius:var(--r-xl);
-  padding:14px 10px;
-  display:flex;flex-direction:column;gap:18px;
+.sidenav{ display:none; }
+
+/* ============================================================ */
+/*  TOP TAB NAV                                                 */
+/* ============================================================ */
+.settings-tabs{
+  display:flex;
+  align-items:center;
+  gap:2px;
+  margin-bottom:28px;
+  border-bottom:1px solid var(--border-default);
+  position:relative;
+}
+.settings-tab{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:10px 16px;
+  font-size:13px;font-weight:600;
+  color:var(--text-secondary);
+  border-radius:var(--r-md) var(--r-md) 0 0;
+  cursor:pointer;
+  position:relative;
+  transition:color 120ms,background-color 120ms;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+}
+.settings-tab svg{width:14px;height:14px;flex-shrink:0;}
+.settings-tab:hover{color:var(--text-primary);background:rgba(255,255,255,0.03);}
+.settings-tab.is-active{
+  color:var(--text-primary);
+  border-bottom-color:var(--brand-500);
+}
+.settings-tab .badge{
+  font-family:var(--font-mono);font-size:9px;font-weight:700;
+  padding:2px 5px;border-radius:var(--r-xs);
+  background:rgba(237,23,23,0.12);color:var(--brand-300);
+  letter-spacing:0.3px;
 }
 .sidenav__group{display:flex;flex-direction:column;gap:2px;}
 .sidenav__group-title{
@@ -1241,85 +1340,162 @@ body::before{
 </style>
 </head>
 <body>
+<div class="app">
 
 <!-- ============================================================ -->
-<!--  TOPBAR                                                      -->
+<!--  TOPBAR (same as index.html)                                 -->
 <!-- ============================================================ -->
 <header class="topbar">
-  <div class="topbar__inner">
-    <a href="index.html" class="tb__logo" aria-label="Swarms">
-      <svg viewBox="0 0 50 50" fill="none">
-        <path d="M25 4l8 4.6v9.3L25 22.5l-8-4.6V8.6L25 4z" fill="white"/>
-        <path d="M14 18l8 4.6v9.3L14 36.5l-8-4.6V22.6L14 18z" fill="white" opacity="0.85"/>
-        <path d="M36 18l8 4.6v9.3L36 36.5l-8-4.6V22.6L36 18z" fill="white" opacity="0.85"/>
-        <path d="M25 32l8 4.6v9.3L25 50.5l-8-4.6V36.6L25 32z" fill="white" opacity="0.7"/>
-      </svg>
+  <nav class="topbar__nav" aria-label="Top navigation">
+    <a class="topbar__link" href="#">How It Works</a>
+    <a class="topbar__btn topbar__btn--launch" href="launch.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+      Launch
     </a>
-    <div class="tb__search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" placeholder="Search agents, prompts, tools, users…" />
-      <span class="kbd">⌘K</span>
+    <button class="topbar__btn topbar__btn--wallet" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 1 0-4h4v4z"/></svg>
+      Connect Wallet
+    </button>
+    <div class="topbar__avatar-wrap">
+      <div class="topbar__avatar" id="avatarBtn" role="button" tabindex="0" aria-label="Account" aria-haspopup="true" aria-expanded="false"></div>
+      <div class="account-dropdown" id="accountDropdown" aria-hidden="true">
+        <div class="acct-header">
+          <div class="acct-avatar"></div>
+          <div class="acct-info">
+            <div class="acct-name">Alex Johnson</div>
+            <div class="acct-email">alex@swarms.ai</div>
+          </div>
+        </div>
+        <div class="acct-credits">
+          <div class="acct-credits__left">
+            <svg class="acct-credits__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9a3 3 0 0 0-2.8-2h-1a3 3 0 0 0 0 6h1a3 3 0 0 1 0 6h-1a3 3 0 0 1-2.8-2"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+            <span class="acct-credits__label">Credits balance</span>
+          </div>
+          <div class="acct-credits__right">
+            <span class="acct-credits__value">$19.82</span>
+            <button class="acct-credits__add" type="button">+ Add more</button>
+          </div>
+        </div>
+        <nav class="acct-menu" aria-label="Account menu">
+          <a class="acct-menu__item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+          <a class="acct-menu__item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Manage account</a>
+          <a class="acct-menu__item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Organization</a>
+          <a class="acct-menu__item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Community</a>
+        </nav>
+        <div class="acct-signout-wrap">
+          <button class="acct-signout" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign out
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="tb__right">
-      <a href="#" class="tb__link">How it works</a>
-      <a href="launch.html" class="tb__launch">+ Launch</a>
-      <button class="tb__wallet"><span class="dot"></span>6DvG…ASJU</button>
-      <span class="tb__avatar"></span>
-    </div>
-  </div>
+  </nav>
 </header>
 
 <!-- ============================================================ -->
-<!--  PAGE HEADER                                                 -->
+<!--  SIDEBAR (same as index.html, Settings active)              -->
 <!-- ============================================================ -->
+<aside class="sidebar">
+  <a class="sb__logo" href="index.html" aria-label="Swarms">
+    <svg viewBox="13.4102 8.88281 16.181 16.181" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M21.4893 24.7755C25.8024 24.7755 29.2989 21.279 29.2989 16.9659C29.2989 12.6527 25.8024 9.15625 21.4893 9.15625C17.1762 9.15625 13.6797 12.6527 13.6797 16.9659C13.6797 21.279 17.1762 24.7755 21.4893 24.7755Z" stroke="white" stroke-width="0.492953"/>
+      <path d="M20.4288 11.3203L20.4336 11.3288L21.5019 13.1892L22.5702 11.3288L22.5751 11.3203H24.7434L24.7483 11.3288L25.8227 13.1998L25.8275 13.2082L25.8227 13.2166L24.7483 15.0876L24.7458 15.0918H26.9091L26.9139 15.1003L27.9883 16.9713L27.9931 16.9797L27.9883 16.9881L26.9139 18.8591L26.9091 18.8676H24.7483L25.8227 20.7386L25.8275 20.747L25.8227 20.7553L24.7483 22.6264L24.7434 22.6348H22.5751L22.5702 22.6264L21.5019 20.7659L20.4336 22.6264L20.4288 22.6348H18.2605L18.2556 22.6264L17.1812 20.7553L17.1763 20.747L17.1812 20.7386L18.2556 18.8676H16.1115L16.1066 18.8591L15.0322 16.9881L15.0273 16.9797L15.0322 16.9713L16.1066 15.1003L16.1115 15.0918H18.258L18.2556 15.0876L17.1812 13.2166L17.1763 13.2082L17.1812 13.1998L18.2556 11.3288L18.2605 11.3203H20.4288ZM21.5019 20.7279L22.5702 18.8676H20.4337L21.5019 20.7279ZM22.5993 18.8591H24.7358L23.6676 16.9987L22.5993 18.8591ZM18.2846 18.8591H20.4212L19.3529 16.9987L18.2846 18.8591ZM18.2846 15.1003L19.3529 16.9607L20.4212 15.1003L20.4237 15.0961H18.2822L18.2846 15.1003ZM22.5992 15.1003L23.6676 16.9607L24.7359 15.1003L24.7383 15.0961H22.5968L22.5992 15.1003ZM20.4336 15.0876L20.4312 15.0918H22.5727L22.5702 15.0876L21.5019 13.2272L20.4336 15.0876Z" fill="white" stroke="white" stroke-width="0.0307859"/>
+    </svg>
+  </a>
+  <nav class="sb__nav">
+    <a class="sb__item" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+      <span>Dashboard</span>
+    </a>
+    <a class="sb__item" href="apps.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Apps</span>
+    </a>
+    <a class="sb__item" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span>Market</span>
+    </a>
+    <a class="sb__item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.9 4.9 1.9-4.9 1.9-1.9 4.9-1.9-4.9-4.9-1.9 4.9-1.9z"/><path d="M19 4v3"/><path d="M5 17v3"/><path d="M3.5 18.5h3"/><path d="M17.5 5.5h3"/></svg>
+      <span>For You</span>
+    </a>
+    <a class="sb__item" href="chat.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      <span>Chat</span>
+    </a>
+    <a class="sb__item" href="registry.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/></svg>
+      <span>Registry</span>
+    </a>
+    <a class="sb__item" href="bookmarks.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span>Bookmarks</span>
+    </a>
+    <a class="sb__item" href="leaderboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+      <span>Leaderboard</span>
+    </a>
+    <a class="sb__item is-active" href="settings.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Settings</span>
+    </a>
+  </nav>
+  <div class="sb__bottom">
+    <div class="credits-coin" title="WAI Credits">
+      <span>2,840</span>
+      <small>WAI</small>
+    </div>
+    <div class="user-avatar"></div>
+  </div>
+</aside>
+
+<!-- ============================================================ -->
+<!--  MAIN                                                        -->
+<!-- ============================================================ -->
+<div class="page-main">
+
+<div class="page-container">
+<!-- Page header -->
 <header class="page-head">
   <div class="page-head__eyebrow">SWARMS · ACCOUNT</div>
   <h1 class="page-head__title">Settings &amp; <em>preferences.</em></h1>
   <p class="page-head__desc">Manage your profile, payments, web3 activity, and how Swarms looks for you.</p>
 </header>
 
+<!-- Top tab navigation -->
+<nav class="settings-tabs" aria-label="Settings sections">
+  <button class="settings-tab is-active" data-tab="profile">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Profile
+  </button>
+  <button class="settings-tab" data-tab="theme">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20 5 5 0 0 0 5-5 2 2 0 0 1 2-2 3 3 0 0 0 3-3A10 10 0 0 0 12 2z"/></svg>
+    Theme
+  </button>
+  <button class="settings-tab" data-tab="billing">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+    Billing &amp; Credits
+  </button>
+  <button class="settings-tab" data-tab="purchases">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+    Purchase history
+  </button>
+  <button class="settings-tab" data-tab="creator">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    Creator earnings
+    <span class="badge">NEW</span>
+  </button>
+  <button class="settings-tab" data-tab="staking">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    Staking
+  </button>
+</nav>
+
 <!-- ============================================================ -->
 <!--  SHELL                                                       -->
 <!-- ============================================================ -->
 <div class="shell">
-
-  <!-- ===== Sidebar nav ===== -->
-  <aside class="sidenav" id="sidenav">
-    <div class="sidenav__group">
-      <span class="sidenav__group-title">Account</span>
-      <button class="sidenav__item is-active" data-tab="profile">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Profile
-      </button>
-      <button class="sidenav__item" data-tab="theme">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20 5 5 0 0 0 5-5 2 2 0 0 1 2-2 3 3 0 0 0 3-3A10 10 0 0 0 12 2z"/></svg>
-        Theme
-      </button>
-    </div>
-    <div class="sidenav__group">
-      <span class="sidenav__group-title">Payments</span>
-      <button class="sidenav__item" data-tab="billing">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        Billing &amp; Credits
-      </button>
-      <button class="sidenav__item" data-tab="purchases">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        Purchase history
-      </button>
-      <button class="sidenav__item" data-tab="creator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        Creator earnings
-        <span class="badge">NEW</span>
-      </button>
-    </div>
-    <div class="sidenav__group">
-      <span class="sidenav__group-title">Web3</span>
-      <button class="sidenav__item" data-tab="staking">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        Staking
-      </button>
-    </div>
-  </aside>
 
   <!-- ===== MAIN CONTENT ===== -->
   <main class="main">
@@ -2311,7 +2487,8 @@ body::before{
 
   </aside>
 
-</div>
+</div><!-- /.shell -->
+</div><!-- /.page-container -->
 
 <!-- Toast -->
 <div class="toast" id="toast">
@@ -2323,13 +2500,12 @@ body::before{
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 
-/* ====== Tab switching ====== */
-$$("#sidenav .sidenav__item").forEach(btn => {
+/* ====== Tab switching (top tabs) ====== */
+$$(".settings-tab").forEach(btn => {
   btn.addEventListener("click", () => {
     const tab = btn.dataset.tab;
-    $$("#sidenav .sidenav__item").forEach(x => x.classList.toggle("is-active", x === btn));
+    $$(".settings-tab").forEach(x => x.classList.toggle("is-active", x === btn));
     $$(".tab-panel").forEach(p => p.classList.toggle("is-active", p.dataset.panel === tab));
-    // toggle context cards
     $$("#context .ctx-card").forEach(c => {
       c.style.display = c.dataset.ctx === tab ? "" : "none";
     });
@@ -2433,6 +2609,20 @@ $$('input[type="text"]').forEach(i => {
     }
   });
 });
+/* ===== Account dropdown ===== */
+(function(){
+  const btn=document.getElementById('avatarBtn');
+  const dd=document.getElementById('accountDropdown');
+  if(!btn||!dd)return;
+  function open(){dd.classList.add('is-open');dd.setAttribute('aria-hidden','false');btn.setAttribute('aria-expanded','true');}
+  function close(){dd.classList.remove('is-open');dd.setAttribute('aria-hidden','true');btn.setAttribute('aria-expanded','false');}
+  btn.addEventListener('click',e=>{e.stopPropagation();dd.classList.contains('is-open')?close():open();});
+  btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();dd.classList.contains('is-open')?close():open();}if(e.key==='Escape')close();});
+  document.addEventListener('click',e=>{if(!dd.contains(e.target))close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+})();
 </script>
+</div><!-- /.page-main -->
+</div><!-- /.app -->
 </body>
 </html>

@@ -713,7 +713,7 @@ body::before {
 .search-box input::placeholder { color: var(--text-tertiary); }
 .search-box input:focus {
   outline: none;
-  border-color: var(--brand-600);
+  border-color: var(--neutral-0);
   background: var(--bg-subtle);
 }
 .search-box svg {
@@ -1185,6 +1185,178 @@ body::before {
   .section__title { font-size: 26px; }
   .section__head { flex-direction: column; align-items: flex-start; gap: 14px; }
 }
+
+/* ====================================================================== */
+/*  ACCOUNT DROPDOWN                                                       */
+/* ====================================================================== */
+.topbar__avatar-wrap {
+  position: relative;
+  margin-left: 8px;
+}
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 272px;
+  background: var(--neutral-900);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-xl);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 200;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+  overflow: hidden;
+}
+.account-dropdown.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Header — avatar + name + email */
+.acct-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 16px 14px;
+}
+.acct-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ed1717 0%, #8b5cf6 100%);
+  flex-shrink: 0;
+  border: 2px solid var(--border-default);
+}
+.acct-info { min-width: 0; }
+.acct-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.acct-email {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Credits row */
+.acct-credits {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 10px 10px;
+  padding: 10px 12px;
+  background: rgba(217,152,21,0.07);
+  border: 1px solid rgba(217,152,21,0.2);
+  border-radius: var(--r-lg);
+}
+.acct-credits__left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.acct-credits__icon {
+  width: 15px;
+  height: 15px;
+  color: #d99815;
+  flex-shrink: 0;
+}
+.acct-credits__label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.acct-credits__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.acct-credits__value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.acct-credits__add {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand-400);
+  padding: 3px 8px;
+  border: 1px solid rgba(237,23,23,0.35);
+  border-radius: var(--r-sm);
+  background: rgba(237,23,23,0.08);
+  cursor: pointer;
+  transition: background-color 120ms, border-color 120ms;
+  white-space: nowrap;
+}
+.acct-credits__add:hover {
+  background: rgba(237,23,23,0.16);
+  border-color: rgba(237,23,23,0.6);
+}
+
+/* Menu items */
+.acct-menu {
+  padding: 4px 6px;
+  border-top: 1px solid var(--border-default);
+}
+.acct-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: background-color 120ms, color 120ms;
+}
+.acct-menu__item svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  transition: color 120ms;
+}
+.acct-menu__item:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-primary);
+}
+.acct-menu__item:hover svg { color: var(--text-secondary); }
+
+/* Sign out */
+.acct-signout-wrap {
+  padding: 6px 6px 8px;
+  border-top: 1px solid var(--border-default);
+}
+.acct-signout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--brand-400);
+  cursor: pointer;
+  transition: background-color 120ms;
+}
+.acct-signout svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.acct-signout:hover { background: rgba(237,23,23,0.08); }
 </style>
 </head>
 <body>
@@ -1204,7 +1376,53 @@ body::before {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 1 0-4h4v4z"/></svg>
         Connect Wallet
       </button>
-      <div class="topbar__avatar" role="button" tabindex="0" aria-label="Account"></div>
+      <div class="topbar__avatar-wrap">
+        <div class="topbar__avatar" id="avatarBtn" role="button" tabindex="0" aria-label="Account" aria-haspopup="true" aria-expanded="false"></div>
+        <!-- User Account Dropdown -->
+        <div class="account-dropdown" id="accountDropdown" aria-hidden="true">
+          <div class="acct-header">
+            <div class="acct-avatar"></div>
+            <div class="acct-info">
+              <div class="acct-name">Alex Johnson</div>
+              <div class="acct-email">alex@swarms.ai</div>
+            </div>
+          </div>
+          <div class="acct-credits">
+            <div class="acct-credits__left">
+              <svg class="acct-credits__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M14.8 9a3 3 0 0 0-2.8-2h-1a3 3 0 0 0 0 6h1a3 3 0 0 1 0 6h-1a3 3 0 0 1-2.8-2"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+              <span class="acct-credits__label">Credits balance</span>
+            </div>
+            <div class="acct-credits__right">
+              <span class="acct-credits__value">$19.82</span>
+              <button class="acct-credits__add" type="button">+ Add more</button>
+            </div>
+          </div>
+          <nav class="acct-menu" aria-label="Account menu">
+            <a class="acct-menu__item" href="#">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              Profile
+            </a>
+            <a class="acct-menu__item" href="#">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Manage account
+            </a>
+            <a class="acct-menu__item" href="#">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Organization
+            </a>
+            <a class="acct-menu__item" href="#">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              Community
+            </a>
+          </nav>
+          <div class="acct-signout-wrap">
+            <button class="acct-signout" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
     </nav>
   </header>
 
@@ -2562,6 +2780,39 @@ body::before {
     if (e.target.closest('a, button')) return;
     window.location.href = 'detail.html';
   });
+
+  /* ===== Account dropdown ===== */
+  (function() {
+    const btn      = document.getElementById('avatarBtn');
+    const dropdown = document.getElementById('accountDropdown');
+
+    function open() {
+      dropdown.classList.add('is-open');
+      dropdown.setAttribute('aria-hidden', 'false');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+    function close() {
+      dropdown.classList.remove('is-open');
+      dropdown.setAttribute('aria-hidden', 'true');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+    function toggle() {
+      dropdown.classList.contains('is-open') ? close() : open();
+    }
+
+    btn.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      if (e.key === 'Escape') close();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+  })();
 </script>
 </body>
 </html>
