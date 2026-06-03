@@ -230,11 +230,8 @@ body::before{
 /* ============================================================ */
 .shell{
   padding:0;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 280px;
-  gap:28px;
+  display:block;
   position:relative;z-index:1;
-  align-items:start;
 }
 
 /* ============================================================ */
@@ -1337,6 +1334,366 @@ body::before{
   .topbar__inner{padding:12px 16px;flex-wrap:wrap;}
   .tb__search{order:3;flex-basis:100%;max-width:100%;}
 }
+
+/* ============================================================ */
+/*  CREATOR EARNINGS TAB — new design (v3)                     */
+/* ============================================================ */
+/* Scoped overrides for creator panel section cards */
+.tab-panel[data-panel="creator"] .section{display:flex;flex-direction:column;margin-bottom:24px;}
+.tab-panel[data-panel="creator"] .section--card{
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:14px;overflow:hidden;padding:0;
+}
+.tab-panel[data-panel="creator"] .section__head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  padding:22px 22px 18px;border-bottom:1px solid var(--border-default);
+  margin-bottom:0;
+}
+.tab-panel[data-panel="creator"] .section__title-block{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1;}
+.tab-panel[data-panel="creator"] .section__title-eyebrow{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:10px;
+}
+.tab-panel[data-panel="creator"] .section__title-eyebrow::before{
+  content:"";width:18px;height:1.5px;background:var(--brand-500);border-radius:2px;flex-shrink:0;
+}
+.tab-panel[data-panel="creator"] .section__title{font-size:20px;font-weight:700;letter-spacing:-0.4px;margin:0;line-height:1.2;}
+.tab-panel[data-panel="creator"] .section__sub{font-size:12.5px;color:var(--text-secondary);margin:3px 0 0;line-height:1.55;}
+.tab-panel[data-panel="creator"] .section__tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+.docs-link{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:7px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:0.4px;color:var(--text-secondary);border:1px solid var(--border-default);transition:all 140ms;}
+.docs-link:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.docs-link svg{width:10px;height:10px;}
+.faq__list{display:flex;flex-direction:column;}
+.faq__item{border-top:1px solid var(--border-default);}
+.faq__item:first-child{border-top:0;}
+.faq__q{width:100%;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:18px 22px;text-align:left;font-size:14px;font-weight:600;color:var(--text-primary);transition:color 140ms;}
+.faq__q-icon{width:24px;height:24px;border-radius:50%;flex-shrink:0;border:1px solid var(--border-default);display:grid;place-items:center;color:var(--text-tertiary);transition:all 200ms;margin-top:-2px;}
+.faq__q-icon svg{width:11px;height:11px;transition:transform 220ms cubic-bezier(.22,.61,.36,1);}
+.faq__item.is-open .faq__q-icon{background:var(--neutral-0);border-color:var(--neutral-0);color:var(--neutral-950);}
+.faq__item.is-open .faq__q-icon svg{transform:rotate(45deg);}
+.faq__a{max-height:0;overflow:hidden;transition:max-height 260ms cubic-bezier(.22,.61,.36,1);}
+.faq__a-inner{font-size:13px;color:var(--text-secondary);line-height:1.65;padding:0 60px 20px 22px;max-width:780px;}
+.faq__a-inner p{margin:0 0 10px;}
+.faq__a-inner p:last-child{margin-bottom:0;}
+.faq__a-inner code{font-family:var(--font-mono);font-size:12px;background:var(--bg-overlay);padding:1px 6px;border-radius:4px;color:var(--text-primary);}
+.faq__a-inner strong{color:var(--text-primary);font-weight:700;}
+.faq__item.is-open .faq__a{max-height:520px;}
+.mini-search{position:relative;}
+.mini-search input{height:34px;padding:0 12px 0 32px;width:220px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-primary);font-size:12.5px;transition:border-color 140ms;}
+.mini-search input::placeholder{color:var(--text-tertiary);}
+.mini-search input:focus{outline:none;border-color:var(--neutral-0);}
+.mini-search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:12px;height:12px;color:var(--text-tertiary);}
+.mini-select{height:34px;padding:0 30px 0 12px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:12px;font-weight:600;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23777777' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;transition:all 140ms;}
+.mini-select:hover{color:var(--text-primary);border-color:var(--border-strong);}
+.mini-select option{background:var(--neutral-900);}
+.stat-strip-v3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.stat-v3{background:var(--bg-card);border:1px solid var(--border-default);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;transition:border-color 200ms,background 200ms;}
+.stat-v3:hover{border-color:var(--border-strong);background:var(--bg-card-hover);}
+.stat-v3__label{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-tertiary);display:flex;align-items:center;gap:7px;}
+.stat-v3__label svg{width:11px;height:11px;}
+.stat-v3__value{display:flex;align-items:baseline;gap:7px;}
+.stat-v3__value-num{font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--text-primary);letter-spacing:-0.5px;}
+.stat-v3__value-unit{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text-tertiary);letter-spacing:0.3px;}
+.stat-v3__usd{font-family:var(--font-mono);font-size:11.5px;color:var(--text-tertiary);}
+.stat-v3__link{margin-top:2px;font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:0.4px;color:var(--text-tertiary);display:inline-flex;align-items:center;gap:5px;width:fit-content;transition:color 140ms;}
+.stat-v3__link:hover{color:var(--text-primary);}
+.stat-v3__link svg{width:10px;height:10px;}
+@media(max-width:980px){.stat-strip-v3{grid-template-columns:1fr 1fr;}}
+@media(max-width:760px){.stat-strip-v3{grid-template-columns:1fr;}}
+
+.ce-hero{
+  position:relative;background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:16px;padding:28px 30px;
+  display:grid;grid-template-columns:1.15fr 0.85fr;gap:36px;
+  overflow:hidden;isolation:isolate;margin-bottom:18px;
+}
+.ce-hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(620px 280px at 92% 50%,rgba(34,197,94,0.10),transparent 70%),
+    linear-gradient(180deg,rgba(34,197,94,0.025),transparent 40%);
+}
+.ce-hero__left{display:flex;flex-direction:column;gap:18px;min-width:0;}
+.ce-hero__eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--success-400);
+}
+.ce-hero__eyebrow .ce-live-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--success-500);
+  box-shadow:0 0 0 4px rgba(34,197,94,0.18);
+  animation:cePulseDot 2.6s ease-in-out infinite;
+}
+@keyframes cePulseDot{
+  0%,100%{box-shadow:0 0 0 4px rgba(34,197,94,0.18);}
+  50%{box-shadow:0 0 0 8px rgba(34,197,94,0.04);}
+}
+.ce-hero__amount{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+.ce-hero__amount-num{
+  font-family:var(--font-mono);font-size:60px;font-weight:700;
+  letter-spacing:-2.4px;color:var(--text-primary);line-height:1;
+}
+.ce-hero__amount-unit{
+  font-family:var(--font-mono);font-size:22px;font-weight:600;
+  color:var(--success-400);letter-spacing:0.5px;
+}
+.ce-hero__meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--text-secondary);}
+.ce-hero__meta .ce-pill{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:5px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border-default);
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;color:var(--text-secondary);
+}
+.ce-hero__meta .ce-pill svg{width:10px;height:10px;color:var(--text-tertiary);}
+.ce-hero__meta .ce-dot-sep{width:3px;height:3px;border-radius:50%;background:var(--border-strong);}
+.ce-hero__actions{display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap;}
+.btn-claim-all{
+  display:inline-flex;align-items:center;gap:9px;padding:13px 22px;
+  background:var(--neutral-0);color:var(--neutral-950);
+  font-size:13.5px;font-weight:700;letter-spacing:0.2px;border-radius:9px;
+  box-shadow:0 6px 24px -8px rgba(255,255,255,0.22),0 0 0 1px rgba(255,255,255,0.04);
+  transition:all 180ms cubic-bezier(.22,.61,.36,1);
+}
+.btn-claim-all:hover{background:var(--neutral-100);transform:translateY(-1px);}
+.btn-claim-all:disabled{background:var(--bg-overlay);color:var(--text-tertiary);box-shadow:none;cursor:not-allowed;transform:none;}
+.btn-claim-all svg{width:14px;height:14px;}
+.btn-claim-all .claim-amt{
+  font-family:var(--font-mono);font-size:11px;font-weight:700;
+  background:rgba(0,0,0,0.07);padding:2px 7px;border-radius:4px;color:var(--neutral-700);
+}
+.btn-claim-all:disabled .claim-amt{background:transparent;color:var(--text-disabled);}
+.ce-btn-secondary{
+  display:inline-flex;align-items:center;gap:7px;padding:11px 14px;border-radius:8px;
+  font-size:12.5px;font-weight:600;color:var(--text-secondary);
+  background:transparent;border:1px solid var(--border-default);transition:all 140ms;
+}
+.ce-btn-secondary:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.ce-btn-secondary svg{width:12px;height:12px;}
+.ce-btn-secondary.is-refreshing svg{animation:ceSpinIcon 0.6s linear;}
+@keyframes ceSpinIcon{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+.ce-hero__right{
+  display:flex;flex-direction:column;gap:14px;justify-content:space-between;
+  border-left:1px solid var(--border-default);padding-left:36px;min-width:0;
+}
+.ce-hero__right-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.ce-hero__right-label{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-tertiary);}
+.ce-hero__right-delta{
+  display:inline-flex;align-items:baseline;gap:4px;
+  font-family:var(--font-mono);font-size:12.5px;font-weight:700;color:var(--success-400);
+}
+.ce-hero__right-delta svg{width:10px;height:10px;align-self:center;}
+.ce-hero__right-delta .delta-period{font-size:9.5px;font-weight:500;color:var(--text-tertiary);letter-spacing:0.5px;text-transform:uppercase;}
+.ce-hero__chart{position:relative;flex:1;min-height:120px;display:flex;align-items:flex-end;}
+.ce-hero__chart svg{width:100%;height:120px;display:block;overflow:visible;}
+.ce-hero__chart-foot{
+  display:flex;justify-content:space-between;
+  font-family:var(--font-mono);font-size:9.5px;color:var(--text-tertiary);
+  letter-spacing:0.4px;margin-top:6px;
+}
+.ce-hero__feerate{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;
+  background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.18);
+  font-size:11.5px;color:var(--text-secondary);
+}
+.ce-hero__feerate svg{width:13px;height:13px;color:var(--success-400);flex-shrink:0;}
+.ce-hero__feerate strong{color:var(--success-400);font-family:var(--font-mono);font-weight:700;}
+/* Stat strip */
+.ce-stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.ce-stat{
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;
+  transition:border-color 200ms,background 200ms;
+}
+.ce-stat:hover{border-color:var(--border-strong);background:var(--bg-card-hover);}
+.ce-stat__label{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-tertiary);display:flex;align-items:center;gap:7px;}
+.ce-stat__label svg{width:11px;height:11px;}
+.ce-stat__value{display:flex;align-items:baseline;gap:7px;}
+.ce-stat__value-num{font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--text-primary);letter-spacing:-0.5px;}
+.ce-stat__value-unit{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text-tertiary);letter-spacing:0.3px;}
+.ce-stat__usd{font-family:var(--font-mono);font-size:11.5px;color:var(--text-tertiary);}
+.ce-stat__link{
+  margin-top:2px;font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:0.4px;color:var(--text-tertiary);
+  display:inline-flex;align-items:center;gap:5px;width:fit-content;transition:color 140ms;
+}
+.ce-stat__link:hover{color:var(--text-primary);}
+.ce-stat__link svg{width:10px;height:10px;}
+/* Section heads */
+.ce-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+.ce-section-title-block{display:flex;flex-direction:column;gap:3px;}
+.ce-section-eyebrow{font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-tertiary);display:inline-flex;align-items:center;gap:8px;}
+.ce-section-eyebrow .num{color:var(--brand-500);}
+.ce-section-title{font-size:20px;font-weight:700;letter-spacing:-0.4px;margin:0;}
+.ce-section-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+/* Mini search/select */
+.ce-mini-search{position:relative;}
+.ce-mini-search input{
+  height:34px;padding:0 12px 0 32px;width:220px;
+  background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;
+  color:var(--text-primary);font-size:12.5px;transition:border-color 140ms;
+}
+.ce-mini-search input::placeholder{color:var(--text-tertiary);}
+.ce-mini-search input:focus{outline:none;border-color:var(--neutral-0);}
+.ce-mini-search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:12px;height:12px;color:var(--text-tertiary);}
+.ce-mini-select{
+  height:34px;padding:0 30px 0 12px;
+  background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;
+  color:var(--text-secondary);font-size:12px;font-weight:600;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23777777' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;transition:all 140ms;
+}
+.ce-mini-select:hover{color:var(--text-primary);border-color:var(--border-strong);}
+.ce-mini-select option{background:var(--neutral-900);}
+/* Products table */
+.products-card{background:var(--bg-card);border:1px solid var(--border-default);border-radius:14px;overflow:hidden;margin-bottom:24px;}
+.ptbl{width:100%;border-collapse:collapse;}
+.ptbl thead th{
+  text-align:left;padding:13px 18px;
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.3px;
+  text-transform:uppercase;color:var(--text-tertiary);
+  background:rgba(255,255,255,0.012);border-bottom:1px solid var(--border-default);
+}
+.ptbl thead th.num{text-align:right;}
+.ptbl thead th.actions{text-align:right;width:170px;}
+.ptbl tbody tr{border-bottom:1px solid var(--border-default);transition:background 160ms;}
+.ptbl tbody tr:last-child{border-bottom:0;}
+.ptbl tbody tr:hover{background:rgba(255,255,255,0.015);}
+.ptbl tbody td{padding:14px 18px;vertical-align:middle;}
+.ptbl tbody td.num{text-align:right;font-family:var(--font-mono);}
+.ptbl tbody td.actions{text-align:right;white-space:nowrap;}
+.prod{display:flex;align-items:center;gap:12px;min-width:0;}
+.prod__cover{
+  width:38px;height:38px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(135deg,#1F1F1F,#0A0A0A);
+  border:1px solid var(--border-default);display:grid;place-items:center;color:var(--text-tertiary);overflow:hidden;
+}
+.prod__cover svg{width:18px;height:18px;}
+.pc-1{background:linear-gradient(135deg,#0a2a14,#052e16);color:#86EFAC;}
+.pc-2{background:linear-gradient(135deg,#2a0a0a,#4A0505);color:#FFC5C5;}
+.pc-3{background:linear-gradient(135deg,#0a1a2a,#0c1a30);color:#93C5FD;}
+.pc-4{background:linear-gradient(135deg,#2a1a0a,#451A03);color:#FCD34D;}
+.pc-5{background:linear-gradient(135deg,#1a0a2a,#1f0a3a);color:#C4B5FD;}
+.pc-6{background:linear-gradient(135deg,#0a2a26,#052e2e);color:#5EEAD4;}
+.pc-7{background:linear-gradient(135deg,#2a0a1f,#3a0a2a);color:#F0ABFC;}
+.pc-8{background:linear-gradient(135deg,#0a2a1f,#0c2e1a);color:#A7F3D0;}
+.prod__main{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.prod__name{font-size:13.5px;font-weight:700;color:var(--text-primary);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.prod__symbol{font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:0.5px;color:var(--text-tertiary);}
+.type-badge{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:5px;
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;
+  background:rgba(255,255,255,0.05);border:1px solid var(--border-default);color:var(--text-secondary);
+}
+.type-badge .tb-dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:0.7;}
+.amt{display:inline-flex;align-items:baseline;gap:5px;justify-content:flex-end;}
+.amt__val{font-size:13.5px;font-weight:600;color:var(--text-primary);}
+.amt__unit{font-size:10.5px;font-weight:600;color:var(--text-tertiary);}
+.amt--earn .amt__val{color:var(--success-400);font-weight:700;}
+.amt--zero .amt__val{color:var(--text-tertiary);}
+.amt__usd{display:block;font-size:10.5px;color:var(--text-tertiary);margin-top:1px;}
+.btn-claim{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border-radius:7px;
+  font-size:11.5px;font-weight:700;letter-spacing:0.2px;
+  background:var(--neutral-0);color:var(--neutral-950);transition:all 140ms;
+}
+.btn-claim:hover{background:var(--neutral-100);transform:translateY(-1px);}
+.btn-claim svg{width:10px;height:10px;}
+.btn-claim:disabled{
+  background:transparent;border:1px solid var(--border-default);color:var(--text-disabled);
+  cursor:not-allowed;transform:none;font-weight:600;font-size:11px;white-space:nowrap;
+}
+.btn-view{
+  width:32px;height:32px;border-radius:7px;display:inline-grid;place-items:center;
+  background:transparent;border:1px solid var(--border-default);color:var(--text-tertiary);
+  transition:all 140ms;margin-left:6px;
+}
+.btn-view:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.btn-view svg{width:11px;height:11px;}
+/* History */
+.history-card{background:var(--bg-card);border:1px solid var(--border-default);border-radius:14px;overflow:hidden;margin-bottom:24px;}
+.history-row{
+  display:grid;grid-template-columns:140px 1fr 130px 110px 90px;
+  gap:14px;align-items:center;padding:14px 18px;
+  border-bottom:1px solid var(--border-default);transition:background 160ms;
+}
+.history-row:last-child{border-bottom:0;}
+.history-row:hover{background:rgba(255,255,255,0.015);}
+.history-row__head{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.3px;
+  text-transform:uppercase;color:var(--text-tertiary);
+  background:rgba(255,255,255,0.012);padding-top:13px;padding-bottom:13px;
+  border-bottom:1px solid var(--border-default);
+}
+.history-row__head:hover{background:rgba(255,255,255,0.012);}
+.history-date{display:flex;flex-direction:column;gap:1px;}
+.history-date strong{font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--text-primary);letter-spacing:0.2px;}
+.history-date span{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);}
+.history-prod{display:flex;align-items:center;gap:10px;min-width:0;}
+.history-prod__cover{width:28px;height:28px;border-radius:6px;flex-shrink:0;background:var(--bg-overlay);border:1px solid var(--border-default);display:grid;place-items:center;}
+.history-prod__name{font-size:12.5px;font-weight:600;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.history-prod__sym{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);}
+.history-amt{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--success-400);text-align:right;}
+.history-amt span{font-size:10px;font-weight:600;color:var(--text-tertiary);margin-left:3px;}
+.history-status{display:flex;justify-content:center;}
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:4px;font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;}
+.status-pill .sp-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.status-pill.is-confirmed{background:rgba(34,197,94,0.1);color:var(--success-400);border:1px solid rgba(34,197,94,0.25);}
+.status-pill.is-pending{background:rgba(251,191,36,0.1);color:var(--warning-400);border:1px solid rgba(251,191,36,0.3);}
+.history-tx{
+  display:inline-flex;align-items:center;gap:5px;justify-content:flex-end;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--text-tertiary);
+  padding:5px 9px;border-radius:5px;border:1px solid var(--border-default);
+  background:transparent;transition:all 140ms;width:fit-content;margin-left:auto;
+}
+.history-tx:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.history-tx svg{width:10px;height:10px;}
+.history-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 18px;border-top:1px solid var(--border-default);background:rgba(255,255,255,0.012);}
+.history-foot__count{font-size:11.5px;color:var(--text-tertiary);font-family:var(--font-mono);letter-spacing:0.3px;}
+.history-foot__count strong{color:var(--text-secondary);}
+.history-foot__more{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:0.4px;color:var(--text-secondary);padding:6px 12px;border-radius:6px;border:1px solid var(--border-default);transition:all 140ms;display:inline-flex;align-items:center;gap:6px;}
+.history-foot__more:hover{color:var(--text-primary);border-color:var(--neutral-0);}
+.history-foot__more svg{width:10px;height:10px;}
+/* FAQ */
+.ce-faq{display:grid;grid-template-columns:280px 1fr;gap:36px;padding:8px 4px;}
+.ce-faq__intro{padding-top:4px;}
+.ce-faq__intro h2{font-size:24px;font-weight:700;letter-spacing:-0.4px;margin:0 0 10px;line-height:1.15;}
+.ce-faq__intro p{font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0 0 16px;}
+.ce-faq__intro a{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:0.4px;color:var(--text-primary);transition:color 140ms;}
+.ce-faq__intro a:hover{color:var(--success-400);}
+.ce-faq__intro a svg{width:10px;height:10px;}
+.ce-faq__list{display:flex;flex-direction:column;gap:2px;}
+.ce-faq__item{border-top:1px solid var(--border-default);}
+.ce-faq__item:last-child{border-bottom:1px solid var(--border-default);}
+.ce-faq__q{width:100%;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:18px 4px;text-align:left;font-size:14px;font-weight:600;color:var(--text-primary);transition:color 140ms;}
+.ce-faq__q-icon{width:24px;height:24px;border-radius:50%;flex-shrink:0;border:1px solid var(--border-default);display:grid;place-items:center;color:var(--text-tertiary);transition:all 200ms;margin-top:-2px;}
+.ce-faq__q-icon svg{width:11px;height:11px;transition:transform 220ms cubic-bezier(.22,.61,.36,1);}
+.ce-faq__item.is-open .ce-faq__q-icon{background:var(--neutral-0);border-color:var(--neutral-0);color:var(--neutral-950);}
+.ce-faq__item.is-open .ce-faq__q-icon svg{transform:rotate(45deg);}
+.ce-faq__a{max-height:0;overflow:hidden;transition:max-height 260ms cubic-bezier(.22,.61,.36,1),padding 200ms ease;}
+.ce-faq__a-inner{font-size:13px;color:var(--text-secondary);line-height:1.65;padding:0 36px 18px 4px;}
+.ce-faq__a-inner p{margin:0 0 10px;}
+.ce-faq__a-inner p:last-child{margin-bottom:0;}
+.ce-faq__a-inner code{font-family:var(--font-mono);font-size:12px;background:var(--bg-overlay);padding:1px 6px;border-radius:4px;color:var(--text-primary);}
+.ce-faq__a-inner strong{color:var(--text-primary);font-weight:700;}
+.ce-faq__item.is-open .ce-faq__a{max-height:520px;}
+/* CE toast */
+.ce-toast-stage{position:fixed;top:80px;right:30px;z-index:300;display:flex;flex-direction:column;gap:10px;pointer-events:none;}
+.ce-toast{
+  pointer-events:auto;display:flex;align-items:flex-start;gap:11px;
+  padding:13px 16px;min-width:300px;max-width:380px;
+  background:var(--bg-card);border:1px solid rgba(34,197,94,0.4);
+  border-radius:10px;box-shadow:0 16px 40px -12px rgba(0,0,0,0.7);
+  transform:translateX(20px);opacity:0;
+  transition:transform 280ms cubic-bezier(.22,.61,.36,1),opacity 200ms ease;
+}
+.ce-toast.is-in{transform:none;opacity:1;}
+.ce-toast__icon{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:var(--success-500);color:var(--neutral-950);display:grid;place-items:center;}
+.ce-toast__icon svg{width:13px;height:13px;}
+.ce-toast__body{font-size:12.5px;color:var(--text-primary);line-height:1.45;}
+.ce-toast__body strong{font-family:var(--font-mono);color:var(--success-400);}
+@media(max-width:980px){.ce-hero{grid-template-columns:1fr;}.ce-hero__right{border-left:0;padding-left:0;border-top:1px solid var(--border-default);padding-top:22px;}.ce-stat-strip{grid-template-columns:1fr 1fr;}.ce-faq{grid-template-columns:1fr;gap:18px;}}
+@media(max-width:760px){.ce-hero__amount-num{font-size:46px;}.ce-stat-strip{grid-template-columns:1fr;}.history-row{grid-template-columns:1fr 1fr;gap:8px;padding:14px;}.history-row>*:nth-child(n+3){grid-column:span 2;}.history-row__head{display:none;}.ptbl thead{display:none;}.ptbl tbody td{display:block;padding:6px 16px;}.ptbl tbody tr{padding:14px 0;display:block;}}
 </style>
 </head>
 <body>
@@ -2091,82 +2448,271 @@ body::before{
     <!-- ============= CREATOR EARNINGS ============= -->
     <section class="tab-panel" data-panel="creator">
 
-      <div class="section">
-        <header class="section__head">
-          <div class="section__title-block">
-            <div class="section__num">CREATOR · GETTING STARTED</div>
-            <h2 class="section__title">Start earning from your work</h2>
-            <p class="section__desc">Tokenize your prompts or agents and earn fees from every transaction. Token holders share revenue.</p>
+      <!-- Hero · Available to Claim -->
+      <div class="ce-hero">
+        <div class="ce-hero__left">
+          <span class="ce-hero__eyebrow"><span class="ce-live-dot"></span>Available to Claim</span>
+          <div class="ce-hero__amount">
+            <span class="ce-hero__amount-num" id="ceUnclaimedNum">0.2473</span>
+            <span class="ce-hero__amount-unit">SOL</span>
           </div>
-        </header>
-
-        <div class="steps-flow">
-          <article class="step-card">
-            <div class="step-card__num">STEP 01</div>
-            <div class="step-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            </div>
-            <h3 class="step-card__title">Create &amp; publish</h3>
-            <p class="step-card__desc">Launch a prompt, agent, or tool to the marketplace. Quality is checked before going live.</p>
-            <span class="step-card__connector"></span>
-          </article>
-          <article class="step-card">
-            <div class="step-card__num">STEP 02</div>
-            <div class="step-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/></svg>
-            </div>
-            <h3 class="step-card__title">Tokenize</h3>
-            <p class="step-card__desc">Issue a token tied to your product. 0.04 SOL one-time fee. Token holders earn revenue share.</p>
-            <span class="step-card__connector"></span>
-          </article>
-          <article class="step-card">
-            <div class="step-card__num">STEP 03</div>
-            <div class="step-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <h3 class="step-card__title">Earn fees</h3>
-            <p class="step-card__desc">Every run, every trade — you earn. Withdraw anytime to your connected wallet.</p>
-          </article>
+          <div class="ce-hero__meta">
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--text-secondary);">≈ <strong style="color:var(--text-secondary);font-weight:600">$19.80 USD</strong></span>
+            <span class="ce-dot-sep"></span>
+            <span class="ce-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 7 12 12 15.5 14"/></svg>Updated 2 min ago</span>
+            <span class="ce-pill" style="color:var(--text-tertiary);">across <strong style="color:var(--text-secondary);">5 of 8</strong> products</span>
+          </div>
+          <div class="ce-hero__actions">
+            <button class="btn-claim-all" id="ceClaimAllBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Claim All Fees
+              <span class="claim-amt">0.2473 SOL</span>
+            </button>
+            <button class="ce-btn-secondary" id="ceRefreshBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Refresh
+            </button>
+          </div>
         </div>
-
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
-          <a href="#" class="btn btn--primary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Launch your first product
-          </a>
-          <a href="#" class="btn btn--ghost">Read creator docs →</a>
+        <div class="ce-hero__right">
+          <div class="ce-hero__right-head">
+            <span class="ce-hero__right-label">Fees · Last 30 Days</span>
+            <span class="ce-hero__right-delta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              +0.082 SOL <span class="delta-period">7d</span>
+            </span>
+          </div>
+          <div class="ce-hero__chart">
+            <svg viewBox="0 0 360 120" preserveAspectRatio="none">
+              <defs><linearGradient id="ceChartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22C55E" stop-opacity="0.32"/><stop offset="100%" stop-color="#22C55E" stop-opacity="0"/></linearGradient></defs>
+              <line x1="0" y1="30" x2="360" y2="30" stroke="#1F1F1F" stroke-dasharray="2 4"/>
+              <line x1="0" y1="60" x2="360" y2="60" stroke="#1F1F1F" stroke-dasharray="2 4"/>
+              <line x1="0" y1="90" x2="360" y2="90" stroke="#1F1F1F" stroke-dasharray="2 4"/>
+              <path d="M0,98 L12,96 L24,92 L36,94 L48,88 L60,90 L72,82 L84,80 L96,84 L108,78 L120,72 L132,76 L144,68 L156,62 L168,66 L180,58 L192,54 L204,60 L216,48 L228,44 L240,50 L252,38 L264,42 L276,34 L288,30 L300,38 L312,28 L324,32 L336,24 L348,20 L360,18 L360,120 L0,120 Z" fill="url(#ceChartFill)"/>
+              <path d="M0,98 L12,96 L24,92 L36,94 L48,88 L60,90 L72,82 L84,80 L96,84 L108,78 L120,72 L132,76 L144,68 L156,62 L168,66 L180,58 L192,54 L204,60 L216,48 L228,44 L240,50 L252,38 L264,42 L276,34 L288,30 L300,38 L312,28 L324,32 L336,24 L348,20 L360,18" fill="none" stroke="#22C55E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="360" cy="18" r="3.5" fill="#22C55E"/>
+              <circle cx="360" cy="18" r="7" fill="#22C55E" opacity="0.18"/>
+            </svg>
+          </div>
+          <div class="ce-hero__chart-foot"><span>Apr 3</span><span>Apr 17</span><span>May 3</span></div>
+          <div class="ce-hero__feerate">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>You earn <strong>0.5%</strong> on every buy and sell of your tokenized products, settled in SOL.</span>
+          </div>
         </div>
       </div>
 
-      <div class="section">
-        <header class="section__head">
-          <div class="section__title-block">
-            <div class="section__num">FAQ</div>
-            <h2 class="section__title">Frequently asked</h2>
-          </div>
-        </header>
-        <details style="border-bottom:1px solid var(--border-default);padding:14px 0;">
-          <summary style="font-size:13px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
-            How much does tokenization cost?
-            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">+</span>
-          </summary>
-          <p style="font-size:12.5px;color:var(--text-secondary);margin:8px 0 0;line-height:1.55;">A one-time fee of 0.04 SOL covers the on-chain mint and bonding curve setup. After that, your token is live and tradeable.</p>
-        </details>
-        <details style="border-bottom:1px solid var(--border-default);padding:14px 0;">
-          <summary style="font-size:13px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
-            How are creator fees calculated?
-            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">+</span>
-          </summary>
-          <p style="font-size:12.5px;color:var(--text-secondary);margin:8px 0 0;line-height:1.55;">Creators earn 70% of every per-run fee, 1% of every secondary token trade, and a share of LP fees if liquidity is provided.</p>
-        </details>
-        <details style="padding:14px 0;">
-          <summary style="font-size:13px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
-            Can I un-tokenize a product?
-            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">+</span>
-          </summary>
-          <p style="font-size:12.5px;color:var(--text-secondary);margin:8px 0 0;line-height:1.55;">Tokenization is permanent on-chain — but you can pause new sales of the underlying product anytime.</p>
-        </details>
+      <!-- Stat strip -->
+      <div class="stat-strip-v3">
+        <div class="stat-v3">
+          <span class="stat-v3__label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Total Claimed</span>
+          <div class="stat-v3__value"><span class="stat-v3__value-num">0.0446</span><span class="stat-v3__value-unit">SOL</span></div>
+          <span class="stat-v3__usd">≈ $3.34 USD · all-time</span>
+          <a href="#ce-history" class="stat-v3__link">View claim history <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a>
+        </div>
+        <div class="stat-v3">
+          <span class="stat-v3__label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/></svg>Total Earned · Lifetime</span>
+          <div class="stat-v3__value"><span class="stat-v3__value-num">0.2919</span><span class="stat-v3__value-unit">SOL</span></div>
+          <span class="stat-v3__usd">≈ $23.14 USD · claimed + unclaimed</span>
+        </div>
+        <div class="stat-v3">
+          <span class="stat-v3__label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Earning Products</span>
+          <div class="stat-v3__value"><span class="stat-v3__value-num">8</span><span class="stat-v3__value-unit">TOKENIZED</span></div>
+          <span class="stat-v3__usd">5 with unclaimed fees · 3 active this week</span>
+        </div>
       </div>
+
+      <!-- Products table -->
+      <section class="section section--card">
+        <div class="section__head">
+          <div class="section__title-block">
+            <span class="section__title-eyebrow">01 · BY PRODUCT</span>
+            <h2 class="section__title">Tokenized Product Earnings</h2>
+            <p class="section__sub">Per-product breakdown of unclaimed and lifetime creator fees.</p>
+          </div>
+          <div class="section__tools">
+            <div class="mini-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" placeholder="Filter by name or symbol…" />
+            </div>
+            <select class="mini-select">
+              <option>Sort: Unclaimed (high → low)</option>
+              <option>Sort: Total earned (high → low)</option>
+              <option>Sort: Newest first</option>
+              <option>Sort: Alphabetical</option>
+            </select>
+          </div>
+        </div>
+        <table class="ptbl">
+          <thead><tr><th>Product</th><th>Type</th><th class="num">Unclaimed</th><th class="num">Lifetime Earned</th><th class="actions">Action</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="prod"><div class="prod__cover pc-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div><div class="prod__main"><span class="prod__name">Vendor Risk Monitor Agent</span><span class="prod__symbol">VRM · Agent</span></div></div></td>
+              <td><span class="type-badge"><span class="tb-dot"></span>Agent</span></td>
+              <td class="num"><span class="amt amt--earn"><span class="amt__val">0.1344</span><span class="amt__unit">SOL</span></span><span class="amt__usd">$10.75 USD</span></td>
+              <td class="num"><span class="amt"><span class="amt__val">0.1344</span><span class="amt__unit">SOL</span></span></td>
+              <td class="actions"><button class="btn-claim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Claim</button><button class="btn-view" title="View"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button></td>
+            </tr>
+            <tr>
+              <td><div class="prod"><div class="prod__cover pc-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg></div><div class="prod__main"><span class="prod__name">QuantBot Alpha</span><span class="prod__symbol">QBOT · Agent</span></div></div></td>
+              <td><span class="type-badge"><span class="tb-dot"></span>Agent</span></td>
+              <td class="num"><span class="amt amt--earn"><span class="amt__val">0.0491</span><span class="amt__unit">SOL</span></span><span class="amt__usd">$3.93 USD</span></td>
+              <td class="num"><span class="amt"><span class="amt__val">0.0491</span><span class="amt__unit">SOL</span></span></td>
+              <td class="actions"><button class="btn-claim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Claim</button><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button></td>
+            </tr>
+            <tr>
+              <td><div class="prod"><div class="prod__cover pc-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div><div class="prod__main"><span class="prod__name">Claw Wizard Agent</span><span class="prod__symbol">CLAWAI888 · Prompt</span></div></div></td>
+              <td><span class="type-badge"><span class="tb-dot"></span>Prompt</span></td>
+              <td class="num"><span class="amt amt--zero"><span class="amt__val">0.0000</span><span class="amt__unit">SOL</span></span><span class="amt__usd">No new fees</span></td>
+              <td class="num"><span class="amt"><span class="amt__val">0.0446</span><span class="amt__unit">SOL</span></span></td>
+              <td class="actions"><button class="btn-claim" disabled>No fees yet</button><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button></td>
+            </tr>
+            <tr>
+              <td><div class="prod"><div class="prod__cover pc-4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M5 9h14M5 15h14"/></svg></div><div class="prod__main"><span class="prod__name">Financial Analyst</span><span class="prod__symbol">FA · Prompt</span></div></div></td>
+              <td><span class="type-badge"><span class="tb-dot"></span>Prompt</span></td>
+              <td class="num"><span class="amt amt--earn"><span class="amt__val">0.0256</span><span class="amt__unit">SOL</span></span><span class="amt__usd">$2.05 USD</span></td>
+              <td class="num"><span class="amt"><span class="amt__val">0.0256</span><span class="amt__unit">SOL</span></span></td>
+              <td class="actions"><button class="btn-claim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Claim</button><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button></td>
+            </tr>
+            <tr>
+              <td><div class="prod"><div class="prod__cover pc-7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="prod__main"><span class="prod__name">Market Risk Briefing</span><span class="prod__symbol">MRBP · Prompt</span></div></div></td>
+              <td><span class="type-badge"><span class="tb-dot"></span>Prompt</span></td>
+              <td class="num"><span class="amt amt--earn"><span class="amt__val">0.0193</span><span class="amt__unit">SOL</span></span><span class="amt__usd">$1.54 USD</span></td>
+              <td class="num"><span class="amt"><span class="amt__val">0.0193</span><span class="amt__unit">SOL</span></span></td>
+              <td class="actions"><button class="btn-claim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Claim</button><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button></td>
+            </tr>
+            <tr>
+              <td><div class="prod"><div class="prod__cover pc-5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg></div><div class="prod__main"><span class="prod__name">FlowState Chronos</span><span class="prod__symbol">FSC · Prompt</span></div></div></td>
+              <td><span class="type-badge"><span class="tb-dot"></span>Prompt</span></td>
+              <td class="num"><span class="amt amt--earn"><span class="amt__val">0.0190</span><span class="amt__unit">SOL</span></span><span class="amt__usd">$1.52 USD</span></td>
+              <td class="num"><span class="amt"><span class="amt__val">0.0190</span><span class="amt__unit">SOL</span></span></td>
+              <td class="actions"><button class="btn-claim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Claim</button><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button></td>
+            </tr>
+            <tr>
+              <td><div class="prod"><div class="prod__cover pc-6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg></div><div class="prod__main"><span class="prod__name">Revenue Leakage Audit</span><span class="prod__symbol">RLA · Prompt</span></div></div></td>
+              <td><span class="type-badge"><span class="tb-dot"></span>Prompt</span></td>
+              <td class="num"><span class="amt amt--zero"><span class="amt__val">0.0000</span><span class="amt__unit">SOL</span></span><span class="amt__usd">No new fees</span></td>
+              <td class="num"><span class="amt"><span class="amt__val">0.0000</span><span class="amt__unit">SOL</span></span></td>
+              <td class="actions"><button class="btn-claim" disabled>No fees yet</button><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button></td>
+            </tr>
+            <tr>
+              <td><div class="prod"><div class="prod__cover pc-8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div><div class="prod__main"><span class="prod__name">Clinical Trial Eligibility</span><span class="prod__symbol">CLINICALTR · Prompt</span></div></div></td>
+              <td><span class="type-badge"><span class="tb-dot"></span>Prompt</span></td>
+              <td class="num"><span class="amt amt--zero"><span class="amt__val">0.0000</span><span class="amt__unit">SOL</span></span><span class="amt__usd">No new fees</span></td>
+              <td class="num"><span class="amt"><span class="amt__val">0.0000</span><span class="amt__unit">SOL</span></span></td>
+              <td class="actions"><button class="btn-claim" disabled>No fees yet</button><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Claim history -->
+      <section class="section section--card" id="ce-history">
+        <div class="section__head">
+          <div class="section__title-block">
+            <span class="section__title-eyebrow">02 · ON-CHAIN LOG</span>
+            <h2 class="section__title">Claim History</h2>
+            <p class="section__sub">Every claim transaction is recorded on Solana — click any row to verify on Solscan.</p>
+          </div>
+          <div class="section__tools">
+            <select class="mini-select"><option>Last 90 days</option><option>Last 30 days</option><option>Last 7 days</option><option>All time</option></select>
+            <select class="mini-select"><option>All products</option><option>Vendor Risk Monitor Agent</option><option>QuantBot Alpha</option><option>Claw Wizard Agent</option></select>
+          </div>
+        </div>
+        <div class="history-row history-row__head">
+          <span>Date</span><span>Product</span>
+          <span style="text-align:right">Amount</span>
+          <span style="text-align:center">Status</span>
+          <span style="text-align:right">Tx</span>
+        </div>
+        <div class="history-row">
+          <div class="history-date"><strong>May 02</strong><span>14:22 UTC</span></div>
+          <div class="history-prod"><div class="history-prod__cover pc-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg></div><div><div class="history-prod__name">Claw Wizard Agent</div><div class="history-prod__sym">CLAWAI888</div></div></div>
+          <div class="history-amt">+0.0446 <span>SOL</span></div>
+          <div class="history-status"><span class="status-pill is-confirmed"><span class="sp-dot"></span>Confirmed</span></div>
+          <a href="#" class="history-tx">8kQ…d2P <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+        <div class="history-row">
+          <div class="history-date"><strong>Apr 26</strong><span>09:08 UTC</span></div>
+          <div class="history-prod"><div class="history-prod__cover pc-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 9"/></svg></div><div><div class="history-prod__name">Vendor Risk Monitor Agent</div><div class="history-prod__sym">VRM</div></div></div>
+          <div class="history-amt">+0.0612 <span>SOL</span></div>
+          <div class="history-status"><span class="status-pill is-confirmed"><span class="sp-dot"></span>Confirmed</span></div>
+          <a href="#" class="history-tx">3hF…aW7 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+        <div class="history-row">
+          <div class="history-date"><strong>Apr 19</strong><span>17:51 UTC</span></div>
+          <div class="history-prod"><div class="history-prod__cover pc-3"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/></svg></div><div><div class="history-prod__name">QuantBot Alpha</div><div class="history-prod__sym">QBOT</div></div></div>
+          <div class="history-amt">+0.0203 <span>SOL</span></div>
+          <div class="history-status"><span class="status-pill is-confirmed"><span class="sp-dot"></span>Confirmed</span></div>
+          <a href="#" class="history-tx">9vN…bX3 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+        <div class="history-row">
+          <div class="history-date"><strong>Apr 12</strong><span>11:34 UTC</span></div>
+          <div class="history-prod"><div class="history-prod__cover pc-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 9"/></svg></div><div><div class="history-prod__name">Vendor Risk Monitor Agent</div><div class="history-prod__sym">VRM</div></div></div>
+          <div class="history-amt">+0.0418 <span>SOL</span></div>
+          <div class="history-status"><span class="status-pill is-confirmed"><span class="sp-dot"></span>Confirmed</span></div>
+          <a href="#" class="history-tx">2qS…rT9 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+        <div class="history-row">
+          <div class="history-date"><strong>Apr 03</strong><span>22:17 UTC</span></div>
+          <div class="history-prod"><div class="history-prod__cover pc-4"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M5 12h14"/></svg></div><div><div class="history-prod__name">Financial Analyst</div><div class="history-prod__sym">FA</div></div></div>
+          <div class="history-amt">+0.0181 <span>SOL</span></div>
+          <div class="history-status"><span class="status-pill is-confirmed"><span class="sp-dot"></span>Confirmed</span></div>
+          <a href="#" class="history-tx">5pH…kL2 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+        <div class="history-row">
+          <div class="history-date"><strong>Mar 26</strong><span>06:49 UTC</span></div>
+          <div class="history-prod"><div class="history-prod__cover pc-3"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/></svg></div><div><div class="history-prod__name">QuantBot Alpha</div><div class="history-prod__sym">QBOT</div></div></div>
+          <div class="history-amt">+0.0288 <span>SOL</span></div>
+          <div class="history-status"><span class="status-pill is-confirmed"><span class="sp-dot"></span>Confirmed</span></div>
+          <a href="#" class="history-tx">7tW…mB6 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+        <div class="history-foot">
+          <span class="history-foot__count">Showing <strong>6</strong> of 14 claims · last 90 days</span>
+          <a href="#" class="history-foot__more">View all on Solscan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section section--card">
+        <div class="section__head">
+          <div class="section__title-block">
+            <span class="section__title-eyebrow">03 · GOOD TO KNOW</span>
+            <h2 class="section__title">Frequently asked questions</h2>
+            <p class="section__sub">How creator fees, claims, and Solana settlement work in the Swarms marketplace.</p>
+          </div>
+          <div class="section__tools">
+            <a href="#" class="docs-link">Read the full creator docs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        <div class="faq__list">
+          <div class="faq__item is-open">
+            <button class="faq__q">How are creator fees calculated?<span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
+            <div class="faq__a"><div class="faq__a-inner"><p>Every time someone <strong>buys or sells</strong> one of your tokenized products, you earn <code>0.5%</code> of the trade value, paid in SOL directly to the creator-fees vault.</p><p>Fees accrue automatically on-chain — there's nothing to invoice or reconcile. You just claim when you're ready.</p></div></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__q">When can I claim my fees?<span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
+            <div class="faq__a"><div class="faq__a-inner"><p>Anytime. There's no lockup and no minimum balance. You can claim a single product or batch all unclaimed fees with the <strong>Claim All Fees</strong> button at the top of this page.</p><p>Most creators claim weekly or monthly to balance gas costs against compounding.</p></div></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__q">What are the network fees for claiming?<span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
+            <div class="faq__a"><div class="faq__a-inner"><p>Each claim is a Solana transaction. Network fees are typically <code>~0.000005 SOL</code> — well under a tenth of a cent. Swarms takes no platform fee on claims.</p></div></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__q">Why does one of my products show 0 SOL?<span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
+            <div class="faq__a"><div class="faq__a-inner"><p>Either there have been no buy or sell trades on it since your last claim, or it isn't a tokenized product. Only <strong>Tokenized</strong> products earn ongoing creator fees.</p></div></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__q">How long does a claim take to settle?<span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
+            <div class="faq__a"><div class="faq__a-inner"><p>Solana confirms most transactions in under <strong>2 seconds</strong>. SOL lands in your connected wallet immediately on confirmation.</p></div></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__q">Can I export my earnings data?<span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
+            <div class="faq__a"><div class="faq__a-inner"><p>Yes — go to <strong>Billing → Export</strong> in account settings. Claims appear as standard transactions in your exported JSON or CSV.</p></div></div>
+          </div>
+        </div>
+      </section>
+
     </section>
 
     <!-- ============= THEME ============= -->
@@ -2283,212 +2829,11 @@ body::before{
 
   </main>
 
-  <!-- ===== CONTEXT (right side) ===== -->
-  <aside class="context" id="context">
-
-    <!-- Profile preview (when on Profile tab) -->
-    <div class="ctx-card" data-ctx="profile">
-      <header class="ctx-card__head">
-        <h3 class="ctx-card__title">Public preview</h3>
-      </header>
-      <div class="preview-profile">
-        <div class="preview-profile__pic">YK</div>
-        <h4 class="preview-profile__name" id="ctxName">Yuki</h4>
-        <span class="preview-profile__handle" id="ctxHandle">@yuki · swarms.world/@yuki</span>
-        <div class="preview-profile__stats">
-          <div class="preview-profile__stat">
-            <div class="preview-profile__stat-num">3</div>
-            <div class="preview-profile__stat-label">Products</div>
-          </div>
-          <div class="preview-profile__stat">
-            <div class="preview-profile__stat-num">128</div>
-            <div class="preview-profile__stat-label">Followers</div>
-          </div>
-          <div class="preview-profile__stat">
-            <div class="preview-profile__stat-num">4.7</div>
-            <div class="preview-profile__stat-label">Avg ★</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="ctx-card" data-ctx="profile">
-      <header class="ctx-card__head">
-        <h3 class="ctx-card__title">Account info</h3>
-      </header>
-      <div class="info-rows">
-        <div class="info-row">
-          <span class="info-row__label">Member since</span>
-          <span class="info-row__value">Jan 14, 2025</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row__label">Subscription</span>
-          <span class="info-row__pill info-row__pill--free">Free</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row__label">Email status</span>
-          <span class="info-row__pill info-row__pill--verified">✓ Verified</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row__label">Wallet</span>
-          <span class="info-row__value">6DvG…ASJU</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row__label">2FA</span>
-          <span class="info-row__value" style="color:var(--warning-400);">Not enabled</span>
-        </div>
-      </div>
-      <button class="btn btn--ghost btn--sm" style="margin-top:14px;width:100%;">Upgrade to Pro →</button>
-    </div>
-
-    <!-- Billing context -->
-    <div class="ctx-card" data-ctx="billing" style="display:none;">
-      <header class="ctx-card__head">
-        <h3 class="ctx-card__title">30-day spending</h3>
-      </header>
-      <div style="font-family:var(--font-mono);font-size:24px;font-weight:600;letter-spacing:-0.5px;line-height:1;margin-bottom:4px;">$148.20</div>
-      <div style="font-family:var(--font-mono);font-size:11px;color:var(--success-400);margin-bottom:14px;">↓ 22% vs last 30d</div>
-      <div class="spend-chart">
-        <div class="spend-chart__bar dim" style="height:24px;"></div>
-        <div class="spend-chart__bar dim" style="height:18px;"></div>
-        <div class="spend-chart__bar" style="height:32px;"></div>
-        <div class="spend-chart__bar" style="height:28px;"></div>
-        <div class="spend-chart__bar" style="height:48px;"></div>
-        <div class="spend-chart__bar" style="height:38px;"></div>
-        <div class="spend-chart__bar" style="height:22px;"></div>
-        <div class="spend-chart__bar" style="height:46px;"></div>
-        <div class="spend-chart__bar" style="height:60px;"></div>
-        <div class="spend-chart__bar" style="height:42px;"></div>
-        <div class="spend-chart__bar" style="height:36px;"></div>
-        <div class="spend-chart__bar" style="height:54px;"></div>
-      </div>
-      <div class="spend-axis">
-        <span>30d ago</span>
-        <span>15d</span>
-        <span>Today</span>
-      </div>
-    </div>
-
-    <div class="ctx-card" data-ctx="billing" style="display:none;">
-      <header class="ctx-card__head">
-        <h3 class="ctx-card__title">Tips</h3>
-      </header>
-      <ul class="tip-list">
-        <li><strong>Pay in $SWARMS</strong> for a 10% bonus on every top-up.</li>
-        <li><strong>Larger top-ups</strong> reduce per-transaction overhead — $250+ recommended for active users.</li>
-        <li><strong>Auto-reload</strong> coming soon — keep your balance topped up automatically.</li>
-      </ul>
-    </div>
-
-    <!-- Purchases context -->
-    <div class="ctx-card" data-ctx="purchases" style="display:none;">
-      <header class="ctx-card__head">
-        <h3 class="ctx-card__title">This month</h3>
-      </header>
-      <div style="display:flex;flex-direction:column;gap:14px;">
-        <div>
-          <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px;">Top category</div>
-          <div style="font-size:13px;font-weight:700;">Trading agents</div>
-          <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">5 purchases · $48.20</div>
-        </div>
-        <div style="border-top:1px solid var(--border-default);padding-top:14px;">
-          <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px;">Most-used</div>
-          <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
-            <span class="tx-product__img bg-1" style="width:32px;height:32px;"></span>
-            <div>
-              <div style="font-size:12.5px;font-weight:600;">Quant Trader Agent</div>
-              <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);">214 runs this month</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Staking context -->
-    <div class="ctx-card" data-ctx="staking" style="display:none;">
-      <header class="ctx-card__head">
-        <h3 class="ctx-card__title">How staking works</h3>
-      </header>
-      <ul class="tip-list">
-        <li><strong>Earn yield</strong> from a share of marketplace fees, distributed daily.</li>
-        <li><strong>7-day cooldown</strong> when unstaking — protects against flash withdrawals.</li>
-        <li><strong>No minimum</strong> — stake any amount, anytime.</li>
-        <li><strong>APY varies</strong> with marketplace volume. Currently <strong style="color:var(--success-400);">12.4%</strong>.</li>
-      </ul>
-    </div>
-
-    <div class="ctx-card" data-ctx="staking" style="display:none;">
-      <header class="ctx-card__head">
-        <h3 class="ctx-card__title">DAO stats</h3>
-      </header>
-      <div class="info-rows">
-        <div class="info-row">
-          <span class="info-row__label">Total staked</span>
-          <span class="info-row__value">12.4M SWARMS</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row__label">Stakers</span>
-          <span class="info-row__value">3,127</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row__label">7d distribution</span>
-          <span class="info-row__value" style="color:var(--success-400);">$48.2K</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row__label">Your share</span>
-          <span class="info-row__value">0.00%</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Creator earnings context -->
-    <div class="ctx-card" data-ctx="creator" style="display:none;">
-      <header class="ctx-card__head">
-        <h3 class="ctx-card__title">Top earners this week</h3>
-      </header>
-      <div style="display:flex;flex-direction:column;gap:12px;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="tx-product__img bg-1" style="width:32px;height:32px;flex-shrink:0;"></span>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:12.5px;font-weight:600;">tunedforai</div>
-            <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--success-400);">+$24.5K · 30d</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="tx-product__img bg-2" style="width:32px;height:32px;flex-shrink:0;"></span>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:12.5px;font-weight:600;">synapse.lab</div>
-            <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--success-400);">+$18.2K · 30d</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="tx-product__img bg-3" style="width:32px;height:32px;flex-shrink:0;"></span>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:12.5px;font-weight:600;">nexus.studio</div>
-            <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--success-400);">+$12.9K · 30d</div>
-          </div>
-        </div>
-      </div>
-      <button class="btn btn--ghost btn--sm" style="margin-top:14px;width:100%;">View leaderboard →</button>
-    </div>
-
-    <!-- Theme context -->
-    <div class="ctx-card" data-ctx="theme" style="display:none;">
-      <header class="ctx-card__head">
-        <h3 class="ctx-card__title">Live preview</h3>
-      </header>
-      <div style="background:var(--bg-default);border:1px solid var(--border-default);border-radius:var(--r-md);padding:14px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:6px;">Sample headline</div>
-        <div style="font-size:11.5px;color:var(--text-secondary);line-height:1.55;margin-bottom:12px;">Body text appears like this. Adjust theme to see changes reflect across the entire app.</div>
-        <button class="btn btn--primary btn--sm" style="font-size:10.5px;">Primary CTA</button>
-      </div>
-      <p style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);margin:10px 0 0;">Changes apply instantly. Reload not required.</p>
-    </div>
-
-  </aside>
-
 </div><!-- /.shell -->
 </div><!-- /.page-container -->
+
+<!-- CE Toast stage -->
+<div class="ce-toast-stage" id="ceToastStage"></div>
 
 <!-- Toast -->
 <div class="toast" id="toast">
@@ -2620,6 +2965,83 @@ $$('input[type="text"]').forEach(i => {
   btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();dd.classList.contains('is-open')?close():open();}if(e.key==='Escape')close();});
   document.addEventListener('click',e=>{if(!dd.contains(e.target))close();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+})();
+
+/* ====== Creator Earnings interactions ====== */
+(function(){
+  function ceShowToast(html) {
+    var stage = document.getElementById('ceToastStage');
+    var el = document.createElement('div');
+    el.className = 'ce-toast';
+    el.innerHTML = '<div class="ce-toast__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="ce-toast__body">' + html + '</div>';
+    stage.appendChild(el);
+    requestAnimationFrame(function(){ el.classList.add('is-in'); });
+    setTimeout(function(){ el.classList.remove('is-in'); el.addEventListener('transitionend', function(){ el.remove(); }, {once:true}); }, 4500);
+  }
+  function ceAnimateNum(el, from, to, dur) {
+    dur = dur || 900;
+    var start = performance.now();
+    (function tick(now) {
+      var t = Math.min((now - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = (from + (to - from) * eased).toFixed(4);
+      if (t < 1) requestAnimationFrame(tick);
+    })(performance.now());
+  }
+  var ceRefreshBtn = document.getElementById('ceRefreshBtn');
+  if (ceRefreshBtn) {
+    ceRefreshBtn.addEventListener('click', function() {
+      if (this.classList.contains('is-refreshing')) return;
+      this.classList.add('is-refreshing');
+      var self = this;
+      setTimeout(function(){ self.classList.remove('is-refreshing'); }, 600);
+    });
+  }
+  var ceClaimAllBtn = document.getElementById('ceClaimAllBtn');
+  var ceNumEl = document.getElementById('ceUnclaimedNum');
+  if (ceClaimAllBtn && ceNumEl) {
+    ceClaimAllBtn.addEventListener('click', function() {
+      var current = parseFloat(ceNumEl.textContent);
+      if (current <= 0) return;
+      ceClaimAllBtn.disabled = true;
+      ceClaimAllBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="animation:ceSpinIcon 0.8s linear infinite"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>Submitting…';
+      setTimeout(function() {
+        ceAnimateNum(ceNumEl, current, 0);
+        ceShowToast('Successfully claimed <strong>' + current.toFixed(4) + ' SOL</strong> to your wallet. Confirmed on Solana.');
+        setTimeout(function() {
+          ceClaimAllBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>All caught up';
+        }, 1000);
+      }, 950);
+    });
+  }
+  document.querySelectorAll('.tab-panel[data-panel="creator"] .btn-claim:not([disabled])').forEach(function(b) {
+    b.addEventListener('click', function() {
+      var row = b.closest('tr');
+      if (!row) return;
+      var name = row.querySelector('.prod__name') ? row.querySelector('.prod__name').textContent : '';
+      var amtEl = row.querySelector('.amt--earn .amt__val');
+      var amt = amtEl ? amtEl.textContent : '';
+      ceShowToast('Claimed <strong>' + amt + ' SOL</strong> from ' + name + '.');
+      var earnCell = row.querySelector('.amt--earn');
+      if (earnCell) {
+        earnCell.classList.remove('amt--earn');
+        earnCell.classList.add('amt--zero');
+        earnCell.querySelector('.amt__val').textContent = '0.0000';
+        var usdEl = earnCell.parentElement.querySelector('.amt__usd');
+        if (usdEl) usdEl.textContent = 'No new fees';
+      }
+      b.disabled = true;
+      b.textContent = 'Claimed';
+    });
+  });
+  document.querySelectorAll('.faq__q').forEach(function(q) {
+    q.addEventListener('click', function() {
+      var item = q.parentElement;
+      var isOpen = item.classList.contains('is-open');
+      document.querySelectorAll('.faq__item').forEach(function(i){ i.classList.remove('is-open'); });
+      if (!isOpen) item.classList.add('is-open');
+    });
+  });
 })();
 </script>
 </div><!-- /.page-main -->
